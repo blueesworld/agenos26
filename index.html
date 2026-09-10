@@ -1,0 +1,1885 @@
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AgenOS - AgenPhone 1</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+user-select: none;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+background: #000;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+overflow: hidden;
+}
+
+.phone-frame {
+width: 390px;
+height: 844px;
+border-radius: 50px;
+overflow: hidden;
+position: relative;
+background: #0a0a1a;
+box-shadow: 0 0 0 3px #1a1a3a, 0 0 0 6px #0d0d20, 0 0 80px rgba(79, 70, 229, 0.3);
+}
+
+@media (max-width: 420px) {
+.phone-frame {
+width: 100vw;
+height: 100vh;
+border-radius: 0;
+box-shadow: none;
+}
+}
+
+.screen {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.screen.hidden {
+opacity: 0;
+pointer-events: none;
+transform: scale(0.95);
+}
+
+.screen.visible {
+opacity: 1;
+pointer-events: all;
+transform: scale(1);
+}
+
+/* Boot Screen */
+#boot-screen {
+background: linear-gradient(135deg, #0a0a2e 0%, #1a0a3e 50%, #0a0a2e 100%);
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+z-index: 100;
+}
+
+.boot-logo {
+font-size: 56px;
+font-weight: 900;
+letter-spacing: 12px;
+background: linear-gradient(135deg, #818cf8, #6366f1, #a78bfa, #c084fc);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: bootPulse 2s ease-in-out infinite;
+}
+
+@keyframes bootPulse {
+0%, 100% { opacity: 0.6; transform: scale(1); }
+50% { opacity: 1; transform: scale(1.05); }
+}
+
+.boot-progress {
+width: 120px;
+height: 2px;
+background: rgba(255,255,255,0.1);
+border-radius: 2px;
+margin-top: 40px;
+overflow: hidden;
+}
+
+.boot-progress-bar {
+height: 100%;
+background: linear-gradient(90deg, #6366f1, #a78bfa);
+border-radius: 2px;
+width: 0%;
+transition: width 0.1s linear;
+}
+
+/* Lock Screen */
+#lock-screen {
+background: linear-gradient(160deg, #0f0c29 0%, #1a1145 30%, #24243e 60%, #0f0c29 100%);
+display: flex;
+flex-direction: column;
+z-index: 90;
+}
+
+.lock-time {
+font-size: 72px;
+font-weight: 200;
+color: white;
+letter-spacing: -2px;
+line-height: 1;
+}
+
+.lock-date {
+font-size: 16px;
+color: rgba(255,255,255,0.6);
+font-weight: 300;
+margin-top: 8px;
+}
+
+.swipe-indicator {
+animation: swipeUp 2s ease-in-out infinite;
+color: rgba(255,255,255,0.4);
+}
+
+@keyframes swipeUp {
+0%, 100% { transform: translateY(0); opacity: 0.4; }
+50% { transform: translateY(-12px); opacity: 0.8; }
+}
+
+/* Home Screen */
+#home-screen {
+background: linear-gradient(160deg, #0f0c29 0%, #141033 25%, #1e1650 50%, #1a1040 75%, #0f0c29 100%);
+display: flex;
+flex-direction: column;
+z-index: 80;
+}
+
+.home-bg-orb {
+position: absolute;
+border-radius: 50%;
+filter: blur(80px);
+opacity: 0.3;
+}
+
+.status-bar {
+height: 54px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 28px;
+padding-top: 8px;
+position: relative;
+z-index: 10;
+}
+
+.notch {
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 126px;
+height: 34px;
+background: #000;
+border-radius: 0 0 20px 20px;
+}
+
+/* Glass Card */
+.glass {
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+background: rgba(255, 255, 255, 0.08);
+backdrop-filter: blur(30px);
+-webkit-backdrop-filter: blur(30px);
+border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* App Icons */
+.app-icon {
+width: 60px;
+height: 60px;
+border-radius: 16px;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s ease;
+cursor: pointer;
+position: relative;
+overflow: hidden;
+}
+
+.app-icon:active {
+transform: scale(0.85);
+}
+
+.app-icon::after {
+content: '';
+position: absolute;
+inset: 0;
+background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+border-radius: 16px;
+}
+
+.app-label {
+font-size: 10px;
+color: rgba(255,255,255,0.8);
+margin-top: 6px;
+text-align: center;
+font-weight: 400;
+}
+
+/* Dock */
+.dock {
+position: absolute;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+padding: 12px 20px;
+border-radius: 28px;
+display: flex;
+gap: 20px;
+z-index: 10;
+}
+
+/* App Screens */
+.app-screen {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 85;
+transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+.app-screen.hidden {
+opacity: 0;
+transform: translateY(100%) scale(0.9);
+pointer-events: none;
+}
+
+.app-screen.visible {
+opacity: 1;
+transform: translateY(0) scale(1);
+pointer-events: all;
+}
+
+.app-screen::-webkit-scrollbar {
+display: none;
+}
+
+/* App Header */
+.app-header {
+position: sticky;
+top: 0;
+z-index: 20;
+padding: 54px 20px 16px;
+background: rgba(10, 10, 26, 0.85);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+}
+
+/* Settings Items */
+.setting-item {
+display: flex;
+align-items: center;
+padding: 14px 16px;
+transition: background 0.2s;
+cursor: pointer;
+}
+
+.setting-item:active {
+background: rgba(255,255,255,0.05);
+}
+
+/* Toggle Switch */
+.toggle {
+width: 44px;
+height: 26px;
+border-radius: 13px;
+background: rgba(255,255,255,0.15);
+position: relative;
+cursor: pointer;
+transition: background 0.3s;
+flex-shrink: 0;
+}
+
+.toggle.active {
+background: #6366f1;
+}
+
+.toggle::after {
+content: '';
+position: absolute;
+width: 22px;
+height: 22px;
+border-radius: 11px;
+background: white;
+top: 2px;
+left: 2px;
+transition: transform 0.3s;
+}
+
+.toggle.active::after {
+transform: translateX(18px);
+}
+
+/* Browser */
+.browser-bar {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 8px 12px;
+margin: 0 16px;
+border-radius: 12px;
+}
+
+/* Notes */
+.note-card {
+transition: all 0.2s;
+cursor: pointer;
+}
+
+.note-card:active {
+transform: scale(0.97);
+}
+
+/* Camera */
+.camera-viewfinder {
+position: relative;
+overflow: hidden;
+}
+
+.camera-viewfinder::before {
+content: '';
+position: absolute;
+inset: 20px;
+border: 1px solid rgba(255,255,255,0.3);
+border-radius: 8px;
+pointer-events: none;
+}
+
+.lens-ring {
+border-radius: 50%;
+border: 2px solid rgba(255,255,255,0.3);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* Notification Panel */
+#notification-panel {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 95;
+transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+overflow: hidden;
+}
+
+#notification-panel.hidden {
+transform: translateY(-100%);
+opacity: 0;
+pointer-events: none;
+}
+
+#notification-panel.visible {
+transform: translateY(0);
+opacity: 1;
+pointer-events: all;
+}
+
+/* Weather animations */
+@keyframes float {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
+}
+
+@keyframes rain {
+0% { transform: translateY(-10px); opacity: 0; }
+50% { opacity: 1; }
+100% { transform: translateY(30px); opacity: 0; }
+}
+
+.weather-icon-float {
+animation: float 3s ease-in-out infinite;
+}
+
+/* Gallery grid */
+.gallery-item {
+aspect-ratio: 1;
+border-radius: 8px;
+overflow: hidden;
+cursor: pointer;
+transition: transform 0.2s;
+}
+
+.gallery-item:active {
+transform: scale(0.95);
+}
+
+/* Keyboard */
+.keyboard {
+position: absolute;
+bottom: 0;
+left: 0;
+width: 100%;
+background: rgba(20, 20, 40, 0.95);
+backdrop-filter: blur(20px);
+padding: 8px 4px 24px;
+z-index: 30;
+transition: transform 0.3s ease;
+}
+
+.keyboard.hidden {
+transform: translateY(100%);
+}
+
+.key {
+height: 42px;
+border-radius: 8px;
+background: rgba(255,255,255,0.12);
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-size: 16px;
+cursor: pointer;
+transition: all 0.1s;
+flex: 1;
+margin: 2px;
+}
+
+.key:active {
+background: rgba(255,255,255,0.25);
+transform: scale(0.92);
+}
+
+.key-special {
+background: rgba(255,255,255,0.06);
+font-size: 12px;
+}
+
+.key-space {
+flex: 4;
+}
+
+/* Scrollbar hide */
+::-webkit-scrollbar { display: none; }
+
+/* Page transitions */
+.page-slide-enter {
+animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+from { transform: translateY(30px); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+
+/* Ripple effect */
+.ripple {
+position: absolute;
+border-radius: 50%;
+background: rgba(255,255,255,0.15);
+transform: scale(0);
+animation: rippleAnim 0.6s linear;
+pointer-events: none;
+}
+
+@keyframes rippleAnim {
+to { transform: scale(4); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="phone">
+
+<!-- Boot Screen -->
+<div class="screen visible" id="boot-screen">
+<div class="boot-logo">AGEN</div>
+<p style="color: rgba(255,255,255,0.3); font-size: 11px; letter-spacing: 4px; margin-top: 12px; font-weight: 300;">PHONE 1</p>
+<div class="boot-progress">
+<div class="boot-progress-bar" id="boot-progress"></div>
+</div>
+</div>
+
+<!-- Lock Screen -->
+<div class="screen hidden" id="lock-screen">
+<div class="notch"></div>
+<div class="status-bar">
+<span style="color: white; font-size: 13px; font-weight: 600; position: relative; z-index: 10;" id="lock-time-small"></span>
+<div style="display: flex; gap: 6px; align-items: center; position: relative; z-index: 10;">
+<svg width="16" height="12" viewBox="0 0 16 12" fill="white" opacity="0.9"><path d="M8 3.6C9.8 3.6 11.4 4.3 12.6 5.5L14 4.1C12.4 2.5 10.3 1.6 8 1.6S3.6 2.5 2 4.1L3.4 5.5C4.6 4.3 6.2 3.6 8 3.6ZM8 7.6C8.8 7.6 9.6 7.9 10.2 8.5L8 10.7L5.8 8.5C6.4 7.9 7.2 7.6 8 7.6ZM0 2.1L1.4 3.5C3.2 1.7 5.5 0.6 8 0.6S12.8 1.7 14.6 3.5L16 2.1C13.8 0 10.9-0.4 8-0.4S2.2 0 0 2.1Z"/></svg>
+<svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect x="0.5" y="0.5" width="18" height="11" rx="2" stroke="white" opacity="0.9"/><rect x="2" y="2" width="12" height="8" rx="1" fill="#34d399"/><rect x="19.5" y="3.5" width="2" height="5" rx="1" fill="white" opacity="0.4"/></svg>
+</div>
+</div>
+
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 60px;">
+<div class="lock-time" id="lock-time">00:00</div>
+<div class="lock-date" id="lock-date">Monday, January 1</div>
+
+<!-- Lock screen widgets -->
+<div class="glass" style="border-radius: 20px; padding: 16px 20px; margin-top: 32px; width: 280px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="font-size: 36px;">🌤</div>
+<div>
+<div style="color: white; font-size: 22px; font-weight: 300;">22°C</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">Agen City • Partly Cloudy</div>
+</div>
+</div>
+</div>
+</div>
+
+<div style="text-align: center; padding-bottom: 50px;" id="unlock-area">
+<div class="swipe-indicator">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;"><path d="M5 15l7-7 7 7"/></svg>
+</div>
+<p style="color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 4px; font-weight: 300;">Tap to unlock</p>
+</div>
+</div>
+
+<!-- Home Screen -->
+<div class="screen hidden" id="home-screen">
+<!-- Background orbs -->
+<div class="home-bg-orb" style="width: 200px; height: 200px; background: #4f46e5; top: 10%; left: -30%;"></div>
+<div class="home-bg-orb" style="width: 250px; height: 250px; background: #7c3aed; top: 40%; right: -40%;"></div>
+<div class="home-bg-orb" style="width: 180px; height: 180px; background: #2563eb; bottom: 10%; left: 20%;"></div>
+
+<div class="notch"></div>
+<div class="status-bar">
+<span style="color: white; font-size: 13px; font-weight: 600; position: relative; z-index: 10;" id="home-time"></span>
+<div style="display: flex; gap: 6px; align-items: center; position: relative; z-index: 10;">
+<svg width="16" height="12" viewBox="0 0 16 12" fill="white" opacity="0.9"><path d="M8 3.6C9.8 3.6 11.4 4.3 12.6 5.5L14 4.1C12.4 2.5 10.3 1.6 8 1.6S3.6 2.5 2 4.1L3.4 5.5C4.6 4.3 6.2 3.6 8 3.6ZM8 7.6C8.8 7.6 9.6 7.9 10.2 8.5L8 10.7L5.8 8.5C6.4 7.9 7.2 7.6 8 7.6ZM0 2.1L1.4 3.5C3.2 1.7 5.5 0.6 8 0.6S12.8 1.7 14.6 3.5L16 2.1C13.8 0 10.9-0.4 8-0.4S2.2 0 0 2.1Z"/></svg>
+<svg width="22" height="12" viewBox="0 0 22 12" fill="none"><rect x="0.5" y="0.5" width="18" height="11" rx="2" stroke="white" opacity="0.9"/><rect x="2" y="2" width="12" height="8" rx="1" fill="#34d399"/><rect x="19.5" y="3.5" width="2" height="5" rx="1" fill="white" opacity="0.4"/></svg>
+</div>
+</div>
+
+<!-- Weather Widget -->
+<div style="padding: 16px 20px; position: relative; z-index: 5;">
+<div class="glass" style="border-radius: 24px; padding: 20px; cursor: pointer;" onclick="openApp('weather')">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div>
+<div style="color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Agen City</div>
+<div style="color: white; font-size: 48px; font-weight: 200; line-height: 1; margin-top: 4px;">22°</div>
+<div style="color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 4px;">Partly Cloudy</div>
+</div>
+<div class="weather-icon-float" style="font-size: 64px;">⛅</div>
+</div>
+<div style="display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06);">
+<div style="text-align: center; flex: 1;"><div style="color: rgba(255,255,255,0.4); font-size: 10px;">MON</div><div style="margin: 4px 0; font-size: 16px;">🌤</div><div style="color: white; font-size: 12px;">22°</div></div>
+<div style="text-align: center; flex: 1;"><div style="color: rgba(255,255,255,0.4); font-size: 10px;">TUE</div><div style="margin: 4px 0; font-size: 16px;">🌧</div><div style="color: white; font-size: 12px;">18°</div></div>
+<div style="text-align: center; flex: 1;"><div style="color: rgba(255,255,255,0.4); font-size: 10px;">WED</div><div style="margin: 4px 0; font-size: 16px;">☀️</div><div style="color: white; font-size: 12px;">25°</div></div>
+<div style="text-align: center; flex: 1;"><div style="color: rgba(255,255,255,0.4); font-size: 10px;">THU</div><div style="margin: 4px 0; font-size: 16px;">⛈</div><div style="color: white; font-size: 12px;">16°</div></div>
+<div style="text-align: center; flex: 1;"><div style="color: rgba(255,255,255,0.4); font-size: 10px;">FRI</div><div style="margin: 4px 0; font-size: 16px;">🌤</div><div style="color: white; font-size: 12px;">21°</div></div>
+</div>
+</div>
+</div>
+
+<!-- App Grid -->
+<div style="padding: 20px; position: relative; z-index: 5;">
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; justify-items: center;">
+<!-- Row 1 -->
+<div style="text-align: center;" onclick="openApp('weather')">
+<div class="app-icon" style="background: linear-gradient(135deg, #3b82f6, #06b6d4);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+</div>
+<div class="app-label">Weather</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('settings')">
+<div class="app-icon" style="background: linear-gradient(135deg, #6b7280, #374151);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg>
+</div>
+<div class="app-label">Settings</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('browser')">
+<div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+</div>
+<div class="app-label">Browser</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('notes')">
+<div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 000-1.42l-2.34-2.34a1.003 1.003 0 00-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+</div>
+<div class="app-label">Notes</div>
+</div>
+
+<!-- Row 2 -->
+<div style="text-align: center;" onclick="openApp('camera')">
+<div class="app-icon" style="background: linear-gradient(135deg, #1f2937, #111827);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+</div>
+<div class="app-label">Camera</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('gallery')">
+<div class="app-icon" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+</div>
+<div class="app-label">Gallery</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('clock')">
+<div class="app-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+</div>
+<div class="app-label">Clock</div>
+</div>
+
+<div style="text-align: center;" onclick="openApp('calculator')">
+<div class="app-icon" style="background: linear-gradient(135deg, #64748b, #475569);">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2V9h2v4zm4 4h-2v-6h2v6zm0-8h-2V7h2v2zM9 17H7v-2h2v2zm0-4H7v-2h2v2zm0-4H7V7h2v2z"/></svg>
+</div>
+<div class="app-label">Calc</div>
+</div>
+</div>
+</div>
+
+<!-- Dock -->
+<div class="dock glass-strong">
+<div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a); width: 52px; height: 52px; border-radius: 14px;" onclick="openApp('phone-app')">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+</div>
+<div class="app-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb); width: 52px; height: 52px; border-radius: 14px;" onclick="openApp('browser')">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+</div>
+<div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); width: 52px; height: 52px; border-radius: 14px;" onclick="openApp('camera')">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+</div>
+<div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 52px; height: 52px; border-radius: 14px;" onclick="openApp('settings')">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.49.49 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 00-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1112 8.4a3.6 3.6 0 010 7.2z"/></svg>
+</div>
+</div>
+
+<!-- Home Indicator -->
+<div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px; z-index: 15;"></div>
+</div>
+
+<!-- Notification Panel -->
+<div class="hidden" id="notification-panel">
+<div style="width: 100%; height: 100%; background: rgba(10,10,26,0.92); backdrop-filter: blur(30px); padding: 60px 20px 40px;">
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+<div class="glass" style="border-radius: 16px; padding: 12px; text-align: center; cursor: pointer;" id="toggle-wifi" onclick="toggleQuick('wifi')">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="#818cf8" style="margin: 0 auto;"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2a7.074 7.074 0 0110 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+<div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 6px;">Wi-Fi</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 12px; text-align: center; cursor: pointer;" id="toggle-bt" onclick="toggleQuick('bt')">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)" style="margin: 0 auto;"><path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/></svg>
+<div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 6px;">Bluetooth</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 12px; text-align: center; cursor: pointer;" id="toggle-airplane" onclick="toggleQuick('airplane')">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)" style="margin: 0 auto;"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+<div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 6px;">Airplane</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 12px; text-align: center; cursor: pointer;" id="toggle-flashlight" onclick="toggleQuick('flashlight')">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)" style="margin: 0 auto;"><path d="M6 14l3 3v5h6v-5l3-3V9H6v5zm5-12h2v3h-2V2zM3.5 5.88l1.41-1.41 2.12 2.12L5.62 8 3.5 5.88zm13.46.71l2.12-2.12 1.41 1.41L18.38 8l-1.42-1.41z"/></svg>
+<div style="color: rgba(255,255,255,0.7); font-size: 9px; margin-top: 6px;">Light</div>
+</div>
+</div>
+
+<!-- Brightness -->
+<div class="glass" style="border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm-1 4h2v2.95h-2zm-7.45-.96l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+<input type="range" min="0" max="100" value="75" style="flex: 1; accent-color: #818cf8; height: 4px;">
+</div>
+</div>
+
+<!-- Volume -->
+<div class="glass" style="border-radius: 16px; padding: 16px; margin-bottom: 24px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.5v7a4.47 4.47 0 002.5-3.5zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+<input type="range" min="0" max="100" value="60" style="flex: 1; accent-color: #818cf8; height: 4px;">
+</div>
+</div>
+
+<!-- Notifications -->
+<div style="color: rgba(255,255,255,0.4); font-size: 12px; font-weight: 500; margin-bottom: 12px;">NOTIFICATIONS</div>
+<div class="glass" style="border-radius: 16px; padding: 14px 16px; margin-bottom: 8px;">
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center;">
+<span style="font-size: 16px;">🔔</span>
+</div>
+<div style="flex: 1;">
+<div style="color: white; font-size: 13px; font-weight: 500;">AgenOS</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 11px;">Welcome to AgenPhone 1!</div>
+</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 10px;">now</div>
+</div>
+</div>
+
+<div style="text-align: center; margin-top: 40px; cursor: pointer; color: rgba(255,255,255,0.3); font-size: 12px;" onclick="closeNotifications()">Close</div>
+</div>
+</div>
+
+<!-- ========== APP SCREENS ========== -->
+
+<!-- Weather App -->
+<div class="app-screen hidden" id="app-weather">
+<div style="background: linear-gradient(160deg, #0c1445 0%, #1a237e 30%, #1565c0 60%, #0d47a1 100%); min-height: 100%; padding: 54px 0 30px;">
+<div class="notch" style="position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 50;"></div>
+<div style="display: flex; align-items: center; padding: 0 20px; margin-bottom: 24px;">
+<div onclick="closeApp('weather')" style="cursor: pointer; padding: 8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 18px; font-weight: 600; margin-left: 8px;">Weather</span>
+</div>
+
+<div style="text-align: center; padding: 0 20px;">
+<div style="color: rgba(255,255,255,0.6); font-size: 14px; font-weight: 300;">AGEN CITY</div>
+<div class="weather-icon-float" style="font-size: 100px; margin: 16px 0;">⛅</div>
+<div style="color: white; font-size: 80px; font-weight: 100; line-height: 1;">22°</div>
+<div style="color: rgba(255,255,255,0.7); font-size: 16px; margin-top: 8px;">Partly Cloudy</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 13px; margin-top: 4px;">H: 26° L: 15°</div>
+</div>
+
+<div style="padding: 24px 20px;">
+<div class="glass" style="border-radius: 20px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Hourly Forecast</div>
+<div style="display: flex; overflow-x: auto; gap: 20px; padding-bottom: 4px;">
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">Now</div><div style="font-size: 24px; margin: 8px 0;">⛅</div><div style="color: white; font-size: 14px; font-weight: 500;">22°</div></div>
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">1PM</div><div style="font-size: 24px; margin: 8px 0;">🌤</div><div style="color: white; font-size: 14px; font-weight: 500;">24°</div></div>
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">2PM</div><div style="font-size: 24px; margin: 8px 0;">☀️</div><div style="color: white; font-size: 14px; font-weight: 500;">25°</div></div>
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">3PM</div><div style="font-size: 24px; margin: 8px 0;">☀️</div><div style="color: white; font-size: 14px; font-weight: 500;">26°</div></div>
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">4PM</div><div style="font-size: 24px; margin: 8px 0;">🌤</div><div style="color: white; font-size: 14px; font-weight: 500;">24°</div></div>
+<div style="text-align: center; min-width: 50px;"><div style="color: rgba(255,255,255,0.6); font-size: 12px;">5PM</div><div style="font-size: 24px; margin: 8px 0;">🌥</div><div style="color: white; font-size: 14px; font-weight: 500;">21°</div></div>
+</div>
+</div>
+</div>
+
+<div style="padding: 0 20px;">
+<div class="glass" style="border-radius: 20px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">7-Day Forecast</div>
+<div id="forecast-days"></div>
+</div>
+</div>
+
+<div style="padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+<div class="glass" style="border-radius: 16px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">UV Index</div>
+<div style="color: white; font-size: 28px; font-weight: 300; margin-top: 8px;">4</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">Moderate</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Humidity</div>
+<div style="color: white; font-size: 28px; font-weight: 300; margin-top: 8px;">62%</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">Normal</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Wind</div>
+<div style="color: white; font-size: 28px; font-weight: 300; margin-top: 8px;">12</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">km/h NW</div>
+</div>
+<div class="glass" style="border-radius: 16px; padding: 16px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Visibility</div>
+<div style="color: white; font-size: 28px; font-weight: 300; margin-top: 8px;">15</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">km</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Settings App -->
+<div class="app-screen hidden" id="app-settings">
+<div style="background: #0a0a1a; min-height: 100%;">
+<div class="app-header">
+<div style="display: flex; align-items: center;">
+<div onclick="closeApp('settings')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 28px; font-weight: 700; margin-left: 8px;">Settings</span>
+</div>
+</div>
+
+<div style="padding: 0 16px 100px;" id="settings-main">
+<!-- Profile -->
+<div class="glass" style="border-radius: 16px; margin-bottom: 16px; overflow: hidden; cursor: pointer;" onclick="showSettingsPage('about')">
+<div style="padding: 16px; display: flex; align-items: center; gap: 14px;">
+<div style="width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center;">
+<span style="color: white; font-size: 22px; font-weight: 600;">A</span>
+</div>
+<div>
+<div style="color: white; font-size: 16px; font-weight: 600;">Agen User</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px;">AgenOS Account • AgenPhone 1</div>
+</div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)" style="margin-left: auto;"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+</div>
+
+<!-- Settings Groups -->
+<div class="glass" style="border-radius: 16px; margin-bottom: 16px; overflow: hidden;">
+<div class="setting-item" onclick="toggleSetting(this)">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #3b82f6; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3a4.237 4.237 0 00-6 0zm-4-4l2 2a7.074 7.074 0 0110 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Wi-Fi</div><div style="color: rgba(255,255,255,0.4); font-size: 11px;">AgenNet_5G</div></div>
+<div class="toggle active"></div>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item" onclick="toggleSetting(this)">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #6366f1; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Bluetooth</div><div style="color: rgba(255,255,255,0.4); font-size: 11px;">Off</div></div>
+<div class="toggle"></div>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item" onclick="toggleSetting(this)">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #f97316; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Airplane Mode</div></div>
+<div class="toggle"></div>
+</div>
+</div>
+
+<div class="glass" style="border-radius: 16px; margin-bottom: 16px; overflow: hidden;">
+<div class="setting-item">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #8b5cf6; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Notifications</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #ec4899; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm-4-6v-5c0-2.48 1.51-4.5 4-4.95V5c0-.83.67-1.5 1.5-1.5h1c.83 0 1.5.67 1.5 1.5v1.05c2.49.45 4 2.47 4 4.95v5l2 2v1H4v-1l2-2z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Sound & Haptics</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item" onclick="toggleSetting(this)">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #1f2937; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Dark Mode</div></div>
+<div class="toggle active"></div>
+</div>
+</div>
+
+<div class="glass" style="border-radius: 16px; margin-bottom: 16px; overflow: hidden;">
+<div class="setting-item">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #10b981; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">General</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #3b82f6; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">Privacy & Security</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+<div style="height: 1px; background: rgba(255,255,255,0.05); margin-left: 60px;"></div>
+<div class="setting-item" onclick="showSettingsPage('about')">
+<div style="width: 32px; height: 32px; border-radius: 8px; background: #6b7280; display: flex; align-items: center; justify-content: center; margin-right: 14px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+</div>
+<div style="flex: 1;"><div style="color: white; font-size: 14px;">About Phone</div></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.3)"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+</div>
+</div>
+</div>
+
+<!-- About Phone Page -->
+<div style="padding: 0 16px 100px; display: none;" id="settings-about">
+<div onclick="hideSettingsPage()" style="cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 20px; color: #818cf8; font-size: 14px;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#818cf8"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+Back to Settings
+</div>
+
+<!-- Phone Visual -->
+<div style="text-align: center; padding: 20px 0 30px;">
+<div style="width: 100px; height: 180px; border-radius: 20px; background: linear-gradient(160deg, #1a1a2e, #16162a, #0d0d1a); border: 2px solid rgba(255,255,255,0.1); margin: 0 auto; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5);">
+<div style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; align-items: center;">
+<div style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: radial-gradient(circle, #1a1a3a, #0a0a2e);"></div>
+<div style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); background: radial-gradient(circle, #1a1a3a, #0a0a2e);"></div>
+</div>
+<div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 6px; color: rgba(255,255,255,0.2); letter-spacing: 2px;">AGEN</div>
+</div>
+<div style="margin-top: 16px; color: white; font-size: 20px; font-weight: 600;">AgenPhone 1</div>
+<div style="color: #818cf8; font-size: 13px; margin-top: 2px;">Matte Black Edition</div>
+</div>
+
+<div class="glass" style="border-radius: 16px; overflow: hidden; margin-bottom: 16px;">
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Device Name</span>
+<span style="color: white; font-size: 13px;">AgenPhone 1</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Edition</span>
+<span style="color: white; font-size: 13px;">Matte Black</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">OS Version</span>
+<span style="color: white; font-size: 13px;">AgenOS 1.0.0</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Build Number</span>
+<span style="color: white; font-size: 13px;">AGN-2024.12.1</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Processor</span>
+<span style="color: white; font-size: 13px;">AgenCore A1</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">RAM</span>
+<span style="color: white; font-size: 13px;">12 GB</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Storage</span>
+<span style="color: white; font-size: 13px;">256 GB</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Display</span>
+<span style="color: white; font-size: 13px;">6.7" AMOLED 120Hz</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Camera</span>
+<span style="color: white; font-size: 13px;">Dual 50MP + 12MP</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Battery</span>
+<span style="color: white; font-size: 13px;">5000 mAh</span>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between;">
+<span style="color: rgba(255,255,255,0.5); font-size: 13px;">Serial Number</span>
+<span style="color: white; font-size: 13px;">AGN1-MB-0001</span>
+</div>
+</div>
+
+<div style="text-align: center; padding: 20px;">
+<div style="font-size: 18px; font-weight: 800; letter-spacing: 4px; background: linear-gradient(135deg, #818cf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AGEN</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 11px; margin-top: 4px;">Designed by Agen Technologies</div>
+<div style="color: rgba(255,255,255,0.2); font-size: 10px; margin-top: 2px;">© 2024 Agen Inc. All rights reserved.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Browser App -->
+<div class="app-screen hidden" id="app-browser">
+<div style="background: #0a0a1a; min-height: 100%; display: flex; flex-direction: column;">
+<div class="notch" style="position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 50;"></div>
+<div style="padding: 54px 16px 0; position: relative; z-index: 10;">
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+<div onclick="closeApp('browser')" style="cursor: pointer; padding: 8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<div class="browser-bar glass" style="flex: 1;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+<input type="text" value="agen.tech" id="browser-url" style="flex: 1; background: none; border: none; color: white; font-size: 14px; outline: none;" readonly>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+</div>
+</div>
+</div>
+
+<!-- Browser Content -->
+<div style="flex: 1; padding: 0 16px 20px; overflow-y: auto;">
+<div class="glass" style="border-radius: 20px; overflow: hidden;">
+<!-- Fake Website -->
+<div style="background: linear-gradient(160deg, #0f0c29, #1a1145, #302b63); padding: 40px 24px; text-align: center;">
+<div style="font-size: 32px; font-weight: 900; letter-spacing: 6px; background: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AGEN</div>
+<div style="color: rgba(255,255,255,0.5); font-size: 12px; letter-spacing: 3px; margin-top: 4px;">TECHNOLOGIES</div>
+<div style="margin-top: 24px; color: white; font-size: 22px; font-weight: 300; line-height: 1.4;">The Future<br>is <span style="font-weight: 700; background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Here</span></div>
+<div style="margin-top: 24px;">
+<div style="display: inline-block; padding: 12px 32px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; font-size: 14px; font-weight: 600; cursor: pointer;">Discover AgenPhone 1</div>
+</div>
+</div>
+<div style="padding: 24px; background: rgba(10,10,26,0.9);">
+<div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">Featured</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+<div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+<div style="font-size: 24px; margin-bottom: 8px;">📱</div>
+<div style="color: white; font-size: 13px; font-weight: 600;">AgenPhone 1</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 4px;">Starting at $999</div>
+</div>
+<div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+<div style="font-size: 24px; margin-bottom: 8px;">⌚</div>
+<div style="color: white; font-size: 13px; font-weight: 600;">AgenWatch</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 4px;">Coming Soon</div>
+</div>
+<div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+<div style="font-size: 24px; margin-bottom: 8px;">🎧</div>
+<div style="color: white; font-size: 13px; font-weight: 600;">AgenPods</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 4px;">$199</div>
+</div>
+<div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px;">
+<div style="font-size: 24px; margin-bottom: 8px;">💻</div>
+<div style="color: white; font-size: 13px; font-weight: 600;">AgenBook</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 4px;">Coming 2025</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Browser Tab Bar -->
+<div style="padding: 12px 16px; display: flex; justify-content: space-around; align-items: center; position: sticky; bottom: 0; background: rgba(10,10,26,0.9); backdrop-filter: blur(20px);">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" style="cursor: pointer;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" style="cursor: pointer;"><path d="M4 11H16.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
+<svg width="22" height="22" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)" style="cursor: pointer;"><path d="M18.364 5.636a9 9 0 11-12.728 0l1.414 1.414a7 7 0 1010.9 0l1.414-1.414zM12 2v10"/></svg>
+<div style="width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.5); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;">1</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Notes App -->
+<div class="app-screen hidden" id="app-notes">
+<div style="background: #0a0a1a; min-height: 100%;">
+<div class="app-header">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<div style="display: flex; align-items: center;">
+<div onclick="closeApp('notes')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 28px; font-weight: 700; margin-left: 8px;">Notes</span>
+</div>
+<div onclick="createNote()" style="cursor: pointer; width: 36px; height: 36px; border-radius: 10px; background: #6366f1; display: flex; align-items: center; justify-content: center;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+</div>
+</div>
+</div>
+
+<div style="padding: 0 16px 100px;" id="notes-list">
+<!-- Notes will be populated by JS -->
+</div>
+
+<!-- Note Editor -->
+<div style="display: none; padding: 0 16px 100px;" id="note-editor">
+<div onclick="backToNotes()" style="cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: #818cf8; font-size: 14px;">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="#818cf8"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+All Notes
+</div>
+<input type="text" id="note-title" placeholder="Title" style="width: 100%; background: none; border: none; color: white; font-size: 24px; font-weight: 700; outline: none; margin-bottom: 12px; padding: 0;">
+<textarea id="note-content" placeholder="Start typing..." style="width: 100%; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 15px; outline: none; resize: none; min-height: 400px; line-height: 1.6; font-family: 'Inter', sans-serif; padding: 0;"></textarea>
+</div>
+</div>
+</div>
+
+<!-- Camera App -->
+<div class="app-screen hidden" id="app-camera">
+<div style="background: #000; min-height: 100%; display: flex; flex-direction: column;">
+<div class="notch" style="position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 50;"></div>
+
+<!-- Camera Top Bar -->
+<div style="padding: 54px 20px 12px; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 10;">
+<div onclick="closeApp('camera')" style="cursor: pointer;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+</div>
+<div style="color: white; font-size: 14px; font-weight: 600;">PHOTO</div>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="cursor: pointer;"><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/></svg>
+</div>
+
+<!-- Viewfinder -->
+<div class="camera-viewfinder" style="flex: 1; background: linear-gradient(160deg, #1a1a2e, #16162a, #1a1a3e); margin: 0 12px; border-radius: 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+<!-- Simulated camera view -->
+<div style="position: absolute; inset: 0; background: radial-gradient(circle at 40% 40%, rgba(99,102,241,0.1), transparent 70%);"></div>
+<div style="position: absolute; inset: 0; background: radial-gradient(circle at 70% 60%, rgba(139,92,246,0.08), transparent 60%);"></div>
+
+<!-- Focus indicator -->
+<div id="focus-ring" style="width: 60px; height: 60px; border: 1.5px solid rgba(255,255,0,0.6); border-radius: 4px; opacity: 0; transition: opacity 0.3s;"></div>
+
+<!-- Grid lines -->
+<div style="position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; pointer-events: none;">
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1); border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1); border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1); border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1); border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-bottom: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div style="border-right: 0.5px solid rgba(255,255,255,0.1);"></div>
+<div></div>
+</div>
+
+<!-- Camera lens info overlay -->
+<div style="position: absolute; bottom: 12px; left: 16px; display: flex; gap: 16px;">
+<div style="color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer;">0.5×</div>
+<div style="color: #f59e0b; font-size: 12px; font-weight: 600; cursor: pointer;">1×</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer;">2×</div>
+</div>
+</div>
+
+<!-- Camera Mode Bar -->
+<div style="padding: 16px 0; display: flex; justify-content: center; gap: 24px;">
+<span style="color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer;">VIDEO</span>
+<span style="color: #f59e0b; font-size: 12px; font-weight: 600; cursor: pointer;">PHOTO</span>
+<span style="color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer;">PORTRAIT</span>
+<span style="color: rgba(255,255,255,0.4); font-size: 12px; cursor: pointer;">NIGHT</span>
+</div>
+
+<!-- Camera Controls -->
+<div style="padding: 0 40px 40px; display: flex; justify-content: space-between; align-items: center;">
+<!-- Last photo thumbnail -->
+<div style="width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #4f46e5, #7c3aed); border: 2px solid rgba(255,255,255,0.2); cursor: pointer;" onclick="openApp('gallery')"></div>
+
+<!-- Shutter button -->
+<div onclick="takePhoto()" style="cursor: pointer; width: 72px; height: 72px; border-radius: 50%; border: 3px solid white; display: flex; align-items: center; justify-content: center;">
+<div style="width: 60px; height: 60px; border-radius: 50%; background: white; transition: all 0.1s;" id="shutter-btn"></div>
+</div>
+
+<!-- Switch camera -->
+<div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 016 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"/></svg>
+</div>
+</div>
+
+<!-- Dual Lens Info -->
+<div style="position: absolute; top: 50%; right: 12px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; align-items: center;">
+<div class="lens-ring" style="width: 28px; height: 28px;">
+<div style="width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #2a2a4a, #1a1a3a);"></div>
+</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 8px; writing-mode: vertical-lr; letter-spacing: 2px;">50MP</div>
+<div class="lens-ring" style="width: 22px; height: 22px;">
+<div style="width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle, #2a2a4a, #1a1a3a);"></div>
+</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 8px; writing-mode: vertical-lr; letter-spacing: 2px;">12MP</div>
+</div>
+</div>
+</div>
+
+<!-- Gallery App -->
+<div class="app-screen hidden" id="app-gallery">
+<div style="background: #0a0a1a; min-height: 100%;">
+<div class="app-header">
+<div style="display: flex; align-items: center; justify-content: space-between;">
+<div style="display: flex; align-items: center;">
+<div onclick="closeApp('gallery')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 28px; font-weight: 700; margin-left: 8px;">Gallery</span>
+</div>
+<div style="display: flex; gap: 8px;">
+<span style="color: #818cf8; font-size: 13px; cursor: pointer;">Photos</span>
+<span style="color: rgba(255,255,255,0.4); font-size: 13px; cursor: pointer;">Albums</span>
+</div>
+</div>
+</div>
+
+<div style="padding: 0 12px 100px;">
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px;">
+<!-- Generated gallery items -->
+<div class="gallery-item" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #f43f5e, #ec4899);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #f59e0b, #d97706);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);"></div>
+<div class="gallery-item" style="background: linear-gradient(160deg, #1a1a2e, #302b63);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #1e3a5f, #0c1445);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #374151, #1f2937);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #dc2626, #b91c1c);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #0891b2, #164e63);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #16a34a, #15803d);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #9333ea, #7e22ce);"></div>
+<div class="gallery-item" style="background: linear-gradient(135deg, #ea580c, #c2410c);"></div>
+</div>
+
+<!-- Camera Concept Section -->
+<div style="margin-top: 24px;">
+<div style="color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; padding-left: 4px;">AgenPhone 1 • Dual Lens System</div>
+<div class="glass" style="border-radius: 20px; padding: 24px; text-align: center;">
+<div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 20px;">
+<!-- Main Lens -->
+<div style="text-align: center;">
+<div style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.15); background: radial-gradient(circle, #1a1a3a 20%, #0a0a2e 60%, #050515 100%); display: flex; align-items: center; justify-content: center; position: relative;">
+<div style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid rgba(99,102,241,0.3); background: radial-gradient(circle, rgba(99,102,241,0.1), transparent);"></div>
+<div style="position: absolute; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle, rgba(99,102,241,0.3), transparent); top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+</div>
+<div style="color: white; font-size: 12px; font-weight: 600; margin-top: 8px;">50MP Main</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 10px;">f/1.8 OIS</div>
+</div>
+<!-- Ultra Wide Lens -->
+<div style="text-align: center;">
+<div style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.1); background: radial-gradient(circle, #1a1a3a 20%, #0a0a2e 60%, #050515 100%); display: flex; align-items: center; justify-content: center; margin-top: 10px; position: relative;">
+<div style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(139,92,246,0.3); background: radial-gradient(circle, rgba(139,92,246,0.1), transparent);"></div>
+<div style="position: absolute; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, rgba(139,92,246,0.3), transparent); top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+</div>
+<div style="color: white; font-size: 12px; font-weight: 600; margin-top: 8px;">12MP Ultra</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 10px;">f/2.2 120°</div>
+</div>
+</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 11px;">Engineered by Agen Optics</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Clock App -->
+<div class="app-screen hidden" id="app-clock">
+<div style="background: #0a0a1a; min-height: 100%; display: flex; flex-direction: column;">
+<div class="app-header">
+<div style="display: flex; align-items: center;">
+<div onclick="closeApp('clock')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 28px; font-weight: 700; margin-left: 8px;">Clock</span>
+</div>
+</div>
+
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 20px;">
+<!-- Analog Clock -->
+<div style="width: 220px; height: 220px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.1); position: relative; margin-bottom: 32px;">
+<!-- Clock markers -->
+<div style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); color: white; font-size: 14px; font-weight: 300;">12</div>
+<div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: white; font-size: 14px; font-weight: 300;">3</div>
+<div style="position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); color: white; font-size: 14px; font-weight: 300;">6</div>
+<div style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: white; font-size: 14px; font-weight: 300;">9</div>
+
+<!-- Clock hands -->
+<div id="hour-hand" style="position: absolute; bottom: 50%; left: 50%; width: 3px; height: 55px; background: white; transform-origin: bottom center; border-radius: 2px; margin-left: -1.5px;"></div>
+<div id="minute-hand" style="position: absolute; bottom: 50%; left: 50%; width: 2px; height: 75px; background: rgba(255,255,255,0.7); transform-origin: bottom center; border-radius: 2px; margin-left: -1px;"></div>
+<div id="second-hand" style="position: absolute; bottom: 50%; left: 50%; width: 1px; height: 85px; background: #6366f1; transform-origin: bottom center; border-radius: 2px; margin-left: -0.5px;"></div>
+<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 8px; height: 8px; border-radius: 50%; background: #6366f1;"></div>
+</div>
+
+<div style="color: white; font-size: 48px; font-weight: 200;" id="clock-digital"></div>
+<div style="color: rgba(255,255,255,0.4); font-size: 14px; margin-top: 4px;" id="clock-date"></div>
+
+<!-- World clocks -->
+<div style="width: 100%; margin-top: 40px;">
+<div class="glass" style="border-radius: 16px; overflow: hidden;">
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<div><div style="color: rgba(255,255,255,0.5); font-size: 11px;">NEW YORK</div><div style="color: rgba(255,255,255,0.4); font-size: 10px;">-6h</div></div>
+<div style="color: white; font-size: 28px; font-weight: 200;" id="clock-ny"></div>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<div><div style="color: rgba(255,255,255,0.5); font-size: 11px;">LONDON</div><div style="color: rgba(255,255,255,0.4); font-size: 10px;">-1h</div></div>
+<div style="color: white; font-size: 28px; font-weight: 200;" id="clock-london"></div>
+</div>
+<div style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;">
+<div><div style="color: rgba(255,255,255,0.5); font-size: 11px;">TOKYO</div><div style="color: rgba(255,255,255,0.4); font-size: 10px;">+8h</div></div>
+<div style="color: white; font-size: 28px; font-weight: 200;" id="clock-tokyo"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Calculator App -->
+<div class="app-screen hidden" id="app-calculator">
+<div style="background: #0a0a1a; min-height: 100%; display: flex; flex-direction: column;">
+<div style="padding: 54px 20px 0; display: flex; align-items: center;">
+<div onclick="closeApp('calculator')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+</div>
+
+<!-- Calculator Display -->
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;">
+<div style="text-align: right; color: rgba(255,255,255,0.5); font-size: 20px; min-height: 30px;" id="calc-history"></div>
+<div style="text-align: right; color: white; font-size: 56px; font-weight: 200; overflow: hidden;" id="calc-display">0</div>
+</div>
+
+<!-- Calculator Buttons -->
+<div style="padding: 0 16px 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+<div class="calc-btn" style="background: rgba(255,255,255,0.08); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; cursor: pointer; transition: all 0.1s;" onclick="calcInput('AC')">
+<span style="color: #818cf8; font-weight: 500;">AC</span>
+</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.08); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; cursor: pointer;" onclick="calcInput('±')">
+<span style="color: #818cf8;">±</span>
+</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.08); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; cursor: pointer;" onclick="calcInput('%')">
+<span style="color: #818cf8;">%</span>
+</div>
+<div class="calc-btn" style="background: #6366f1; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer;" onclick="calcInput('÷')">÷</div>
+
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('7')">7</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('8')">8</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('9')">9</div>
+<div class="calc-btn" style="background: #6366f1; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer;" onclick="calcInput('×')">×</div>
+
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('4')">4</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('5')">5</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('6')">6</div>
+<div class="calc-btn" style="background: #6366f1; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer;" onclick="calcInput('-')">−</div>
+
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('1')">1</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('2')">2</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('3')">3</div>
+<div class="calc-btn" style="background: #6366f1; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer;" onclick="calcInput('+')">+</div>
+
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer; grid-column: span 2;" onclick="calcInput('0')">0</div>
+<div class="calc-btn" style="background: rgba(255,255,255,0.12); height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; cursor: pointer;" onclick="calcInput('.')">.</div>
+<div class="calc-btn" style="background: #6366f1; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer;" onclick="calcInput('=')">=</div>
+</div>
+</div>
+</div>
+
+<!-- Phone App -->
+<div class="app-screen hidden" id="app-phone-app">
+<div style="background: #0a0a1a; min-height: 100%; display: flex; flex-direction: column;">
+<div class="app-header">
+<div style="display: flex; align-items: center;">
+<div onclick="closeApp('phone-app')" style="cursor: pointer; padding: 8px; margin-left: -8px;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+</div>
+<span style="color: white; font-size: 28px; font-weight: 700; margin-left: 8px;">Phone</span>
+</div>
+</div>
+
+<!-- Phone Display -->
+<div style="flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 20px;">
+<div style="text-align: center; margin-bottom: 40px;">
+<div style="color: white; font-size: 36px; font-weight: 200; letter-spacing: 4px; min-height: 50px;" id="phone-display"></div>
+</div>
+
+<!-- Dialpad -->
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 280px; margin: 0 auto;">
+<div class="dialpad-btn" onclick="dialInput('1')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;">
+<span style="color: white; font-size: 24px; font-weight: 300;">1</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('2')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">2</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">ABC</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('3')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">3</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">DEF</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('4')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">4</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">GHI</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('5')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">5</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">JKL</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('6')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">6</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">MNO</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('7')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">7</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">PQRS</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('8')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">8</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">TUV</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('9')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">9</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px; letter-spacing: 2px;">WXYZ</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('*')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px;">✱</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('0')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px; font-weight: 300;">0</span>
+<span style="color: rgba(255,255,255,0.3); font-size: 8px;">+</span>
+</div>
+<div class="dialpad-btn" onclick="dialInput('#')" style="height: 64px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+<span style="color: white; font-size: 24px;">#</span>
+</div>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; gap: 40px; margin-top: 24px; padding-bottom: 30px;">
+<div onclick="dialDelete()" style="cursor: pointer; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="rgba(255,255,255,0.5)"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
+</div>
+<div style="width: 64px; height: 64px; border-radius: 50%; background: #22c55e; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+</div>
+<div style="width: 48px; height: 48px;"></div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+// ==================== STATE ====================
+let currentScreen = 'boot';
+let currentApp = null;
+let phoneNumber = '';
+let notes = [
+{ id: 1, title: 'Welcome to AgenOS', content: 'Your AgenPhone 1 is ready to use. Explore all the amazing features of AgenOS, designed exclusively for the AgenPhone 1 Matte Black Edition.', date: 'Today', color: '#6366f1' },
+{ id: 2, title: 'Meeting Notes', content: 'Discuss Q4 product launch timeline\n- AgenPods release date\n- AgenWatch prototype review\n- Marketing campaign finalization', date: 'Yesterday', color: '#f59e0b' },
+{ id: 3, title: 'Ideas', content: '• New wallpaper designs\n• AgenOS 2.0 features\n• Widget customization\n• Dark/Light theme toggle', date: '2 days ago', color: '#ec4899' }
+];
+let currentNoteId = null;
+let calcDisplay = '0';
+let calcHistory = '';
+let calcNewNumber = true;
+let calcOperator = null;
+let calcPrevValue = null;
+let quickToggles = { wifi: true, bt: false, airplane: false, flashlight: false };
+
+// ==================== BOOT SEQUENCE ====================
+function bootSequence() {
+const progressBar = document.getElementById('boot-progress');
+let progress = 0;
+
+const interval = setInterval(() => {
+progress += Math.random() * 8 + 2;
+if (progress >= 100) {
+progress = 100;
+clearInterval(interval);
+setTimeout(() => {
+showScreen('lock');
+}, 400);
+}
+progressBar.style.width = progress + '%';
+}, 100);
+}
+
+// ==================== SCREEN MANAGEMENT ====================
+function showScreen(screen) {
+document.querySelectorAll('.screen').forEach(s => {
+s.classList.remove('visible');
+s.classList.add('hidden');
+});
+document.getElementById(screen + '-screen').classList.remove('hidden');
+document.getElementById(screen + '-screen').classList.add('visible');
+currentScreen = screen;
+}
+
+// ==================== LOCK SCREEN ====================
+document.getElementById('unlock-area').addEventListener('click', () => {
+showScreen('home');
+});
+
+// Touch/swipe on lock screen
+let lockTouchStartY = 0;
+document.getElementById('lock-screen').addEventListener('touchstart', (e) => {
+lockTouchStartY = e.touches[0].clientY;
+});
+document.getElementById('lock-screen').addEventListener('touchend', (e) => {
+const diff = lockTouchStartY - e.changedTouches[0].clientY;
+if (diff > 50) showScreen('home');
+});
+
+// ==================== TIME UPDATES ====================
+function updateTime() {
+const now = new Date();
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const seconds = String(now.getSeconds()).padStart(2, '0');
+const timeStr = hours + ':' + minutes;
+
+// Lock screen
+document.getElementById('lock-time').textContent = timeStr;
+const options = { weekday: 'long', month: 'long', day: 'numeric' };
+document.getElementById('lock-date').textContent = now.toLocaleDateString('en-US', options);
+document.getElementById('lock-time-small').textContent = timeStr;
+
+// Home screen
+document.getElementById('home-time').textContent = timeStr;
+
+// Clock app
+document.getElementById('clock-digital').textContent = timeStr + ':' + seconds;
+document.getElementById('clock-date').textContent = now.toLocaleDateString('en-US', options);
+
+// Analog clock
+const hourDeg = (now.getHours() % 12) * 30 + now.getMinutes() * 0.5;
+const minDeg = now.getMinutes() * 6;
+const secDeg = now.getSeconds() * 6;
+document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+document.getElementById('minute-hand').style.transform = `rotate(${minDeg}deg)`;
+document.getElementById('second-hand').style.transform = `rotate(${secDeg}deg)`;
+
+// World clocks
+const nyTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+const londonTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/London' }));
+const tokyoTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
+
+document.getElementById('clock-ny').textContent = String(nyTime.getHours()).padStart(2, '0') + ':' + String(nyTime.getMinutes()).padStart(2, '0');
+document.getElementById('clock-london').textContent = String(londonTime.getHours()).padStart(2, '0') + ':' + String(londonTime.getMinutes()).padStart(2, '0');
+document.getElementById('clock-tokyo').textContent = String(tokyoTime.getHours()).padStart(2, '0') + ':' + String(tokyoTime.getMinutes()).padStart(2, '0');
+}
+
+// ==================== APP MANAGEMENT ====================
+function openApp(appName) {
+const appScreen = document.getElementById('app-' + appName);
+if (appScreen) {
+appScreen.classList.remove('hidden');
+appScreen.classList.add('visible');
+currentApp = appName;
+
+if (appName === 'notes') renderNotes();
+}
+}
+
+function closeApp(appName) {
+const appScreen = document.getElementById('app-' + appName);
+if (appScreen) {
+appScreen.classList.remove('visible');
+appScreen.classList.add('hidden');
+currentApp = null;
+}
+}
+
+// ==================== NOTIFICATION PANEL ====================
+let notifStartY = 0;
+let notifOpen = false;
+
+document.getElementById('home-screen').addEventListener('touchstart', (e) => {
+if (currentApp) return;
+notifStartY = e.touches[0].clientY;
+});
+
+document.getElementById('home-screen').addEventListener('touchmove', (e) => {
+if (currentApp) return;
+const diff = e.touches[0].clientY - notifStartY;
+if (diff > 80 && !notifOpen && notifStartY < 80) {
+openNotifications();
+}
+});
+
+function openNotifications() {
+document.getElementById('notification-panel').classList.remove('hidden');
+document.getElementById('notification-panel').classList.add('visible');
+notifOpen = true;
+}
+
+function closeNotifications() {
+document.getElementById('notification-panel').classList.remove('visible');
+document.getElementById('notification-panel').classList.add('hidden');
+notifOpen = false;
+}
+
+// ==================== QUICK TOGGLES ====================
+function toggleQuick(name) {
+quickToggles[name] = !quickToggles[name];
+const el = document.getElementById('toggle-' + name);
+const svg = el.querySelector('svg');
+if (quickToggles[name]) {
+svg.setAttribute('fill', '#818cf8');
+} else {
+svg.setAttribute('fill', 'rgba(255,255,255,0.4)');
+}
+}
+
+// ==================== SETTINGS ====================
+function toggleSetting(item) {
+const toggle = item.querySelector('.toggle');
+if (toggle) {
+toggle.classList.toggle('active');
+}
+}
+
+function showSettingsPage(page) {
+document.getElementById('settings-main').style.display = 'none';
+document.getElementById('settings-' + page).style.display = 'block';
+}
+
+function hideSettingsPage() {
+document.getElementById('settings-main').style.display = 'block';
+document.getElementById('settings-about').style.display = 'none';
+}
+
+// ==================== NOTES ====================
+function renderNotes() {
+const container = document.getElementById('notes-list');
+container.innerHTML = '';
+
+notes.forEach((note, index) => {
+const div = document.createElement('div');
+div.className = 'note-card glass page-slide-enter';
+div.style.cssText = 'border-radius: 16px; padding: 16px; margin-bottom: 12px; animation-delay: ' + (index * 0.05) + 's;';
+div.innerHTML = `
+<div style="display: flex; align-items: start; gap: 12px;">
+<div style="width: 4px; height: 40px; border-radius: 2px; background: ${note.color}; flex-shrink: 0; margin-top: 2px;"></div>
+<div style="flex: 1; min-width: 0;">
+<div style="color: white; font-size: 15px; font-weight: 600; margin-bottom: 4px;">${note.title}</div>
+<div style="color: rgba(255,255,255,0.4); font-size: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${note.content.replace(/\n/g, ' ')}</div>
+<div style="color: rgba(255,255,255,0.3); font-size: 10px; margin-top: 8px;">${note.date}</div>
+</div>
+</div>
+`;
+div.onclick = () => editNote(note.id);
+container.appendChild(div);
+});
+}
+
+function editNote(id) {
+const note = notes.find(n => n.id === id);
+if (!note) return;
+currentNoteId = id;
+document.getElementById('notes-list').style.display = 'none';
+document.getElementById('note-editor').style.display = 'block';
+document.getElementById('note-title').value = note.title;
+document.getElementById('note-content').value = note.content;
+}
+
+function createNote() {
+const newNote = {
+id: Date.now(),
+title: 'New Note',
+content: '',
+date: 'Just now',
+color: ['#6366f1', '#f59e0b', '#ec4899', '#10b981', '#3b82f6'][Math.floor(Math.random() * 5)]
+};
+notes.unshift(newNote);
+editNote(newNote.id);
+}
+
+function backToNotes() {
+// Save current note
+if (currentNoteId) {
+const note = notes.find(n => n.id === currentNoteId);
+if (note) {
+note.title = document.getElementById('note-title').value || 'Untitled';
+note.content = document.getElementById('note-content').value;
+}
+}
+currentNoteId = null;
+document.getElementById('notes-list').style.display = 'block';
+document.getElementById('note-editor').style.display = 'none';
+renderNotes();
+}
+
+// ==================== CALCULATOR ====================
+function calcInput(value) {
+const display = document.getElementById('calc-display');
+const history = document.getElementById('calc-history');
+
+if (value === 'AC') {
+calcDisplay = '0';
+calcHistory = '';
+calcNewNumber = true;
+calcOperator = null;
+calcPrevValue = null;
+} else if (value === '±') {
+if (calcDisplay !== '0') {
+calcDisplay = calcDisplay.startsWith('-') ? calcDisplay.slice(1) : '-' + calcDisplay;
+}
+} else if (value === '%') {
+calcDisplay = String(parseFloat(calcDisplay) / 100);
+} else if (['+', '-', '×', '÷'].includes(value)) {
+if (calcOperator && !calcNewNumber) {
+calcPrevValue = calculate(calcPrevValue, parseFloat(calcDisplay), calcOperator);
+calcDisplay = String(calcPrevValue);
+} else {
+calcPrevValue = parseFloat(calcDisplay);
+}
+calcOperator = value;
+calcHistory = calcDisplay + ' ' + value;
+calcNewNumber = true;
+} else if (value === '=') {
+if (calcOperator && calcPrevValue !== null) {
+calcHistory = calcPrevValue + ' ' + calcOperator + ' ' + calcDisplay + ' =';
+calcDisplay = String(calculate(calcPrevValue, parseFloat(calcDisplay), calcOperator));
+calcOperator = null;
+calcPrevValue = null;
+calcNewNumber = true;
+}
+} else if (value === '.') {
+if (calcNewNumber) {
+calcDisplay = '0.';
+calcNewNumber = false;
+} else if (!calcDisplay.includes('.')) {
+calcDisplay += '.';
+}
+} else {
+if (calcNewNumber) {
+calcDisplay = value;
+calcNewNumber = false;
+} else {
+calcDisplay = calcDisplay === '0' ? value : calcDisplay + value;
+}
+}
+
+// Limit display length
+if (calcDisplay.length > 12) {
+calcDisplay = parseFloat(calcDisplay).toPrecision(10);
+}
+
+display.textContent = calcDisplay;
+history.textContent = calcHistory;
+}
+
+function calculate(a, b, op) {
+switch(op) {
+case '+': return a + b;
+case '-': return a - b;
+case '×': return a * b;
+case '÷': return b !== 0 ? a / b : 'Error';
+default: return b;
+}
+}
+
+// ==================== PHONE DIALER ====================
+function dialInput(num) {
+phoneNumber += num;
+document.getElementById('phone-display').textContent = formatPhone(phoneNumber);
+}
+
+function dialDelete() {
+phoneNumber = phoneNumber.slice(0, -1);
+document.getElementById('phone-display').textContent = formatPhone(phoneNumber);
+}
+
+function formatPhone(num) {
+if (num.length <= 3) return num;
+if (num.length <= 6) return num.slice(0, 3) + ' ' + num.slice(3);
+return num.slice(0, 3) + ' ' + num.slice(3, 6) + ' ' + num.slice(6, 10);
+}
+
+// ==================== CAMERA ====================
+function takePhoto() {
+const btn = document.getElementById('shutter-btn');
+btn.style.transform = 'scale(0.85)';
+btn.style.background = 'rgba(255,255,255,0.7)';
+
+// Flash effect
+const viewfinder = document.querySelector('.camera-viewfinder');
+const flash = document.createElement('div');
+flash.style.cssText = 'position: absolute; inset: 0; background: white; opacity: 0; transition: opacity 0.1s; z-index: 10;';
+viewfinder.appendChild(flash);
+
+setTimeout(() => {
+flash.style.opacity = '0.8';
+setTimeout(() => {
+flash.style.opacity = '0';
+setTimeout(() => flash.remove(), 200);
+}, 100);
+}, 50);
+
+setTimeout(() => {
+btn.style.transform = 'scale(1)';
+btn.style.background = 'white';
+}, 200);
+
+// Show focus ring
+const focusRing = document.getElementById('focus-ring');
+focusRing.style.opacity = '1';
+setTimeout(() => { focusRing.style.opacity = '0'; }, 800);
+}
+
+// ==================== WEATHER FORECAST ====================
+function renderForecast() {
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const icons = ['⛅', '🌧', '☀️', '⛈', '🌤', '☀️', '🌥'];
+const temps = [22, 18, 25, 16, 21, 24, 20];
+const lows = [14, 12, 16, 10, 13, 15, 12];
+const container = document.getElementById('forecast-days');
+container.innerHTML = '';
+
+const today = new Date().getDay();
+
+for (let i = 0; i < 7; i++) {
+const dayIndex = (today + i) % 7;
+const dayName = i === 0 ? 'Today' : days[dayIndex === 0 ? 6 : dayIndex - 1];
+
+const div = document.createElement('div');
+div.style.cssText = 'display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);';
+if (i === 6) div.style.borderBottom = 'none';
+
+div.innerHTML = `
+<div style="width: 80px; color: ${i === 0 ? 'white' : 'rgba(255,255,255,0.6)'}; font-size: 13px; font-weight: ${i === 0 ? '500' : '400'};">${dayName}</div>
+<div style="font-size: 22px; margin: 0 12px;">${icons[i]}</div>
+<div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+<span style="color: rgba(255,255,255,0.4); font-size: 13px; width: 30px; text-align: right;">${lows[i]}°</span>
+<div style="flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.1); position: relative; overflow: hidden;">
+<div style="position: absolute; left: ${((lows[i]-8)/22)*100}%; right: ${100-((temps[i]-8)/22)*100}%; height: 100%; border-radius: 2px; background: linear-gradient(90deg, #3b82f6, #f59e0b);"></div>
+</div>
+<span style="color: white; font-size: 13px; width: 30px;">${temps[i]}°</span>
+</div>
+`;
+container.appendChild(div);
+}
+}
+
+// ==================== CALC BUTTON EFFECTS ====================
+document.querySelectorAll('.calc-btn, .dialpad-btn').forEach(btn => {
+btn.addEventListener('mousedown', function() {
+this.style.opacity = '0.6';
+this.style.transform = 'scale(0.92)';
+});
+btn.addEventListener('mouseup', function() {
+this.style.opacity = '1';
+this.style.transform = 'scale(1)';
+});
+btn.addEventListener('mouseleave', function() {
+this.style.opacity = '1';
+this.style.transform = 'scale(1)';
+});
+btn.addEventListener('touchstart', function(e) {
+this.style.opacity = '0.6';
+this.style.transform = 'scale(0.92)';
+});
+btn.addEventListener('touchend', function() {
+this.style.opacity = '1';
+this.style.transform = 'scale(1)';
+});
+});
+
+// ==================== BACK TO HOME (swipe up from bottom) ====================
+document.addEventListener('touchstart', (e) => {
+if (!currentApp && currentScreen === 'home') return;
+const rect = document.getElementById('phone').getBoundingClientRect();
+const touchY = e.touches[0].clientY - rect.top;
+const phoneHeight = rect.height;
+
+if (touchY > phoneHeight - 40) {
+window._swipeHomeStartY = e.touches[0].clientY;
+}
+});
+
+document.addEventListener('touchend', (e) => {
+if (window._swipeHomeStartY) {
+const diff = window._swipeHomeStartY - e.changedTouches[0].clientY;
+if (diff > 60) {
+if (currentApp) {
+closeApp(currentApp);
+} else if (currentScreen === 'lock') {
+showScreen('home');
+}
+}
+window._swipeHomeStartY = null;
+}
+});
+
+// ==================== STATUS BAR CLICK FOR NOTIFICATIONS ====================
+document.querySelectorAll('.status-bar').forEach(bar => {
+bar.addEventListener('click', (e) => {
+if (currentScreen === 'home' && !currentApp) {
+const rect = bar.getBoundingClientRect();
+if (e.clientY < rect.bottom) {
+if (notifOpen) {
+closeNotifications();
+} else {
+openNotifications();
+}
+}
+}
+});
+});
+
+// ==================== INITIALIZE ====================
+function init() {
+updateTime();
+setInterval(updateTime, 1000);
+renderForecast();
+bootSequence();
+}
+
+init();
+</script>
+
+</body>
+</html>
+```
