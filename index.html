@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>AgenOS — Fullscreen</title>
+<title>AgenOS 4.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,15 +13,44 @@
     --accent-2:#3b6bf6;
     --bg-deep:#050509;
     --bg-surface:#0d0d17;
+    --bg-elevated:#1c1c22;
+    --bg-grouped:#0a0a12;
     --glass:rgba(255,255,255,0.055);
     --glass-strong:rgba(255,255,255,0.09);
     --glass-border:rgba(255,255,255,0.11);
     --text-1:#f4f4f9;
     --text-2:#9696ab;
     --text-3:#5e5e72;
+    --separator:rgba(255,255,255,0.08);
     --icon-tint-color: #8b5cf6;
     --kb-height: 280px;
+    --cc-blur: 30px;
   }
+
+  /* Light Mode */
+  body.light-mode{
+    --bg-deep:#f2f2f7;
+    --bg-surface:#ffffff;
+    --bg-elevated:#ffffff;
+    --bg-grouped:#f2f2f7;
+    --glass:rgba(255,255,255,0.7);
+    --glass-strong:rgba(255,255,255,0.85);
+    --glass-border:rgba(0,0,0,0.08);
+    --text-1:#000000;
+    --text-2:#6e6e73;
+    --text-3:#8e8e93;
+    --separator:rgba(0,0,0,0.08);
+  }
+  body.light-mode .statusbar-slot svg *,
+  body.light-mode .statusbar-slot svg path{fill:#000 !important;stroke:#000 !important;}
+  body.light-mode .statusbar-slot svg rect{stroke:#000 !important;fill:#000 !important;}
+  body.light-mode .statusbar-slot span{color:#000;}
+  body.light-mode #lock-screen .statusbar svg *,
+  body.light-mode #lock-screen .statusbar span{fill:#fff !important;stroke:#fff !important;color:#fff !important;}
+  body.light-mode .home-indicator{background:rgba(0,0,0,0.6);}
+  body.light-mode .app-label{color:#000;text-shadow:none;}
+  body.light-mode #dynamic-island{background:#000;}
+
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;margin:0;padding:0;overflow:hidden;}
   body{
@@ -33,6 +62,13 @@
     color:var(--text-1);
     user-select:none;
     overscroll-behavior:none;
+    transition:background .4s ease, color .3s ease;
+  }
+  body.light-mode{
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, #e0e0f0 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 100% 100%, #d0d8f0 0%, transparent 55%),
+      var(--bg-deep);
   }
   .font-display{font-family:'Space Grotesk',sans-serif;}
   ::-webkit-scrollbar{display:none;}
@@ -75,7 +111,7 @@
   .accent-grad{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));}
   .accent-text{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
 
-  /* ---------- App Icon ---------- */
+  /* App Icon */
   .app-icon{
     width:58px;height:58px;border-radius:16px;
     display:flex;align-items:center;justify-content:center;
@@ -96,7 +132,7 @@
   .icon-clear .app-icon{ background: rgba(255,255,255,0.12) !important; backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.25); }
   .icon-clear .app-icon svg *{fill: #fff !important; stroke: #fff !important;}
 
-  /* ---------- Draggable App ---------- */
+  /* Draggable App */
   .app-btn{
     display:flex;flex-direction:column;align-items:center;gap:6px;
     position:relative;
@@ -105,35 +141,20 @@
     transition:transform .2s cubic-bezier(.34,1.56,.64,1);
     will-change:transform;
   }
-  .app-btn.dragging{
-    z-index:10000;
-    transition:none;
-    cursor:grabbing;
-  }
+  .app-btn.dragging{ z-index:10000; transition:none; cursor:grabbing; }
   .app-btn.dragging .app-icon{
     transform:scale(1.18);
     box-shadow:0 20px 40px -10px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.15) inset;
     filter:brightness(1.08);
   }
   .app-btn.dragging .app-label{opacity:0;}
-  .app-btn.wiggle{
-    animation:wiggle .35s ease-in-out infinite alternate;
-  }
+  .app-btn.wiggle{ animation:wiggle .35s ease-in-out infinite alternate; }
   .app-btn.wiggle:nth-child(2n){animation-delay:.1s;}
   .app-btn.wiggle:nth-child(3n){animation-delay:.2s;}
-  @keyframes wiggle{
-    0%{transform:rotate(-1.2deg) scale(1);}
-    100%{transform:rotate(1.2deg) scale(1);}
-  }
-  .app-btn.placeholder{
-    opacity:0;
-    pointer-events:none;
-  }
+  @keyframes wiggle{ 0%{transform:rotate(-1.2deg) scale(1);} 100%{transform:rotate(1.2deg) scale(1);} }
+
   .drag-ghost{
-    position:fixed;
-    z-index:99999;
-    pointer-events:none;
-    transition:none;
+    position:fixed;z-index:99999;pointer-events:none;transition:none;
     filter:drop-shadow(0 20px 30px rgba(0,0,0,0.6));
     transform-origin:center;
   }
@@ -150,6 +171,7 @@
     display:flex;flex-direction:column;
     background:var(--bg-surface);
     z-index:50;
+    color:var(--text-1);
   }
   .app-window.open{transform:translateY(0);opacity:1;pointer-events:auto;}
   #home-layer.dimmed{transform:scale(0.92);opacity:0;}
@@ -158,9 +180,9 @@
   .app-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:40px;}
 
   .row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;}
-  .divider{height:1px;background:rgba(255,255,255,0.07);margin:0 16px;}
+  .divider{height:1px;background:var(--separator);margin:0 16px;}
 
-  .toggle{width:46px;height:27px;border-radius:14px;background:rgba(255,255,255,0.14);position:relative;transition:background .25s;flex-shrink:0;}
+  .toggle{width:46px;height:27px;border-radius:14px;background:rgba(128,128,128,0.3);position:relative;transition:background .25s;flex-shrink:0;}
   .toggle.on{background:var(--accent-1);}
   .toggle::after{content:'';position:absolute;top:2.5px;left:2.5px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.3,1.3,.5,1);box-shadow:0 1px 3px rgba(0,0,0,0.4);}
   .toggle.on::after{transform:translateX(19px);}
@@ -194,38 +216,126 @@
   .wp-swatch{width:100%;aspect-ratio:9/16;border-radius:12px;cursor:pointer;position:relative;box-shadow:0 4px 10px -4px rgba(0,0,0,.5);}
   .wp-swatch.selected::after{content:'';position:absolute;inset:0;border-radius:12px;border:2.5px solid var(--accent-1);}
 
-  input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);}
+  input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(128,128,128,0.3);}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);}
 
-  /* Keyboard */
   #keyboard{
     position:absolute;bottom:0;left:0;right:0;
     height:var(--kb-height);
     background:rgba(28,28,36,0.96);
     backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border-top:1px solid rgba(255,255,255,0.1);
+    border-top:1px solid var(--separator);
     transform:translateY(100%);
     transition:transform .3s cubic-bezier(.32,.72,0,1);
     z-index:5000;
     padding:8px 4px max(8px, env(safe-area-inset-bottom));
     display:flex;flex-direction:column;gap:8px;
   }
+  body.light-mode #keyboard{background:rgba(240,240,245,0.97);}
   #keyboard.show{transform:translateY(0);}
   .kb-row{display:flex;justify-content:center;gap:6px;flex:1;}
-  .kb-key{flex:1;max-width:44px;background:rgba(255,255,255,0.12);border:none;border-radius:6px;color:#fff;font-size:20px;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(0,0,0,0.4);transition:background .1s;cursor:pointer;}
-  .kb-key:active{background:rgba(255,255,255,0.3);}
-  .kb-key.special{background:rgba(255,255,255,0.08);font-size:14px;max-width:60px;}
+  .kb-key{flex:1;max-width:44px;background:rgba(128,128,128,0.25);border:none;border-radius:6px;color:var(--text-1);font-size:20px;font-weight:400;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 0 rgba(0,0,0,0.4);transition:background .1s;cursor:pointer;}
+  .kb-key:active{background:rgba(128,128,128,0.4);}
+  .kb-key.special{background:rgba(128,128,128,0.18);font-size:14px;max-width:60px;}
   .kb-key.wide{max-width:90px;}
   .kb-key.space{max-width:200px;flex:3;}
-  .kb-key.accent{background:var(--accent-1);}
+  .kb-key.accent{background:var(--accent-1);color:#fff;}
   .kb-suggestions{display:flex;gap:8px;padding:0 8px;height:38px;align-items:center;}
-  .kb-suggestion{flex:1;text-align:center;padding:6px 4px;background:rgba(255,255,255,0.08);border-radius:6px;font-size:14px;color:#fff;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .kb-suggestion:active{background:rgba(255,255,255,0.2);}
+  .kb-suggestion{flex:1;text-align:center;padding:6px 4px;background:rgba(128,128,128,0.15);border-radius:6px;font-size:14px;color:var(--text-1);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .kb-suggestion:active{background:rgba(128,128,128,0.3);}
 
   #camera-video{width:100%;height:100%;object-fit:cover;background:#000;display:block;}
 
   .store-card{border-radius:20px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);display:flex;gap:14px;align-items:center;margin-bottom:12px;}
   .store-icon{width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;}
+
+  /* Control Center */
+  #control-center{
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    z-index:15000;
+    background:rgba(0,0,0,0.5);
+    backdrop-filter:blur(var(--cc-blur));-webkit-backdrop-filter:blur(var(--cc-blur));
+    transform:translateY(-100%);
+    opacity:0;pointer-events:none;
+    transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;
+    padding:60px 16px 40px;
+    overflow-y:auto;
+    touch-action:pan-y;
+  }
+  body.light-mode #control-center{background:rgba(255,255,255,0.6);}
+  #control-center.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+
+  .cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+  .cc-tile{
+    background:var(--glass-strong);
+    border:1px solid var(--glass-border);
+    border-radius:22px;
+    padding:14px;
+    backdrop-filter:blur(20px);
+    display:flex;flex-direction:column;justify-content:space-between;
+    min-height:80px;
+    cursor:pointer;
+    transition:transform .15s ease, background .2s ease;
+  }
+  .cc-tile:active{transform:scale(0.96);}
+  .cc-tile.on{background:var(--accent-1);border-color:transparent;}
+  .cc-tile.on .cc-icon{background:rgba(255,255,255,0.25);}
+  .cc-icon{width:32px;height:32px;border-radius:50%;background:rgba(128,128,128,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .cc-tile .cc-label{font-size:12px;font-weight:600;margin-top:8px;opacity:.9;}
+  .cc-tile .cc-sub{font-size:11px;opacity:.7;}
+
+  .cc-slider{
+    background:var(--glass-strong);
+    border:1px solid var(--glass-border);
+    border-radius:22px;
+    padding:16px;
+    backdrop-filter:blur(20px);
+    margin-bottom:12px;
+    position:relative;
+    overflow:hidden;
+    height:90px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .cc-slider-label{font-size:12px;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;}
+  .cc-slider input{width:100%;}
+  .cc-slider-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:20px;pointer-events:none;opacity:.8;}
+  .cc-slider-inner{padding-left:32px;}
+
+  .cc-row{display:flex;gap:12px;margin-bottom:12px;}
+  .cc-small-tile{
+    flex:1;background:var(--glass-strong);border:1px solid var(--glass-border);
+    border-radius:22px;padding:16px;backdrop-filter:blur(20px);
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+    font-size:28px;cursor:pointer;transition:transform .15s ease;
+  }
+  .cc-small-tile:active{transform:scale(.94);}
+  .cc-small-tile.on{background:var(--accent-1);}
+
+  /* Notification Center */
+  #notification-center{
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    z-index:14000;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
+    transform:translateX(-100%);
+    opacity:0;pointer-events:none;
+    transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;
+    padding:60px 16px 40px;
+    overflow-y:auto;
+  }
+  #notification-center.show{transform:translateX(0);opacity:1;pointer-events:auto;}
+  .notif-card{
+    background:var(--glass-strong);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    padding:14px 16px;
+    backdrop-filter:blur(20px);
+    margin-bottom:10px;
+    display:flex;gap:12px;
+    animation:notifIn .4s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes notifIn{from{opacity:0;transform:translateY(-20px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
+  .notif-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;}
 
   /* Permission Modal */
   .permission-modal{
@@ -237,13 +347,13 @@
   }
   .permission-modal.show{display:flex;}
   .permission-card{
-    background:#1c1c22;
+    background:var(--bg-elevated);
     border-radius:24px;
     padding:26px 24px;
     max-width:340px;width:100%;
     text-align:center;
     box-shadow:0 30px 60px -20px rgba(0,0,0,0.9);
-    border:1px solid rgba(255,255,255,0.1);
+    border:1px solid var(--glass-border);
     animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
   }
   @keyframes modalIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
@@ -252,8 +362,66 @@
   .permission-desc{font-size:14px;color:var(--text-2);line-height:1.5;margin-bottom:20px;}
   .permission-btns{display:flex;gap:10px;}
   .permission-btn{flex:1;padding:12px;border-radius:14px;border:none;font-weight:600;font-size:15px;cursor:pointer;}
-  .permission-btn.deny{background:rgba(255,255,255,0.1);color:#fff;}
+  .permission-btn.deny{background:rgba(128,128,128,0.2);color:var(--text-1);}
   .permission-btn.allow{background:var(--accent-1);color:#fff;}
+
+  /* Home Screen Pages */
+  #home-scroll{
+    flex:1;
+    overflow-y:auto;
+    overflow-x:hidden;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+    position:relative;
+  }
+  #home-pages{
+    display:flex;
+    flex-direction:row;
+    height:100%;
+    transition:transform .4s cubic-bezier(.32,.72,0,1);
+    touch-action:pan-x;
+  }
+  .home-page{
+    width:100vw;
+    flex-shrink:0;
+    padding:20px 18px 20px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    box-sizing:border-box;
+  }
+  .home-page .page-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    row-gap:22px;
+    justify-items:center;
+  }
+
+  /* Page dots */
+  #page-dots{
+    display:flex;justify-content:center;gap:6px;
+    padding:6px 0 2px;
+    flex-shrink:0;
+  }
+  .page-dot{
+    width:7px;height:7px;border-radius:50%;
+    background:rgba(255,255,255,0.35);
+    transition:background .2s, transform .2s;
+  }
+  .page-dot.active{background:#fff;transform:scale(1.1);}
+  body.light-mode .page-dot{background:rgba(0,0,0,0.25);}
+  body.light-mode .page-dot.active{background:#000;}
+
+  /* Update screen */
+  .update-progress-ring{
+    transform:rotate(-90deg);
+  }
+  .update-spinner{
+    width:60px;height:60px;border-radius:50%;
+    border:3px solid rgba(128,128,128,0.2);
+    border-top-color:var(--accent-1);
+    animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
 
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
@@ -265,6 +433,7 @@
 <div id="screen">
   <div id="dynamic-island"></div>
 
+  <!-- BOOT -->
   <div id="boot-screen" class="screen-layer">
     <div class="pulse-ring"></div>
     <div class="pulse-ring" style="animation-delay:.6s;"></div>
@@ -272,6 +441,7 @@
     <div class="boot-bar-track"><div class="boot-bar-fill" id="boot-fill"></div></div>
   </div>
 
+  <!-- LOCK -->
   <div id="lock-screen" class="screen-layer wallpaper" style="opacity:0;">
     <div class="statusbar" style="position:absolute;top:0;left:0;right:0;" id="statusbar-lock"></div>
     <div class="lock-time" id="lock-time">9:41</div>
@@ -284,6 +454,7 @@
     <div class="home-indicator" id="lock-drag"></div>
   </div>
 
+  <!-- HOME -->
   <div id="home-layer" class="screen-layer wallpaper">
     <div class="statusbar statusbar-slot"></div>
 
@@ -298,20 +469,77 @@
       </div>
     </div>
 
-    <div class="app-scroll" style="padding:20px 18px 6px;" id="home-scroll">
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);row-gap:22px;justify-items:center;" id="app-grid"></div>
-      <div style="height:60px;"></div>
+    <div id="home-scroll">
+      <div id="home-pages">
+        <!-- Pages rendered by JS -->
+      </div>
     </div>
 
-    <div style="flex:1;"></div>
+    <div id="page-dots"></div>
 
-    <div style="padding:10px 16px 34px;">
+    <div style="padding:6px 16px 30px;">
       <div class="glass-strong" style="border-radius:28px;padding:12px 14px;display:flex;justify-content:space-between;" id="dock"></div>
     </div>
     <div class="home-indicator" onclick="AgenOS.goHome()"></div>
   </div>
 
+  <!-- APP CONTAINER -->
   <div id="app-container"></div>
+
+  <!-- CONTROL CENTER -->
+  <div id="control-center">
+    <div style="max-width:500px;margin:0 auto;">
+      <div class="cc-grid">
+        <div class="cc-tile" id="cc-wifi" onclick="AgenOS.ccToggle('wifi')">
+          <div class="cc-icon">📶</div>
+          <div><div class="cc-label">WLAN</div><div class="cc-sub" id="cc-wifi-sub">Agen_Home</div></div>
+        </div>
+        <div class="cc-tile" id="cc-bt" onclick="AgenOS.ccToggle('bluetooth')">
+          <div class="cc-icon">ᛒ</div>
+          <div><div class="cc-label">Bluetooth</div><div class="cc-sub" id="cc-bt-sub">Ein</div></div>
+        </div>
+        <div class="cc-tile" id="cc-airplane" onclick="AgenOS.ccToggle('airplane')">
+          <div class="cc-icon">✈</div>
+          <div><div class="cc-label">Flugmodus</div><div class="cc-sub" id="cc-airplane-sub">Aus</div></div>
+        </div>
+        <div class="cc-tile" id="cc-dnd" onclick="AgenOS.ccToggle('dnd')">
+          <div class="cc-icon">🌙</div>
+          <div><div class="cc-label">Nicht stören</div><div class="cc-sub" id="cc-dnd-sub">Aus</div></div>
+        </div>
+      </div>
+
+      <div class="cc-slider">
+        <div class="cc-slider-icon">☀️</div>
+        <div class="cc-slider-inner">
+          <div class="cc-slider-label"><span>Helligkeit</span><span id="cc-bright-val">80%</span></div>
+          <input type="range" min="10" max="100" value="80" id="cc-bright" oninput="AgenOS.setBrightness(this.value)">
+        </div>
+      </div>
+
+      <div class="cc-slider">
+        <div class="cc-slider-icon">🔊</div>
+        <div class="cc-slider-inner">
+          <div class="cc-slider-label"><span>Lautstärke</span><span id="cc-vol-val">65%</span></div>
+          <input type="range" min="0" max="100" value="65" id="cc-vol" oninput="AgenOS.setVolume(this.value)">
+        </div>
+      </div>
+
+      <div class="cc-row">
+        <div class="cc-small-tile" id="cc-flash" onclick="AgenOS.ccToggle('flashlight')">🔦</div>
+        <div class="cc-small-tile" id="cc-camera" onclick="AgenOS.ccOpenCamera()">📷</div>
+        <div class="cc-small-tile" id="cc-darkmode" onclick="AgenOS.ccToggleDarkMode()">🌓</div>
+        <div class="cc-small-tile" id="cc-lock" onclick="AgenOS.lockScreen()">🔒</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION CENTER -->
+  <div id="notification-center">
+    <div style="max-width:500px;margin:0 auto;">
+      <div style="text-align:center;color:var(--text-2);font-size:13px;font-weight:600;margin-bottom:16px;letter-spacing:.5px;">MITTEILUNGEN</div>
+      <div id="notif-list"></div>
+    </div>
+  </div>
 </div>
 
 <!-- Permission Modal -->
@@ -351,7 +579,7 @@
 
 <script>
 /* =========================================================================
-   AgenOS 3.0 — Drag & Drop + More Apps + Real Camera
+   AgenOS 4.0 — Professional Edition
    ========================================================================= */
 const AgenOS = (function(){
 
@@ -360,17 +588,21 @@ const AgenOS = (function(){
     activeApp:null,
     accent:{a1:'#8b5cf6', a2:'#3b6bf6'},
     wallpaper:'default',
+    darkMode:true,
+    brightness:80,
+    volume:65,
     settings:{
       wifi:true,bluetooth:true,airplane:false,dnd:false,saver:false,location:true,
       faceId:true, trueTone:true, nightShift:false, autoBrightness:true,
       keyboardHaptics:true, keyboardClick:true, predictive:true,
       iconStyle:'color',
       iconTintColor:'#8b5cf6',
-      cameraPermission: null // null = unknown, 'granted', 'denied'
+      cameraPermission: null,
+      softwareUpdate: 'pending' // pending | downloading | ready | installed
     },
     battery:87,
     notes:[
-      {id:1,title:'Launch checklist',body:'AgenOS 3.0 Build abschließen.\nBoot-Animation polieren.\nAgenPhone 1 Vorbestellungen versenden.'},
+      {id:1,title:'Launch checklist',body:'AgenOS 4.0 Build abschließen.\nBoot-Animation polieren.\nAgenPhone 1 Vorbestellungen versenden.'},
       {id:2,title:'Ideen',body:'Matte Black Finish für die zweite Farbvariante.\nAgen Cloud Sync für Notes.'}
     ],
     photos:[],
@@ -386,19 +618,24 @@ const AgenOS = (function(){
     playing:false,
     threads:{
       'Mira': [{me:false,text:'Hey — sind die AgenPhone 1 Einheiten schon versendet?'},{me:true,text:'Ja, sind heute raus 🚀'}],
-      'Agen Support': [{me:false,text:'Dein AgenPhone 1 ist jetzt auf AgenOS 3.0 aktiv.'}],
+      'Agen Support': [{me:false,text:'Dein AgenPhone 1 ist jetzt auf AgenOS 4.0 aktiv.'}],
       'Theo': [{me:false,text:'Das Matte Black Finish ist unglaublich.'}]
     },
     activeThread:null,
     cameraStream:null,
     cameraFacing:'environment',
-    iconOrder:null, // saved order of app IDs
-    iconStyle:'color',
+    pageCount:2,
+    currentPage:0,
+    notifications:[
+      {icon:'💬', color:'#34d399', title:'Mira', body:'Ja, sind heute raus 🚀', time:'jetzt'},
+      {icon:'📦', color:'#3b82f6', title:'Agen Store', body:'Dein AgenPhone 1 ist unterwegs', time:'vor 2 Min'},
+      {icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 4.1 ist verfügbar', time:'vor 1 Std'},
+    ],
     alarm: { enabled:false, time:'07:30' },
     health: { steps:6248, goal:10000, calories:412, distance:4.7, heartRate:72 },
     compass: { heading:0 },
     timer: { running:false, remaining:0, interval:null },
-    flashlight: { on:false, stream:null },
+    flashlight: { on:false },
   };
 
   const wallpapers = {
@@ -408,7 +645,9 @@ const AgenOS = (function(){
     void:'radial-gradient(ellipse 90% 60% at 50% 0%, #1e1e2e 0%, transparent 60%), linear-gradient(180deg,#0a0a0d 0%,#020203 100%)',
     ember:'radial-gradient(ellipse 110% 70% at 15% 0%, #f9731633 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #8b5cf6 0%, transparent 50%), linear-gradient(180deg,#160a08 0%,#050508 100%)',
     ocean:'radial-gradient(ellipse 110% 70% at 20% 0%, #0ea5e933 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #3b82f6 0%, transparent 50%), linear-gradient(180deg,#04121f 0%,#050508 100%)',
-    forest:'radial-gradient(ellipse 110% 70% at 20% 0%, #22c55e33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #059669 0%, transparent 50%), linear-gradient(180deg,#04140a 0%,#050508 100%)'
+    forest:'radial-gradient(ellipse 110% 70% at 20% 0%, #22c55e33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #059669 0%, transparent 50%), linear-gradient(180deg,#04140a 0%,#050508 100%)',
+    light:'linear-gradient(180deg,#e8ecf5 0%,#d8dff0 100%)',
+    sunset:'radial-gradient(ellipse 120% 70% at 50% 0%, #ff9a56 0%, transparent 60%), radial-gradient(ellipse 100% 60% at 20% 30%, #ff6b9d 0%, transparent 50%), linear-gradient(180deg,#2a0f1e 0%,#050508 100%)',
   };
 
   const ICONS = {
@@ -429,9 +668,8 @@ const AgenOS = (function(){
     health:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6-8 11-8 11Z" fill="#ef4444"/><path d="M12 9v6M9 12h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>`,
     currency:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#22c55e"/><text x="12" y="16" font-size="11" font-weight="700" fill="#fff" text-anchor="middle" font-family="Inter">€$</text></svg>`,
     translate:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#3b82f6"/><text x="8" y="16" font-size="9" fill="#fff" font-family="Inter">A</text><text x="14" y="16" font-size="9" fill="#fff" font-family="Inter">文</text></svg>`,
-    flashlight:`<svg viewBox="0 0 24 24" fill="none"><rect x="8" y="3" width="8" height="6" rx="1.5" fill="#fbbf24"/><path d="M9 9h6l-1 12H10L9 9Z" fill="#fbbf24"/><path d="M12 3v6" stroke="#fff" stroke-width="1"/></svg>`,
-    compass:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#1c1c22"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.2"/><path d="M12 5l2 7-2 7-2-7 2-7Z" fill="#ef4444"/><text x="12" y="4" font-size="4" fill="#fff" text-anchor="middle" font-family="Inter">N</text></svg>`,
-    measure:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="9" width="20" height="6" rx="1.5" fill="#f59e0b"/><path d="M6 9v3M10 9v3M14 9v3M18 9v3" stroke="#111" stroke-width="1.2"/></svg>`,
+    flashlight:`<svg viewBox="0 0 24 24" fill="none"><rect x="8" y="3" width="8" height="6" rx="1.5" fill="#fbbf24"/><path d="M9 9h6l-1 12H10L9 9Z" fill="#fbbf24"/></svg>`,
+    compass:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#1c1c22"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.2"/><path d="M12 5l2 7-2 7-2-7 2-7Z" fill="#ef4444"/></svg>`,
     timer:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" fill="#fff"/><path d="M12 9v4l2.5 2" stroke="#111" stroke-width="1.8" stroke-linecap="round"/><rect x="10" y="3" width="4" height="2" rx="1" fill="#fff"/></svg>`,
     voice:`<svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3" fill="#fff"/><path d="M5 12a7 7 0 0 0 14 0M12 19v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>`,
   };
@@ -452,7 +690,6 @@ const AgenOS = (function(){
     {id:'translate', name:'Übersetzer', bg:'linear-gradient(160deg,#3b82f6,#1d4ed8)'},
     {id:'flashlight', name:'Taschenlampe', bg:'linear-gradient(160deg,#fbbf24,#d97706)'},
     {id:'compass', name:'Kompass', bg:'linear-gradient(160deg,#1c1c22,#0a0a0e)'},
-    {id:'measure', name:'Maßband', bg:'linear-gradient(160deg,#f59e0b,#b45309)'},
     {id:'timer', name:'Timer', bg:'linear-gradient(160deg,#a855f7,#7c3aed)'},
     {id:'voice', name:'Sprachmemo', bg:'linear-gradient(160deg,#ef4444,#991b1b)'},
   ];
@@ -483,23 +720,23 @@ const AgenOS = (function(){
     translate:{title:'Übersetzer', render:()=>renderTranslate()},
     flashlight:{title:'Taschenlampe', render:()=>renderFlashlight()},
     compass:{title:'Kompass', render:()=>renderCompass()},
-    measure:{title:'Maßband', render:()=>renderMeasure()},
     timer:{title:'Timer', render:()=>renderTimerApp()},
     voice:{title:'Sprachmemo', render:()=>renderVoice()},
   };
 
-  /* ---------- Clock ---------- */
+  /* ---------- Helpers ---------- */
   function fmtTime(d){
     let h=d.getHours(), m=d.getMinutes();
     const ap = h>=12?'PM':'AM'; h = h%12; if(h===0)h=12;
     return `${h}:${m<10?'0':''}${m}`;
   }
   function statusBarHTML(){
-    return `<span>${fmtTime(new Date())}</span>
+    const color = state.darkMode ? '#fff' : '#000';
+    return `<span style="color:${color}">${fmtTime(new Date())}</span>
       <div style="display:flex;align-items:center;gap:6px;">
-        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 10.2a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z" fill="#fff"/><path d="M8.5 6.4c1.6 0 3 .6 4.1 1.6l1.2-1.3A9 9 0 0 0 3.2 6.7l1.2 1.3a6 6 0 0 1 4.1-1.6Z" fill="#fff"/><path d="M8.5 2.5c2.8 0 5.4 1.1 7.3 3l1.2-1.3A12 12 0 0 0 0 4.2l1.2 1.3a10.3 10.3 0 0 1 7.3-3Z" fill="#fff" opacity=".55"/></svg>
-        <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="2.5" stroke="#fff" stroke-opacity=".6"/><rect x="2.5" y="2.5" width="${(state.battery/100*16).toFixed(0)}" height="7" rx="1.5" fill="#fff"/><rect x="21.5" y="4" width="1.6" height="4" rx="1" fill="#fff" opacity=".6"/></svg>
-        <span style="font-size:12px;font-weight:600;">${state.battery}%</span>
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 10.2a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z" fill="${color}"/><path d="M8.5 6.4c1.6 0 3 .6 4.1 1.6l1.2-1.3A9 9 0 0 0 3.2 6.7l1.2 1.3a6 6 0 0 1 4.1-1.6Z" fill="${color}"/><path d="M8.5 2.5c2.8 0 5.4 1.1 7.3 3l1.2-1.3A12 12 0 0 0 0 4.2l1.2 1.3a10.3 10.3 0 0 1 7.3-3Z" fill="${color}" opacity=".55"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="2.5" stroke="${color}" stroke-opacity=".6"/><rect x="2.5" y="2.5" width="${(state.battery/100*16).toFixed(0)}" height="7" rx="1.5" fill="${color}"/><rect x="21.5" y="4" width="1.6" height="4" rx="1" fill="${color}" opacity=".6"/></svg>
+        <span style="font-size:12px;font-weight:600;color:${color}">${state.battery}%</span>
       </div>`;
   }
   function tickClock(){
@@ -509,7 +746,6 @@ const AgenOS = (function(){
     const d = new Date();
     const lt = document.getElementById('lock-time'); if(lt) lt.textContent = fmtTime(d);
     const ld = document.getElementById('lock-date'); if(ld) ld.textContent = d.toLocaleDateString('de-DE',{weekday:'long',month:'long',day:'numeric'});
-    // Update clock app if open
     const ck = document.getElementById('live-clock'); if(ck) ck.textContent = fmtTime(d);
     const ckd = document.getElementById('live-clock-date'); if(ckd) ckd.textContent = d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
   }
@@ -527,7 +763,13 @@ const AgenOS = (function(){
     const ic = document.getElementById('widget-icon'); if(ic) ic.innerHTML = weatherIconSVG('Partly');
   }
 
-  /* ---------- Icon style ---------- */
+  /* ---------- Theme ---------- */
+  function applyTheme(){
+    document.body.classList.toggle('light-mode', !state.darkMode);
+    applyIconStyle();
+    // Update CC tiles
+    updateCCTiles();
+  }
   function applyIconStyle(){
     const root = document.documentElement;
     root.classList.remove('icon-tinted','icon-dark','icon-clear');
@@ -537,21 +779,92 @@ const AgenOS = (function(){
     root.style.setProperty('--icon-tint-color', state.settings.iconTintColor);
   }
 
-  /* ---------- Render Grid with Drag & Drop ---------- */
-  function getOrderedApps(){
-    if(state.iconOrder && state.iconOrder.length){
-      return state.iconOrder.map(id => ALL_APPS.find(a=>a.id===id)).filter(Boolean);
+  /* ---------- Home Screen Pages ---------- */
+  function buildHomePages(){
+    const pagesEl = document.getElementById('home-pages');
+    if(!pagesEl) return;
+    pagesEl.innerHTML = '';
+    const apps = ALL_APPS;
+    const perPage = 16;
+    const pageCount = Math.max(1, Math.ceil(apps.length / perPage));
+    state.pageCount = pageCount;
+
+    for(let p=0; p<pageCount; p++){
+      const page = document.createElement('div');
+      page.className = 'home-page';
+      const grid = document.createElement('div');
+      grid.className = 'page-grid';
+      const slice = apps.slice(p*perPage, (p+1)*perPage);
+      slice.forEach(a => grid.appendChild(iconEl(a)));
+      page.appendChild(grid);
+      pagesEl.appendChild(page);
     }
-    return [...ALL_APPS];
+    updatePageDots();
+    updateHomePageTransform();
+  }
+  function updatePageDots(){
+    const dotsEl = document.getElementById('page-dots');
+    if(!dotsEl) return;
+    dotsEl.innerHTML = '';
+    for(let i=0; i<state.pageCount; i++){
+      const dot = document.createElement('div');
+      dot.className = 'page-dot' + (i===state.currentPage?' active':'');
+      dot.onclick = ()=>{ state.currentPage = i; updateHomePageTransform(); updatePageDots(); };
+      dotsEl.appendChild(dot);
+    }
+  }
+  function updateHomePageTransform(){
+    const pagesEl = document.getElementById('home-pages');
+    if(!pagesEl) return;
+    pagesEl.style.transform = `translateX(${-state.currentPage * 100}vw)`;
+    const scroll = document.getElementById('home-scroll');
+    if(scroll) scroll.scrollTop = 0;
   }
 
-  function renderGrid(){
-    const grid = document.getElementById('app-grid');
-    if(!grid) return;
-    grid.innerHTML='';
-    const apps = getOrderedApps();
-    apps.forEach(a => grid.appendChild(iconEl(a,58)));
-    renderDock();
+  /* Swipe between pages */
+  let homeTouch = { startX:0, startY:0, active:false };
+  function setupHomeSwipe(){
+    const scroll = document.getElementById('home-scroll');
+    if(!scroll) return;
+    scroll.addEventListener('touchstart', e=>{
+      if(dragState.active) return;
+      homeTouch.startX = e.touches[0].clientX;
+      homeTouch.startY = e.touches[0].clientY;
+      homeTouch.active = true;
+    }, {passive:true});
+    scroll.addEventListener('touchend', e=>{
+      if(!homeTouch.active || dragState.active) return;
+      const dx = e.changedTouches[0].clientX - homeTouch.startX;
+      const dy = e.changedTouches[0].clientY - homeTouch.startY;
+      if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){
+        if(dx < 0 && state.currentPage < state.pageCount-1){ state.currentPage++; }
+        else if(dx > 0 && state.currentPage > 0){ state.currentPage--; }
+        updateHomePageTransform(); updatePageDots();
+      }
+      homeTouch.active = false;
+    });
+    // Mouse drag for desktop
+    let mouseDown = false, mStartX = 0;
+    scroll.addEventListener('mousedown', e=>{ mouseDown = true; mStartX = e.clientX; });
+    scroll.addEventListener('mouseup', e=>{
+      if(!mouseDown) return; mouseDown = false;
+      const dx = e.clientX - mStartX;
+      if(Math.abs(dx) > 80){
+        if(dx < 0 && state.currentPage < state.pageCount-1){ state.currentPage++; }
+        else if(dx > 0 && state.currentPage > 0){ state.currentPage--; }
+        updateHomePageTransform(); updatePageDots();
+      }
+    });
+  }
+
+  /* ---------- Icon / Drag ---------- */
+  function iconEl(app){
+    const div = document.createElement('div');
+    div.className='app-btn';
+    div.dataset.appId = app.id;
+    div.innerHTML = `<div class="app-icon" style="background:${app.bg};width:58px;height:58px;">${ICONS[app.id]||''}</div><div class="app-label">${app.name}</div>`;
+    attachDragHandlers(div, app.id);
+    return div;
   }
   function renderDock(){
     const dock = document.getElementById('dock');
@@ -565,41 +878,25 @@ const AgenOS = (function(){
       dock.appendChild(wrap);
     });
   }
-  function iconEl(app, size){
-    const div = document.createElement('div');
-    div.className='app-btn';
-    div.dataset.appId = app.id;
-    div.innerHTML = `<div class="app-icon" style="background:${app.bg};width:${size}px;height:${size}px;">${ICONS[app.id]||''}</div><div class="app-label">${app.name}</div>`;
-    attachDragHandlers(div, app.id);
-    return div;
-  }
 
-  /* ---------- Drag & Drop Logic ---------- */
   let dragState = {
-    active:false,
-    ghost:null,
-    sourceEl:null,
-    appId:null,
-    offsetX:0, offsetY:0,
-    longPressTimer:null,
-    startX:0, startY:0,
-    isEditing:false,
+    active:false, ghost:null, sourceEl:null, appId:null,
+    offsetX:0, offsetY:0, longPressTimer:null,
+    startX:0, startY:0, isEditing:false, moved:false
   };
 
   function attachDragHandlers(el, appId){
     el.addEventListener('pointerdown', (e)=> onPointerDown(e, el, appId));
   }
-
   function onPointerDown(e, el, appId){
-    // Don't drag if clicking a button inside etc.
     if(e.button !== undefined && e.button !== 0) return;
     dragState.startX = e.clientX;
     dragState.startY = e.clientY;
     dragState.sourceEl = el;
     dragState.appId = appId;
     dragState.active = false;
+    dragState.moved = false;
 
-    // Long-press to start drag (500ms)
     dragState.longPressTimer = setTimeout(()=>{
       startDrag(el, appId, e.clientX, e.clientY);
     }, 450);
@@ -611,19 +908,14 @@ const AgenOS = (function(){
     window.addEventListener('pointercancel', upHandler);
     el._cleanup = ()=>{ window.removeEventListener('pointermove', moveHandler); window.removeEventListener('pointerup', upHandler); window.removeEventListener('pointercancel', upHandler); };
   }
-
   function startDrag(el, appId, x, y){
     if(dragState.active) return;
     dragState.active = true;
     clearTimeout(dragState.longPressTimer);
-    // Haptic
     if(navigator.vibrate) navigator.vibrate(10);
-
     const rect = el.getBoundingClientRect();
     dragState.offsetX = x - rect.left;
     dragState.offsetY = y - rect.top;
-
-    // Create ghost
     const ghost = el.cloneNode(true);
     ghost.className = 'drag-ghost';
     ghost.style.left = (x - dragState.offsetX) + 'px';
@@ -631,28 +923,24 @@ const AgenOS = (function(){
     ghost.style.width = rect.width + 'px';
     document.body.appendChild(ghost);
     dragState.ghost = ghost;
-
     el.classList.add('dragging');
-    document.body.classList.add('dragging-active');
     enterEditMode();
   }
-
   function enterEditMode(){
     if(dragState.isEditing) return;
     dragState.isEditing = true;
-    document.querySelectorAll('#app-grid .app-btn').forEach(b=> b.classList.add('wiggle'));
+    document.querySelectorAll('.app-btn').forEach(b=> b.classList.add('wiggle'));
   }
   function exitEditMode(){
     dragState.isEditing = false;
-    document.querySelectorAll('#app-grid .app-btn').forEach(b=> b.classList.remove('wiggle'));
+    document.querySelectorAll('.app-btn').forEach(b=> b.classList.remove('wiggle'));
   }
-
   function onPointerMove(e){
     if(!dragState.active){
-      // Cancel long-press if moved too much
       const dx = e.clientX - dragState.startX;
       const dy = e.clientY - dragState.startY;
       if(Math.hypot(dx,dy) > 8){
+        dragState.moved = true;
         clearTimeout(dragState.longPressTimer);
       }
       return;
@@ -661,38 +949,22 @@ const AgenOS = (function(){
       dragState.ghost.style.left = (e.clientX - dragState.offsetX) + 'px';
       dragState.ghost.style.top = (e.clientY - dragState.offsetY) + 'px';
     }
-    // Find element under pointer
     const elUnder = document.elementFromPoint(e.clientX, e.clientY);
-    const targetBtn = elUnder ? elUnder.closest('#app-grid .app-btn') : null;
-    if(targetBtn && targetBtn !== dragState.sourceEl){
+    const targetBtn = elUnder ? elUnder.closest('.app-btn') : null;
+    if(targetBtn && targetBtn !== dragState.sourceEl && targetBtn.parentElement.classList.contains('page-grid')){
       reorderApps(dragState.sourceEl, targetBtn);
     }
-    // Auto-scroll if near edges
-    const scrollEl = document.getElementById('home-scroll');
-    if(scrollEl){
-      const rect = scrollEl.getBoundingClientRect();
-      if(e.clientY < rect.top + 60) scrollEl.scrollTop -= 8;
-      else if(e.clientY > rect.bottom - 60) scrollEl.scrollTop += 8;
-    }
   }
-
   function reorderApps(sourceEl, targetEl){
-    const grid = document.getElementById('app-grid');
+    const grid = sourceEl.parentElement;
     if(!grid) return;
     const children = Array.from(grid.children);
     const sourceIdx = children.indexOf(sourceEl);
     const targetIdx = children.indexOf(targetEl);
     if(sourceIdx === -1 || targetIdx === -1) return;
-
-    if(sourceIdx < targetIdx){
-      grid.insertBefore(sourceEl, targetEl.nextSibling);
-    } else {
-      grid.insertBefore(sourceEl, targetEl);
-    }
-    // Save new order
-    state.iconOrder = Array.from(grid.children).map(c=>c.dataset.appId);
+    if(sourceIdx < targetIdx) grid.insertBefore(sourceEl, targetEl.nextSibling);
+    else grid.insertBefore(sourceEl, targetEl);
   }
-
   function onPointerUp(e){
     clearTimeout(dragState.longPressTimer);
     if(dragState.sourceEl && dragState.sourceEl._cleanup){
@@ -700,33 +972,20 @@ const AgenOS = (function(){
       dragState.sourceEl._cleanup = null;
     }
     if(dragState.active){
-      // Drop
       if(dragState.ghost){ dragState.ghost.remove(); dragState.ghost = null; }
       if(dragState.sourceEl) dragState.sourceEl.classList.remove('dragging');
-      document.body.classList.remove('dragging-active');
       dragState.active = false;
       dragState.sourceEl = null;
-      // Exit edit mode after 2s of no interaction
       clearTimeout(window._editTimeout);
       window._editTimeout = setTimeout(()=> exitEditMode(), 2500);
     } else {
-      // Tap - open app if no drag happened
-      if(dragState.sourceEl){
+      if(dragState.sourceEl && !dragState.moved){
         const appId = dragState.sourceEl.dataset.appId;
-        if(appId && !dragState.isEditing){
-          openApp(appId);
-        } else if(dragState.isEditing){
-          // In edit mode, tap just closes edit mode
-          exitEditMode();
-        }
+        if(appId && !dragState.isEditing) openApp(appId);
+        else if(dragState.isEditing) exitEditMode();
       }
       dragState.sourceEl = null;
     }
-  }
-
-  // Exit edit mode on home indicator tap
-  function exitEditModeIfActive(){
-    if(dragState.isEditing) exitEditMode();
   }
 
   /* ---------- App shell ---------- */
@@ -750,8 +1009,6 @@ const AgenOS = (function(){
   /* =========================================================
      APPS
      ========================================================= */
-
-  /* --- Weather --- */
   function renderWeather(){
     const days=['Heute','Fr','Sa','So','Mo','Di'];
     const conds=['☀️','⛅','⛅','🌧️','☀️','⛅'];
@@ -774,7 +1031,7 @@ const AgenOS = (function(){
         </div>
         <div class="glass" style="margin-top:16px;border-radius:20px;text-align:left;">
           ${days.map((d,i)=>`
-            <div class="row" style="${i<days.length-1?'border-bottom:1px solid rgba(255,255,255,.06);':''}">
+            <div class="row" style="${i<days.length-1?'border-bottom:1px solid var(--separator);':''}">
               <div style="width:70px;font-weight:600;">${d}</div>
               <div style="font-size:20px;">${conds[i]}</div>
               <div style="color:var(--text-2);width:34px;text-align:right;">${temps[i]-5}°</div>
@@ -791,14 +1048,13 @@ const AgenOS = (function(){
       </div>`;
   }
 
-  /* --- Notes --- */
   function renderNotesList(){
     return `<div style="padding:6px 16px 24px;">
       <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
         <button onclick="AgenOS.newNote()" class="press-scale" style="background:none;border:none;color:var(--accent-1);font-size:26px;font-weight:400;">＋</button>
       </div>
       ${state.notes.slice().reverse().map(n=>`
-        <div class="press-scale" style="padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;" onclick="AgenOS.openNote(${n.id})">
+        <div class="press-scale" style="padding:14px 4px;border-bottom:1px solid var(--separator);cursor:pointer;" onclick="AgenOS.openNote(${n.id})">
           <div style="font-weight:700;font-size:16px;">${n.title||'Neue Notiz'}</div>
           <div style="color:var(--text-2);font-size:13px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${(n.body||'').split('\\n')[0]||'Kein weiterer Text'}</div>
         </div>`).join('') || `<div style="text-align:center;color:var(--text-3);margin-top:60px;">Noch keine Notizen. Tippe ＋ zum Hinzufügen.</div>`}
@@ -815,7 +1071,6 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Gallery --- */
   function photoGradients(){ return ['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d'][state.photos.length % 8]; }
   function renderGallery(){
     const shots = state.photos.length ? state.photos : Array.from({length:9},(_,i)=>({g:['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d','#818cf8,#312e81'][i%9]}));
@@ -827,30 +1082,29 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Calculator with History --- */
   function renderCalculator(){
     const c = state.calc;
     const keys = ['C','±','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','='];
     return `<div style="padding:10px 16px 20px;display:flex;flex-direction:column;height:100%;min-height:70vh;">
-      <div style="padding:4px 10px;max-height:80px;overflow-y:auto;color:var(--text-3);font-size:13px;text-align:right;">
+      <div id="calc-history" style="padding:4px 10px;max-height:80px;overflow-y:auto;color:var(--text-3);font-size:13px;text-align:right;">
         ${c.history.slice(-4).reverse().map(h=>`<div>${h}</div>`).join('')}
       </div>
       <div style="flex:1;display:flex;align-items:flex-end;justify-content:flex-end;padding:10px;">
-        <div class="font-display" id="calc-display" style="font-size:56px;font-weight:500;word-break:break-all;text-align:right;">${c.display}</div>
+        <div class="font-display" id="calc-display" style="font-size:56px;font-weight:500;word-break:break-all;text-align:right;color:var(--text-1);">${c.display}</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-bottom:6px;">
         ${keys.map(k=>{
           const isOp = ['÷','×','−','+','='].includes(k);
           const isTop = ['C','±','%'].includes(k);
-          const bg = isOp? 'var(--accent-1)' : isTop? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.08)';
+          const bg = isOp? 'var(--accent-1)' : isTop? 'rgba(128,128,128,0.25)' : 'rgba(128,128,128,0.15)';
+          const col = isOp? '#fff' : 'var(--text-1)';
           const span = k==='0' ? 'grid-column:span 2;border-radius:30px;justify-content:flex-start;padding-left:26px;' : '';
-          return `<button class="keypad-btn press-scale" style="background:${bg};color:#fff;border:none;${span}" onclick="AgenOS.calcPress('${k==='÷'?'/':k==='×'?'*':k==='−'?'-':k}')">${k}</button>`;
+          return `<button class="keypad-btn press-scale" style="background:${bg};color:${col};border:none;${span}" onclick="AgenOS.calcPress('${k==='÷'?'/':k==='×'?'*':k==='−'?'-':k}')">${k}</button>`;
         }).join('')}
       </div>
     </div>`;
   }
 
-  /* --- Music --- */
   function renderMusic(){
     const t = state.tracks[state.trackIndex];
     return `<div style="padding:20px 26px 30px;display:flex;flex-direction:column;align-items:center;height:100%;">
@@ -861,22 +1115,22 @@ const AgenOS = (function(){
         <div style="color:var(--text-2);margin-top:4px;">${t.artist}</div>
       </div>
       <div style="width:100%;margin-top:26px;">
-        <div style="height:4px;border-radius:2px;background:rgba(255,255,255,.15);overflow:hidden;">
-          <div id="music-progress" style="height:100%;width:0%;background:#fff;transition:width .3s linear;"></div>
+        <div style="height:4px;border-radius:2px;background:rgba(128,128,128,.3);overflow:hidden;">
+          <div id="music-progress" style="height:100%;width:0%;background:var(--accent-1);transition:width .3s linear;"></div>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-top:6px;">
           <span id="music-elapsed">0:00</span><span>${t.dur}</span>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:34px;margin-top:30px;">
-        <button onclick="AgenOS.musicPrev()" class="press-scale" style="background:none;border:none;color:#fff;font-size:22px;">⏮</button>
-        <button onclick="AgenOS.musicToggle()" class="press-scale" id="music-toggle-btn" style="background:#fff;color:#000;border:none;width:58px;height:58px;border-radius:50%;font-size:22px;">${state.playing?'⏸':'▶'}</button>
-        <button onclick="AgenOS.musicNext()" class="press-scale" style="background:none;border:none;color:#fff;font-size:22px;">⏭</button>
+        <button onclick="AgenOS.musicPrev()" class="press-scale" style="background:none;border:none;color:var(--text-1);font-size:22px;">⏮</button>
+        <button onclick="AgenOS.musicToggle()" class="press-scale" id="music-toggle-btn" style="background:var(--text-1);color:var(--bg-surface);border:none;width:58px;height:58px;border-radius:50%;font-size:22px;">${state.playing?'⏸':'▶'}</button>
+        <button onclick="AgenOS.musicNext()" class="press-scale" style="background:none;border:none;color:var(--text-1);font-size:22px;">⏭</button>
       </div>
       <div style="margin-top:24px;width:100%;">
         <div style="font-size:12px;color:var(--text-2);margin-bottom:8px;">PLAYLIST</div>
         ${state.tracks.map((t,i)=>`
-          <div class="row press-scale" onclick="AgenOS.playTrack(${i})" style="cursor:pointer;border-radius:10px;background:${i===state.trackIndex?'rgba(255,255,255,.06)':'transparent'};">
+          <div class="row press-scale" onclick="AgenOS.playTrack(${i})" style="cursor:pointer;border-radius:10px;background:${i===state.trackIndex?'rgba(128,128,128,.15)':'transparent'};">
             <div style="display:flex;align-items:center;gap:12px;">
               <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));"></div>
               <div><div style="font-size:14px;font-weight:${i===state.trackIndex?'700':'500'};">${t.title}</div><div style="font-size:11px;color:var(--text-2);">${t.artist}</div></div>
@@ -887,7 +1141,6 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Camera (real with permission) --- */
   function renderCamera(){
     return `<div style="height:100%;display:flex;flex-direction:column;background:#000;">
       <div style="display:flex;justify-content:center;padding:14px 0 6px;">
@@ -917,7 +1170,6 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Store --- */
   function renderStore(){
     const apps = [
       {name:'Agen Chat', icon:'💬', desc:'KI-gestützter Messenger', size:'42 MB', cat:'Soziales'},
@@ -932,7 +1184,7 @@ const AgenOS = (function(){
     return `<div style="padding:6px 16px 24px;">
       <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:18px;">
         <span>🔍</span>
-        <input placeholder="Apps durchsuchen" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;">
+        <input placeholder="Apps durchsuchen" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;">
       </div>
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin-bottom:12px;">EMPFOHLEN</div>
       ${apps.map(a=>`
@@ -944,48 +1196,40 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Clock --- */
   function renderClock(){
     const d = new Date();
     return `<div style="padding:20px;text-align:center;">
-      <div class="font-display" id="live-clock" style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:1;margin-top:20px;">${fmtTime(d)}</div>
+      <div class="font-display" id="live-clock" style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:1;margin-top:20px;color:var(--text-1);">${fmtTime(d)}</div>
       <div id="live-clock-date" style="color:var(--text-2);font-size:16px;margin-top:10px;">${d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>
       <div style="display:flex;justify-content:center;margin-top:40px;">
-        <div style="position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,#1c1c22,#0a0a0e);box-shadow:0 0 0 2px rgba(255,255,255,.08) inset,0 20px 40px -16px rgba(0,0,0,.8);">
+        <div style="position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset,0 20px 40px -16px rgba(0,0,0,.8);">
           ${Array.from({length:12},(_,i)=>{
             const angle = i*30*Math.PI/180;
             const x = 110 + Math.sin(angle)*90;
             const y = 110 - Math.cos(angle)*90;
             return `<div style="position:absolute;left:${x-6}px;top:${y-8}px;font-size:12px;color:var(--text-2);font-weight:600;">${i===0?12:i}</div>`;
           }).join('')}
-          <div id="clock-hand-hour" style="position:absolute;left:50%;top:50%;width:5px;height:60px;background:#fff;border-radius:3px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${(d.getHours()%12)*30 + d.getMinutes()*0.5}deg);"></div>
-          <div id="clock-hand-min" style="position:absolute;left:50%;top:50%;width:3px;height:85px;background:#fff;border-radius:2px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getMinutes()*6}deg);"></div>
+          <div id="clock-hand-hour" style="position:absolute;left:50%;top:50%;width:5px;height:60px;background:var(--text-1);border-radius:3px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${(d.getHours()%12)*30 + d.getMinutes()*0.5}deg);"></div>
+          <div id="clock-hand-min" style="position:absolute;left:50%;top:50%;width:3px;height:85px;background:var(--text-1);border-radius:2px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getMinutes()*6}deg);"></div>
           <div id="clock-hand-sec" style="position:absolute;left:50%;top:50%;width:1.5px;height:95px;background:var(--accent-1);border-radius:1px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getSeconds()*6}deg);"></div>
           <div style="position:absolute;left:50%;top:50%;width:12px;height:12px;background:var(--accent-1);border-radius:50%;transform:translate(-50%,-50%);"></div>
         </div>
       </div>
       <div style="margin-top:36px;display:flex;flex-direction:column;gap:12px;">
-        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;">
-          <span>Wecker</span><span style="color:var(--text-2);">${state.alarm.enabled?state.alarm.time:'Aus'}</span>
-        </div>
-        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;">
-          <span>Stoppuhr</span><span style="color:var(--text-3);">›</span>
-        </div>
-        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;">
-          <span>Timer</span><span style="color:var(--text-3);">›</span>
-        </div>
+        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;"><span>Wecker</span><span style="color:var(--text-2);">${state.alarm.enabled?state.alarm.time:'Aus'}</span></div>
+        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;"><span>Stoppuhr</span><span style="color:var(--text-3);">›</span></div>
+        <div class="glass" style="border-radius:16px;padding:14px;display:flex;justify-content:space-between;"><span>Timer</span><span style="color:var(--text-3);">›</span></div>
       </div>
     </div>`;
   }
 
-  /* --- Calendar --- */
   function renderCalendar(){
     const now = new Date();
     const month = now.getMonth();
     const year = now.getFullYear();
     const firstDay = new Date(year,month,1).getDay();
     const daysInMonth = new Date(year,month+1,0).getDate();
-    const offset = (firstDay+6)%7; // Monday first
+    const offset = (firstDay+6)%7;
     const monthNames = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
     const events = { 3:'Team Meeting', 10:'AgenPhone Launch', 17:'Zahnarzt', 24:'Abendessen' };
     let cells = '';
@@ -993,7 +1237,7 @@ const AgenOS = (function(){
     for(let d=1;d<=daysInMonth;d++){
       const isToday = d===now.getDate();
       const hasEvent = events[d];
-      cells += `<div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;${isToday?'background:var(--accent-1);':''}font-size:14px;font-weight:${isToday?'700':'500'};position:relative;">
+      cells += `<div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;${isToday?'background:var(--accent-1);color:#fff;':''}font-size:14px;font-weight:${isToday?'700':'500'};position:relative;">
         ${d}
         ${hasEvent?'<div style="position:absolute;bottom:6px;width:4px;height:4px;border-radius:50%;background:'+(isToday?'#fff':'var(--accent-1)')+';"></div>':''}
       </div>`;
@@ -1004,7 +1248,7 @@ const AgenOS = (function(){
         <div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TERMINE HEUTE</div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TERMINE</div>
       ${Object.keys(events).filter(d=>parseInt(d)>=now.getDate()).slice(0,3).map(d=>`
         <div class="glass" style="border-radius:14px;padding:12px;margin-bottom:8px;display:flex;gap:12px;align-items:center;">
           <div style="width:4px;height:32px;border-radius:2px;background:var(--accent-1);"></div>
@@ -1013,13 +1257,9 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* --- Maps --- */
   function renderMaps(){
     return `<div style="position:relative;height:100%;min-height:70vh;background:linear-gradient(135deg,#0a1a0a,#0a0a18);overflow:hidden;">
-      <div style="position:absolute;inset:0;background-image:
-        linear-gradient(rgba(34,197,94,.15) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,197,94,.15) 1px, transparent 1px);
-        background-size:40px 40px;"></div>
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(34,197,94,.15) 1px, transparent 1px),linear-gradient(90deg, rgba(34,197,94,.15) 1px, transparent 1px);background-size:40px 40px;"></div>
       <div style="position:absolute;top:20%;left:30%;width:180px;height:180px;background:radial-gradient(circle,rgba(34,197,94,.3),transparent 70%);border-radius:50%;"></div>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
         <div style="width:20px;height:20px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 6px rgba(59,130,246,.3),0 0 0 14px rgba(59,130,246,.15);"></div>
@@ -1027,20 +1267,19 @@ const AgenOS = (function(){
       </div>
       <div class="glass" style="position:absolute;top:16px;left:16px;right:16px;border-radius:14px;padding:12px 16px;display:flex;gap:10px;align-items:center;">
         <span>🔍</span>
-        <input placeholder="Ziel suchen" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;">
+        <input placeholder="Ziel suchen" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;">
       </div>
       <div class="glass-strong" style="position:absolute;bottom:24px;left:16px;right:16px;border-radius:20px;padding:16px;">
         <div style="font-weight:700;font-size:15px;">Agen City Center</div>
         <div style="color:var(--text-2);font-size:12px;margin-top:2px;">2,4 km · 8 Min mit dem Auto</div>
         <div style="display:flex;gap:8px;margin-top:12px;">
           <button class="press-scale" style="flex:1;background:var(--accent-1);border:none;color:#fff;padding:10px;border-radius:12px;font-weight:600;font-size:13px;">Route</button>
-          <button class="press-scale" style="flex:1;background:rgba(255,255,255,.1);border:none;color:#fff;padding:10px;border-radius:12px;font-weight:600;font-size:13px;">Teilen</button>
+          <button class="press-scale" style="flex:1;background:rgba(128,128,128,.2);border:none;color:var(--text-1);padding:10px;border-radius:12px;font-weight:600;font-size:13px;">Teilen</button>
         </div>
       </div>
     </div>`;
   }
 
-  /* --- Health --- */
   function renderHealth(){
     const h = state.health;
     const pct = Math.min(100, h.steps/h.goal*100);
@@ -1048,7 +1287,7 @@ const AgenOS = (function(){
       <div style="text-align:center;margin-top:10px;">
         <div style="position:relative;width:200px;height:200px;margin:0 auto;">
           <svg viewBox="0 0 200 200" style="transform:rotate(-90deg);">
-            <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14"/>
+            <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(128,128,128,.2)" stroke-width="14"/>
             <circle cx="100" cy="100" r="85" fill="none" stroke="url(#grad1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${2*Math.PI*85}" stroke-dashoffset="${2*Math.PI*85*(1-pct/100)}"/>
             <defs><linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs>
           </svg>
@@ -1065,29 +1304,22 @@ const AgenOS = (function(){
         <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">HERZFREQUENZ</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.heartRate} bpm</div></div>
         <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">AKTIVITÄT</div><div style="font-size:22px;font-weight:600;margin-top:4px;">42 Min</div></div>
       </div>
-      <div class="glass" style="border-radius:18px;padding:16px;margin-top:16px;">
-        <div style="font-weight:700;margin-bottom:8px;">Wochenübersicht</div>
-        <div style="display:flex;gap:8px;align-items:flex-end;height:80px;">
-          ${[40,65,30,80,55,90,70].map(v=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="width:100%;height:${v}%;background:linear-gradient(180deg,#f472b6,#db2777);border-radius:4px;"></div><div style="font-size:10px;color:var(--text-2);">${['M','D','M','D','F','S','S'][[40,65,30,80,55,90,70].indexOf(v)]}</div></div>`).join('')}
-        </div>
-      </div>
     </div>`;
   }
 
-  /* --- Currency --- */
   function renderCurrency(){
     const rates = {EUR:1, USD:1.08, GBP:0.86, JPY:161.5, CHF:0.96};
     return `<div style="padding:18px;">
       <div class="glass" style="border-radius:20px;padding:20px;">
         <div style="font-size:12px;color:var(--text-2);">BETRAG</div>
-        <input id="cur-amount" type="number" value="100" oninput="AgenOS.updateCurrency()" style="width:100%;background:none;border:none;outline:none;color:#fff;font-size:34px;font-weight:600;margin-top:6px;font-family:'Space Grotesk',sans-serif;">
+        <input id="cur-amount" type="number" value="100" oninput="AgenOS.updateCurrency()" style="width:100%;background:none;border:none;outline:none;color:var(--text-1);font-size:34px;font-weight:600;margin-top:6px;font-family:'Space Grotesk',sans-serif;">
         <div style="display:flex;gap:8px;margin-top:14px;">
-          <select id="cur-from" onchange="AgenOS.updateCurrency()" class="glass" style="flex:1;background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--glass-border);border-radius:12px;padding:10px;">
-            ${Object.keys(rates).map(k=>`<option value="${k}" style="background:#1c1c22;">${k}</option>`).join('')}
+          <select id="cur-from" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">
+            ${Object.keys(rates).map(k=>`<option value="${k}">${k}</option>`).join('')}
           </select>
           <button onclick="AgenOS.swapCurrency()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:10px 16px;border-radius:12px;font-size:18px;">⇄</button>
-          <select id="cur-to" onchange="AgenOS.updateCurrency()" class="glass" style="flex:1;background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--glass-border);border-radius:12px;padding:10px;">
-            ${Object.keys(rates).map(k=>`<option value="${k}" ${k==='USD'?'selected':''} style="background:#1c1c22;">${k}</option>`).join('')}
+          <select id="cur-to" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">
+            ${Object.keys(rates).map(k=>`<option value="${k}" ${k==='USD'?'selected':''}>${k}</option>`).join('')}
           </select>
         </div>
       </div>
@@ -1095,11 +1327,6 @@ const AgenOS = (function(){
         <div style="font-size:12px;color:var(--text-2);">ERGEBNIS</div>
         <div id="cur-result" class="font-display" style="font-size:42px;font-weight:700;margin-top:6px;">108,00</div>
         <div id="cur-rate" style="font-size:12px;color:var(--text-2);margin-top:4px;">1 EUR = 1,08 USD</div>
-      </div>
-      <div class="glass" style="border-radius:20px;padding:14px;margin-top:16px;">
-        <div style="font-size:12px;color:var(--text-2);margin-bottom:10px;">SCHNELLUMRECHNUNG</div>
-        ${Object.keys(rates).filter(k=>k!=='EUR').map(k=>`
-          <div class="row" style="padding:8px 4px;"><span>1 EUR</span><span style="font-weight:600;">${rates[k].toFixed(2)} ${k}</span></div>`).join('')}
       </div>
     </div>`;
   }
@@ -1122,7 +1349,6 @@ const AgenOS = (function(){
     updateCurrency();
   }
 
-  /* --- Translate --- */
   function renderTranslate(){
     return `<div style="padding:18px;">
       <div class="glass" style="border-radius:20px;padding:16px;">
@@ -1131,7 +1357,7 @@ const AgenOS = (function(){
           <span style="font-size:12px;color:var(--accent-1);">⇄</span>
           <span style="font-size:12px;color:var(--text-2);">ENGLISCH</span>
         </div>
-        <textarea id="trans-input" class="kb-input" placeholder="Text eingeben…" style="width:100%;min-height:100px;background:rgba(255,255,255,.05);border:none;outline:none;border-radius:14px;padding:14px;color:#fff;font-size:16px;resize:none;"></textarea>
+        <textarea id="trans-input" class="kb-input" placeholder="Text eingeben…" style="width:100%;min-height:100px;background:rgba(128,128,128,.1);border:none;outline:none;border-radius:14px;padding:14px;color:var(--text-1);font-size:16px;resize:none;"></textarea>
       </div>
       <button onclick="AgenOS.translateText()" class="press-scale" style="width:100%;margin-top:14px;background:var(--accent-1);border:none;color:#fff;padding:14px;border-radius:14px;font-weight:600;font-size:15px;">Übersetzen</button>
       <div class="glass" style="border-radius:20px;padding:16px;margin-top:16px;">
@@ -1149,34 +1375,28 @@ const AgenOS = (function(){
     let result = dict[text];
     if(!result){
       result = text.split(' ').map(w=>dict[w]||w).join(' ');
-      result = result.charAt(0).toUpperCase()+result.slice(1);
-    } else {
-      result = result.charAt(0).toUpperCase()+result.slice(1);
     }
-    out.textContent = result;
+    out.textContent = result.charAt(0).toUpperCase()+result.slice(1);
   }
 
-  /* --- Flashlight --- */
   function renderFlashlight(){
     return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,${state.flashlight.on?'#fbbf24':'#1c1c22'},${state.flashlight.on?'#d97706':'#0a0a0e'});box-shadow:${state.flashlight.on?'0 0 80px 20px rgba(251,191,36,.5)':'none'};display:flex;align-items:center;justify-content:center;font-size:60px;transition:all .3s;cursor:pointer;" onclick="AgenOS.toggleFlashlight()">🔦</div>
+      <div style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,${state.flashlight.on?'#fbbf24':'var(--bg-elevated)'},${state.flashlight.on?'#d97706':'var(--bg-deep)'});box-shadow:${state.flashlight.on?'0 0 80px 20px rgba(251,191,36,.5)':'none'};display:flex;align-items:center;justify-content:center;font-size:60px;transition:all .3s;cursor:pointer;" onclick="AgenOS.toggleFlashlight()">🔦</div>
       <div style="margin-top:36px;font-size:18px;font-weight:700;">Taschenlampe</div>
       <div style="color:var(--text-2);margin-top:6px;">${state.flashlight.on?'AN':'AUS'}</div>
       <button onclick="AgenOS.toggleFlashlight()" class="press-scale" style="margin-top:30px;background:${state.flashlight.on?'#ef4444':'var(--accent-1)'};border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;font-size:15px;">${state.flashlight.on?'Ausschalten':'Einschalten'}</button>
-      <div style="color:var(--text-3);font-size:12px;margin-top:20px;text-align:center;max-width:260px;">Tipp: Aktiviere die Taschenlampe, um die Kamera-LED zu nutzen (falls unterstützt).</div>
     </div>`;
   }
 
-  /* --- Compass --- */
   function renderCompass(){
     return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div id="compass-dial" style="position:relative;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#1c1c22,#0a0a0e);box-shadow:0 0 0 2px rgba(255,255,255,.1) inset,0 20px 40px -16px rgba(0,0,0,.8);">
+      <div id="compass-dial" style="position:relative;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset,0 20px 40px -16px rgba(0,0,0,.8);">
         ${['N','O','S','W'].map((d,i)=>{
           const a = i*90;
           const r = 110;
           const x = 130 + Math.sin(a*Math.PI/180)*r;
           const y = 130 - Math.cos(a*Math.PI/180)*r;
-          return `<div style="position:absolute;left:${x-8}px;top:${y-10}px;font-weight:700;font-size:16px;color:${i===0?'#ef4444':'#fff'};">${d}</div>`;
+          return `<div style="position:absolute;left:${x-8}px;top:${y-10}px;font-weight:700;font-size:16px;color:${i===0?'#ef4444':'var(--text-1)'};">${d}</div>`;
         }).join('')}
         ${Array.from({length:36},(_,i)=>{
           const a = i*10;
@@ -1185,14 +1405,13 @@ const AgenOS = (function(){
           const y1 = 130 - Math.cos(a*Math.PI/180)*r1;
           const x2 = 130 + Math.sin(a*Math.PI/180)*r2;
           const y2 = 130 - Math.cos(a*Math.PI/180)*r2;
-          return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,${i%9===0?.5:.2})" stroke-width="${i%9===0?1.5:0.8}"/>`;
+          return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(128,128,128,${i%9===0?.5:.2})" stroke-width="${i%9===0?1.5:0.8}"/>`;
         }).join('')}
-        <div id="compass-needle" style="position:absolute;left:50%;top:50%;width:4px;height:100px;background:linear-gradient(180deg,#ef4444 50%,#fff 50%);border-radius:2px;transform-origin:center bottom;transform:translate(-50%,-100%) rotate(0deg);transition:transform .2s ease;"></div>
-        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);"></div>
+        <div id="compass-needle" style="position:absolute;left:50%;top:50%;width:4px;height:100px;background:linear-gradient(180deg,#ef4444 50%,var(--text-1) 50%);border-radius:2px;transform-origin:center bottom;transform:translate(-50%,-100%) rotate(0deg);transition:transform .2s ease;"></div>
+        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--text-1);border-radius:50%;transform:translate(-50%,-50%);"></div>
       </div>
       <div class="font-display" style="font-size:36px;font-weight:700;margin-top:30px;"><span id="compass-heading">0</span>°</div>
       <div style="color:var(--text-2);margin-top:4px;">Richtung: <span id="compass-dir">N</span></div>
-      <div class="glass" style="border-radius:14px;padding:12px 20px;margin-top:24px;font-size:12px;color:var(--text-2);">Nutze die Sensoren deines Geräts (falls verfügbar)</div>
     </div>`;
   }
   function startCompass(){
@@ -1216,75 +1435,30 @@ const AgenOS = (function(){
     }
   }
 
-  /* --- Measure --- */
-  function renderMeasure(){
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div style="font-size:60px;">📏</div>
-      <div class="font-display" style="font-size:56px;font-weight:700;margin-top:20px;"><span id="measure-value">0.0</span> <span style="font-size:24px;color:var(--text-2);">cm</span></div>
-      <div style="color:var(--text-2);margin-top:8px;">Bewege dein Gerät, um zu messen</div>
-      <div class="glass" style="border-radius:20px;padding:20px;margin-top:30px;width:100%;max-width:320px;">
-        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span>Start</span><span id="measure-start">0.0 cm</span></div>
-        <div style="height:3px;background:rgba(255,255,255,.1);border-radius:2px;position:relative;">
-          <div id="measure-progress" style="height:100%;width:0%;background:var(--accent-1);border-radius:2px;transition:width .2s;"></div>
-        </div>
-      </div>
-      <button onclick="AgenOS.resetMeasure()" class="press-scale" style="margin-top:24px;background:rgba(255,255,255,.1);border:none;color:#fff;padding:12px 30px;border-radius:12px;font-weight:600;">Zurücksetzen</button>
-    </div>`;
-  }
-  let measureStart = null;
-  function startMeasure(){
-    if(window.DeviceMotionEvent){
-      window.addEventListener('devicemotion', handleMeasure);
-    }
-  }
-  function handleMeasure(e){
-    const acc = e.accelerationIncludingGravity;
-    if(!acc) return;
-    const mag = Math.sqrt(acc.x*acc.x+acc.y*acc.y+acc.z*acc.z);
-    const val = Math.max(0, (mag-9.8)*10);
-    const el = document.getElementById('measure-value');
-    const prog = document.getElementById('measure-progress');
-    if(el) el.textContent = val.toFixed(1);
-    if(prog) prog.style.width = Math.min(100, val*2)+'%';
-  }
-  function resetMeasure(){
-    const el = document.getElementById('measure-value');
-    const prog = document.getElementById('measure-progress');
-    if(el) el.textContent = '0.0';
-    if(prog) prog.style.width = '0%';
-  }
-
-  /* --- Timer --- */
   function renderTimerApp(){
     return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
       <div class="font-display" id="timer-display" style="font-size:72px;font-weight:300;letter-spacing:-2px;">00:00</div>
       <div style="color:var(--text-2);margin-top:8px;">Minuten : Sekunden</div>
       <div style="display:flex;gap:8px;margin-top:24px;flex-wrap:wrap;justify-content:center;">
-        ${[1,3,5,10,15,30].map(m=>`<button onclick="AgenOS.setTimer(${m})" class="press-scale" style="background:rgba(255,255,255,.08);border:none;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;">${m}m</button>`).join('')}
+        ${[1,3,5,10,15,30].map(m=>`<button onclick="AgenOS.setTimer(${m})" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:10px 16px;border-radius:12px;font-size:14px;">${m}m</button>`).join('')}
       </div>
       <div style="display:flex;gap:12px;margin-top:30px;">
         <button onclick="AgenOS.toggleTimer()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;font-size:15px;">${state.timer.running?'Pause':'Start'}</button>
-        <button onclick="AgenOS.resetTimer()" class="press-scale" style="background:rgba(255,255,255,.1);border:none;color:#fff;padding:14px 30px;border-radius:14px;font-weight:600;font-size:15px;">Reset</button>
+        <button onclick="AgenOS.resetTimer()" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:14px 30px;border-radius:14px;font-weight:600;font-size:15px;">Reset</button>
       </div>
     </div>`;
   }
-  function setTimer(min){
-    state.timer.remaining = min*60;
-    updateTimerDisplay();
-  }
+  function setTimer(min){ state.timer.remaining = min*60; updateTimerDisplay(); }
   function toggleTimer(){
-    if(state.timer.running){
-      clearInterval(state.timer.interval);
-      state.timer.running = false;
-    } else {
+    if(state.timer.running){ clearInterval(state.timer.interval); state.timer.running = false; }
+    else {
       if(state.timer.remaining<=0) return;
       state.timer.running = true;
       state.timer.interval = setInterval(()=>{
         state.timer.remaining--;
         updateTimerDisplay();
         if(state.timer.remaining<=0){
-          clearInterval(state.timer.interval);
-          state.timer.running=false;
+          clearInterval(state.timer.interval); state.timer.running=false;
           if(navigator.vibrate) navigator.vibrate([200,100,200]);
           alert('Timer abgelaufen!');
         }
@@ -1293,11 +1467,8 @@ const AgenOS = (function(){
     renderApp('timer');
   }
   function resetTimer(){
-    clearInterval(state.timer.interval);
-    state.timer.running=false;
-    state.timer.remaining=0;
-    updateTimerDisplay();
-    renderApp('timer');
+    clearInterval(state.timer.interval); state.timer.running=false; state.timer.remaining=0;
+    updateTimerDisplay(); renderApp('timer');
   }
   function updateTimerDisplay(){
     const el = document.getElementById('timer-display');
@@ -1307,7 +1478,6 @@ const AgenOS = (function(){
     el.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   }
 
-  /* --- Voice Memo --- */
   function renderVoice(){
     return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
       <div style="font-size:60px;">🎙️</div>
@@ -1341,40 +1511,47 @@ const AgenOS = (function(){
       };
       mediaRecorder.start();
       if(status) status.textContent = '● Aufnahme läuft…';
-    }catch(e){
-      if(status) status.textContent = 'Mikrofon nicht verfügbar';
-    }
+    }catch(e){ if(status) status.textContent = 'Mikrofon nicht verfügbar'; }
   }
 
-  /* --- Settings --- */
-  function settingsToggleRow(key,label,sub){
-    return `<div class="row press-scale" onclick="AgenOS.toggleSetting('${key}')" style="cursor:pointer;">
+  /* =========================================================
+     SETTINGS (fully functional)
+     ========================================================= */
+  function settingsToggleRow(key,label,sub,onclick){
+    return `<div class="row press-scale" onclick="${onclick||`AgenOS.toggleSetting('${key}')`}" style="cursor:pointer;">
       <div><div>${label}</div>${sub?`<div style="font-size:12px;color:var(--text-2);margin-top:2px;">${sub}</div>`:''}</div>
       <div class="toggle ${state.settings[key]?'on':''}" id="tgl-${key}"></div>
     </div>`;
   }
   function settingsBack(){ return `<div onclick="AgenOS.settingsNav('home')" style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Einstellungen</div>`; }
+
   function renderSettingsHome(){
     return `<div style="padding:4px 18px 24px;">
       <div class="glass" style="border-radius:20px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:18px;cursor:pointer;" onclick="AgenOS.settingsNav('id')">
         <div style="width:52px;height:52px;border-radius:50%;" class="accent-grad"></div>
         <div><div style="font-weight:700;font-size:17px;">Agen ID</div><div style="color:var(--text-2);font-size:13px;">Sync, Backup & Geräte</div></div>
       </div>
+
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
-        ${settingsToggleRow('wifi','WLAN','Agen_Home_5G')}
+        ${settingsToggleRow('wifi','WLAN', state.settings.wifi?'Agen_Home_5G':'Aus')}
         <div class="divider"></div>
-        ${settingsToggleRow('bluetooth','Bluetooth','Ein')}
+        ${settingsToggleRow('bluetooth','Bluetooth', state.settings.bluetooth?'Ein':'Aus')}
         <div class="divider"></div>
         ${settingsToggleRow('airplane','Flugmodus','')}
       </div>
+
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
         <div class="row press-scale" onclick="AgenOS.settingsNav('display')" style="cursor:pointer;"><span>Anzeige & Helligkeit</span><span style="color:var(--text-3);">›</span></div>
+        <div class="divider"></div>
+        <div class="row press-scale" onclick="AgenOS.settingsNav('appearance')" style="cursor:pointer;"><span>Erscheinungsbild</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('iconStyle')" style="cursor:pointer;"><span>App-Icon-Stil</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('sound')" style="cursor:pointer;"><span>Töne & Haptik</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('battery')" style="cursor:pointer;"><span>Batterie</span><span style="color:var(--text-3);">${state.battery}%</span></div>
+        <div class="divider"></div>
+        <div class="row press-scale" onclick="AgenOS.settingsNav('storage')" style="cursor:pointer;"><span>Speicher</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('keyboard')" style="cursor:pointer;"><span>Tastatur</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
@@ -1384,24 +1561,56 @@ const AgenOS = (function(){
         <div class="divider"></div>
         ${settingsToggleRow('location','Standortdienste','')}
       </div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;">
+
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
+        <div class="row press-scale" onclick="AgenOS.settingsNav('softwareupdate')" style="cursor:pointer;">
+          <span>Softwareupdate</span>
+          <span style="color:${state.settings.softwareUpdate==='pending'?'#ef4444':'var(--text-3)'};">${state.settings.softwareUpdate==='pending'?'1 verfügbar':'Aktuell'}</span>
+        </div>
+        <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('about')" style="cursor:pointer;"><span>Über das Gerät</span><span style="color:var(--text-3);">›</span></div>
       </div>
     </div>`;
   }
+
+  function renderSettingsAppearance(){
+    return `<div style="padding:4px 18px 24px;">
+      ${settingsBack()}
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ERSCHEINUNGSBILD</div>
+      <div class="glass" style="border-radius:20px;overflow:hidden;">
+        <div class="row press-scale" onclick="AgenOS.setDarkMode(false)" style="cursor:pointer;">
+          <div><div style="font-weight:600;">Hell</div><div style="font-size:12px;color:var(--text-2);">Heller Modus für den Tag</div></div>
+          <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${!state.darkMode?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">
+            ${!state.darkMode?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row press-scale" onclick="AgenOS.setDarkMode(true)" style="cursor:pointer;">
+          <div><div style="font-weight:600;">Dunkel</div><div style="font-size:12px;color:var(--text-2);">Dunkler Modus für die Nacht</div></div>
+          <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.darkMode?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">
+            ${state.darkMode?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}
+          </div>
+        </div>
+      </div>
+
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">AKZENTFARBE</div>
+      <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">
+        ${[
+          {n:'Violett',a1:'#8b5cf6',a2:'#3b6bf6'},{n:'Aqua',a1:'#22d3ee',a2:'#3b82f6'},{n:'Rose',a1:'#fb7185',a2:'#a855f7'},
+          {n:'Amber',a1:'#f59e0b',a2:'#ef4444'},{n:'Mint',a1:'#34d399',a2:'#059669'},{n:'Ozean',a1:'#0ea5e9',a2:'#2563eb'},
+        ].map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(128,128,128,.2);" title="${c.n}"></div>`).join('')}
+      </div>
+    </div>`;
+  }
+
   function renderSettingsDisplay(){
     const wpKeys = Object.keys(wallpapers);
-    const accents = [
-      {n:'Violett',a1:'#8b5cf6',a2:'#3b6bf6'},{n:'Aqua',a1:'#22d3ee',a2:'#3b82f6'},{n:'Rose',a1:'#fb7185',a2:'#a855f7'},
-      {n:'Amber',a1:'#f59e0b',a2:'#ef4444'},{n:'Mint',a1:'#34d399',a2:'#059669'},{n:'Ozean',a1:'#0ea5e9',a2:'#2563eb'},
-    ];
     return `<div style="padding:4px 18px 24px;">
       ${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">HELLIGKEIT</div>
-      <div class="glass" style="border-radius:18px;padding:16px;"><input type="range" min="10" max="100" value="80" style="width:100%;"></div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">AKZENTFARBE</div>
-      <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">
-        ${accents.map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(255,255,255,.15);" title="${c.n}"></div>`).join('')}
+      <div class="glass" style="border-radius:18px;padding:16px;">
+        <input type="range" min="10" max="100" value="${state.brightness}" id="settings-bright" oninput="AgenOS.setBrightness(this.value)" style="width:100%;">
+        <div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;" id="settings-bright-val">${state.brightness}%</div>
       </div>
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">HINTERGRUNDBILD</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
@@ -1409,6 +1618,7 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
+
   function renderSettingsIconStyle(){
     const styles = [
       {id:'color', name:'Farbig', desc:'Original App-Farben'},
@@ -1422,9 +1632,9 @@ const AgenOS = (function(){
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ICON-STIL (iOS 26)</div>
       <div class="glass" style="border-radius:18px;overflow:hidden;">
         ${styles.map((s,i)=>`
-          <div class="row press-scale" onclick="AgenOS.setIconStyle('${s.id}')" style="cursor:pointer;${i<styles.length-1?'border-bottom:1px solid rgba(255,255,255,.06);':''}">
+          <div class="row press-scale" onclick="AgenOS.setIconStyle('${s.id}')" style="cursor:pointer;${i<styles.length-1?'border-bottom:1px solid var(--separator);':''}">
             <div><div style="font-weight:600;">${s.name}</div><div style="font-size:12px;color:var(--text-2);">${s.desc}</div></div>
-            <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.settings.iconStyle===s.id?'var(--accent-1)':'rgba(255,255,255,.2)'};display:flex;align-items:center;justify-content:center;">
+            <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.settings.iconStyle===s.id?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">
               ${state.settings.iconStyle===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}
             </div>
           </div>`).join('')}
@@ -1432,18 +1642,18 @@ const AgenOS = (function(){
       ${state.settings.iconStyle==='tinted'?`
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TÖNUNGSFARBE</div>
       <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">
-        ${tintColors.map(c=>`<div onclick="AgenOS.setIconTint('${c}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:${c};box-shadow:0 0 0 2px ${state.settings.iconTintColor===c?'#fff':'rgba(255,255,255,.15)'};"></div>`).join('')}
+        ${tintColors.map(c=>`<div onclick="AgenOS.setIconTint('${c}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:${c};box-shadow:0 0 0 2px ${state.settings.iconTintColor===c?'#fff':'rgba(128,128,128,.2)'};"></div>`).join('')}
       </div>`:''}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">VORSCHAU</div>
-      <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;justify-content:center;">
-        ${ALL_APPS.slice(0,4).map(a=>`<div class="app-icon" style="background:${a.bg};width:54px;height:54px;">${ICONS[a.id]}</div>`).join('')}
-      </div>
     </div>`;
   }
+
   function renderSettingsSound(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">KLINGELTON-LAUTSTÄRKE</div>
-      <div class="glass" style="border-radius:18px;padding:16px;"><input type="range" min="0" max="100" value="65" style="width:100%;"></div>
+      <div class="glass" style="border-radius:18px;padding:16px;">
+        <input type="range" min="0" max="100" value="${state.volume}" oninput="AgenOS.setVolume(this.value)" style="width:100%;">
+        <div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;">${state.volume}%</div>
+      </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:20px;">
         ${settingsToggleRow('dnd','Stiller Modus','')}
         <div class="divider"></div>
@@ -1453,6 +1663,7 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
+
   function renderSettingsBattery(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="text-align:center;margin:26px 0;">
@@ -1467,6 +1678,38 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
+
+  function renderSettingsStorage(){
+    const used = 41;
+    const total = 512;
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
+      <div class="glass" style="border-radius:20px;padding:20px;margin-top:18px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-weight:700;">${used} GB</span><span style="color:var(--text-2);">von ${total} GB belegt</span>
+        </div>
+        <div style="height:12px;border-radius:6px;background:rgba(128,128,128,.2);overflow:hidden;display:flex;">
+          <div style="width:${used/512*100}%;background:var(--accent-1);"></div>
+        </div>
+      </div>
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:16px;">
+        ${[
+          {n:'Fotos', s:'12,4 GB', c:'#f472b6'},
+          {n:'Apps', s:'18,2 GB', c:'#8b5cf6'},
+          {n:'Nachrichten', s:'2,1 GB', c:'#34d399'},
+          {n:'Musik', s:'5,6 GB', c:'#fb7185'},
+          {n:'System', s:'2,7 GB', c:'#6b7280'},
+        ].map((r,i)=>`
+          <div class="row" style="${i<4?'border-bottom:1px solid var(--separator);':''}">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:8px;height:8px;border-radius:50%;background:${r.c};"></div>
+              <span>${r.n}</span>
+            </div>
+            <span style="color:var(--text-2);">${r.s}</span>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
   function renderSettingsKeyboard(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">TASTATUR</div>
@@ -1479,10 +1722,11 @@ const AgenOS = (function(){
       </div>
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TASTATUR-TEST</div>
       <div class="glass" style="border-radius:18px;padding:16px;">
-        <input id="kb-test-input" class="kb-input" placeholder="Tippe hier…" style="width:100%;background:rgba(255,255,255,.08);border:none;outline:none;border-radius:12px;padding:12px 16px;color:#fff;font-size:16px;">
+        <input id="kb-test-input" class="kb-input" placeholder="Tippe hier…" style="width:100%;background:rgba(128,128,128,.15);border:none;outline:none;border-radius:12px;padding:12px 16px;color:var(--text-1);font-size:16px;">
       </div>
     </div>`;
   }
+
   function renderSettingsPrivacy(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:18px;">
@@ -1496,9 +1740,60 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
+
+  function renderSettingsSoftwareUpdate(){
+    const st = state.settings.softwareUpdate;
+    if(st==='installed'){
+      return `<div style="padding:4px 18px 24px;">${settingsBack()}
+        <div style="text-align:center;padding:40px 0;">
+          <div style="font-size:60px;margin-bottom:16px;">✅</div>
+          <div style="font-size:22px;font-weight:700;">AgenOS ist aktuell</div>
+          <div style="color:var(--text-2);margin-top:8px;">Version 4.0.2 · Letzte Prüfung: gerade eben</div>
+        </div>
+      </div>`;
+    }
+    if(st==='downloading'){
+      return `<div style="padding:4px 18px 24px;">${settingsBack()}
+        <div style="text-align:center;padding:40px 0;">
+          <div class="update-spinner" style="margin:0 auto 20px;"></div>
+          <div style="font-size:20px;font-weight:700;">Wird heruntergeladen…</div>
+          <div style="color:var(--text-2);margin-top:8px;">AgenOS 4.1 · 2,4 GB</div>
+        </div>
+      </div>`;
+    }
+    if(st==='ready'){
+      return `<div style="padding:4px 18px 24px;">${settingsBack()}
+        <div style="text-align:center;padding:40px 0;">
+          <div style="font-size:60px;margin-bottom:16px;">📦</div>
+          <div style="font-size:22px;font-weight:700;">Bereit zur Installation</div>
+          <div style="color:var(--text-2);margin-top:8px;">AgenOS 4.1 wurde heruntergeladen.</div>
+          <button onclick="AgenOS.installUpdate()" class="press-scale" style="margin-top:24px;background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;font-size:15px;">Jetzt installieren</button>
+        </div>
+      </div>`;
+    }
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
+      <div class="glass" style="border-radius:20px;padding:20px;margin-top:18px;">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:24px;">⬆️</div>
+          <div>
+            <div style="font-weight:700;font-size:17px;">AgenOS 4.1</div>
+            <div style="color:var(--text-2);font-size:13px;">2,4 GB · Verfügbar</div>
+          </div>
+        </div>
+        <div style="margin-top:16px;font-size:14px;line-height:1.5;color:var(--text-2);">
+          • Verbesserte Kamera-Qualität<br>
+          • Neue App-Icon-Stile<br>
+          • Fehlerbehebungen und Leistungsverbesserungen<br>
+          • Sicherheitsupdates
+        </div>
+      </div>
+      <button onclick="AgenOS.downloadUpdate()" class="press-scale" style="width:100%;margin-top:16px;background:var(--accent-1);border:none;color:#fff;padding:16px;border-radius:16px;font-weight:600;font-size:15px;">Herunterladen und installieren</button>
+    </div>`;
+  }
+
   function renderSettingsAbout(){
     const rows = [
-      ['Name','AgenPhone 1'],['Edition','Matte Black'],['OS Version','AgenOS 3.0'],
+      ['Name','AgenPhone 1'],['Edition','Matte Black'],['OS Version','AgenOS 4.0'],
       ['Chip','Agen A1 Neural Engine'],['Speicher','512 GB (471,2 GB verfügbar)'],
       ['Modellnummer','AGN-PH1-BLK-512'],['Seriennummer','AGN-8841-KX02'],
       ['Display','6,4" LTPO OLED, 120Hz Agen Flow'],
@@ -1507,92 +1802,151 @@ const AgenOS = (function(){
     ];
     return `<div style="padding:4px 18px 30px;">${settingsBack()}
       <div style="text-align:center;margin:22px 0 18px;">
-        <div style="width:74px;height:110px;border-radius:14px;margin:0 auto 12px;background:linear-gradient(160deg,#2b2b31,#0c0c0e);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 10px 24px -10px rgba(0,0,0,.7);position:relative;">
+        <div style="width:74px;height:110px;border-radius:14px;margin:0 auto 12px;background:linear-gradient(160deg,#2b2b31,#0c0c0e);box-shadow:0 0 0 1px rgba(128,128,128,.2) inset,0 10px 24px -10px rgba(0,0,0,.7);position:relative;">
           <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:22px;height:6px;border-radius:4px;background:#000;"></div>
         </div>
         <div style="font-weight:700;font-size:18px;" class="font-display">AgenPhone 1</div>
         <div style="color:var(--text-2);font-size:13px;">Matte Black Edition</div>
       </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;">
-        ${rows.map((r,i)=>`<div class="row" style="${i<rows.length-1?'border-bottom:1px solid rgba(255,255,255,.06);':''}"><span style="color:var(--text-2);">${r[0]}</span><span style="font-weight:600;text-align:right;max-width:60%;">${r[1]}</span></div>`).join('')}
+        ${rows.map((r,i)=>`<div class="row" style="${i<rows.length-1?'border-bottom:1px solid var(--separator);':''}"><span style="color:var(--text-2);">${r[0]}</span><span style="font-weight:600;text-align:right;max-width:60%;">${r[1]}</span></div>`).join('')}
       </div>
       <div style="text-align:center;color:var(--text-3);font-size:12px;margin-top:18px;">Designed by Agen. Assembled with intent.</div>
     </div>`;
   }
 
-  /* --- Phone / Messages / Browser --- */
-  function renderPhone(){
-    return `<div style="padding:10px 20px 20px;display:flex;flex-direction:column;height:100%;">
-      <div style="text-align:center;font-size:34px;font-weight:300;letter-spacing:2px;min-height:44px;" id="dial-display" class="font-display">&nbsp;</div>
-      <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-content:center;margin-top:10px;">
-        ${['1','2','3','4','5','6','7','8','9','*','0','#'].map(k=>`<button class="keypad-btn press-scale" style="background:rgba(255,255,255,.08);color:#fff;border:none;font-size:24px;" onclick="AgenOS.dial('${k}')">${k}</button>`).join('')}
-      </div>
-      <div style="display:flex;justify-content:center;margin-top:10px;">
-        <button onclick="AgenOS.call()" class="press-scale" style="width:64px;height:64px;border-radius:50%;background:#22c55e;border:none;font-size:26px;">📞</button>
-      </div>
-    </div>`;
+  /* ---------- Settings Actions ---------- */
+  function settingsNav(section){
+    const map = {
+      home:renderSettingsHome, display:renderSettingsDisplay, iconStyle:renderSettingsIconStyle,
+      appearance:renderSettingsAppearance, sound:renderSettingsSound, battery:renderSettingsBattery,
+      storage:renderSettingsStorage, keyboard:renderSettingsKeyboard, privacy:renderSettingsPrivacy,
+      softwareupdate:renderSettingsSoftwareUpdate, about:renderSettingsAbout
+    };
+    const el = document.getElementById('content-settings');
+    if(el) el.innerHTML = (map[section]||renderSettingsHome)();
+    if(section==='keyboard'){
+      setTimeout(()=>{ const inp = document.getElementById('kb-test-input'); if(inp) setupKeyboardInput(inp); }, 100);
+    }
   }
-  function renderCalling(number){
-    setTimeout(()=>{ if(state.activeApp==='phone') renderApp('phone'); }, 3200);
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a2e,#050508);">
-      <div style="width:96px;height:96px;border-radius:50%;" class="accent-grad"></div>
-      <div style="font-size:22px;font-weight:700;margin-top:20px;">${number||'Agen Support'}</div>
-      <div style="color:var(--text-2);margin-top:6px;">ruft an…</div>
-      <button onclick="AgenOS.closeApp()" class="press-scale" style="margin-top:50px;width:60px;height:60px;border-radius:50%;background:#ef4444;border:none;font-size:24px;">📞</button>
-    </div>`;
+  function toggleSetting(key){
+    state.settings[key] = !state.settings[key];
+    const el = document.getElementById('tgl-'+key);
+    if(el) el.classList.toggle('on');
+    updateCCTiles();
+    if(key==='airplane'){
+      const sub = document.querySelector(`#tgl-airplane`)?.parentElement?.querySelector('div[style*="font-size:12px"]');
+      if(sub) sub.textContent = state.settings.airplane?'Ein':'';
+    }
   }
-  function renderMessagesList(){
-    return `<div style="padding:6px 4px 24px;">
-      ${Object.keys(state.threads).map(name=>{
-        const msgs = state.threads[name];
-        const last = msgs[msgs.length-1];
-        return `<div class="row press-scale" style="cursor:pointer;" onclick="AgenOS.openThread('${name}')">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;">${name[0]}</div>
-            <div><div style="font-weight:600;">${name}</div><div style="color:var(--text-2);font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${last.text}</div></div>
+  function setDarkMode(on){
+    state.darkMode = on;
+    applyTheme();
+    settingsNav('appearance');
+  }
+  function setAccent(a1,a2){
+    document.documentElement.style.setProperty('--accent-1',a1);
+    document.documentElement.style.setProperty('--accent-2',a2);
+    settingsNav('appearance');
+  }
+  function setWallpaper(key){
+    state.wallpaper = key;
+    document.documentElement.style.setProperty('--wp', wallpapers[key]);
+    settingsNav('display');
+  }
+  function setIconStyle(style){ state.settings.iconStyle = style; applyIconStyle(); settingsNav('iconStyle'); }
+  function setIconTint(color){ state.settings.iconTintColor = color; applyIconStyle(); settingsNav('iconStyle'); }
+  function setBrightness(v){
+    state.brightness = v;
+    document.getElementById('screen').style.filter = `brightness(${0.5 + v/200})`;
+    const el = document.getElementById('settings-bright-val'); if(el) el.textContent = v+'%';
+    const cc = document.getElementById('cc-bright-val'); if(cc) cc.textContent = v+'%';
+    const ccInput = document.getElementById('cc-bright'); if(ccInput) ccInput.value = v;
+  }
+  function setVolume(v){
+    state.volume = v;
+    const el = document.getElementById('cc-vol-val'); if(el) el.textContent = v+'%';
+    const ccInput = document.getElementById('cc-vol'); if(ccInput) ccInput.value = v;
+  }
+  function downloadUpdate(){
+    state.settings.softwareUpdate = 'downloading';
+    settingsNav('softwareupdate');
+    setTimeout(()=>{
+      state.settings.softwareUpdate = 'ready';
+      settingsNav('softwareupdate');
+      addNotification({icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 4.1 ist bereit zur Installation', time:'jetzt'});
+    }, 3000);
+  }
+  function installUpdate(){
+    state.settings.softwareUpdate = 'installed';
+    settingsNav('softwareupdate');
+    setTimeout(()=>{
+      addNotification({icon:'✅', color:'#34d399', title:'Update installiert', body:'AgenOS 4.1 wurde erfolgreich installiert', time:'jetzt'});
+    }, 500);
+  }
+
+  /* =========================================================
+     CONTROL CENTER
+     ========================================================= */
+  function updateCCTiles(){
+    const s = state.settings;
+    const set = (id, on, sub)=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.toggle('on', on);
+      const subEl = el.querySelector('.cc-sub');
+      if(subEl && sub!==undefined) subEl.textContent = sub;
+    };
+    set('cc-wifi', s.wifi, s.wifi?'Agen_Home':'Aus');
+    set('cc-bt', s.bluetooth, s.bluetooth?'Ein':'Aus');
+    set('cc-airplane', s.airplane, s.airplane?'Ein':'Aus');
+    set('cc-dnd', s.dnd, s.dnd?'Ein':'Aus');
+    const fl = document.getElementById('cc-flash');
+    if(fl) fl.classList.toggle('on', state.flashlight.on);
+    const dm = document.getElementById('cc-darkmode');
+    if(dm) dm.classList.toggle('on', state.darkMode);
+  }
+  function ccToggle(key){
+    state.settings[key] = !state.settings[key];
+    if(key==='airplane' && state.settings.airplane){
+      state.settings.wifi = false;
+      state.settings.bluetooth = false;
+    }
+    updateCCTiles();
+  }
+  function ccToggleDarkMode(){
+    state.darkMode = !state.darkMode;
+    applyTheme();
+  }
+  function ccOpenCamera(){
+    closeControlCenter();
+    openApp('camera');
+  }
+  function closeControlCenter(){
+    document.getElementById('control-center').classList.remove('show');
+  }
+
+  /* =========================================================
+     NOTIFICATIONS
+     ========================================================= */
+  function addNotification(n){
+    state.notifications.unshift(n);
+    renderNotifications();
+  }
+  function renderNotifications(){
+    const el = document.getElementById('notif-list');
+    if(!el) return;
+    el.innerHTML = state.notifications.map(n=>`
+      <div class="notif-card">
+        <div class="notif-icon" style="background:${n.color};">${n.icon}</div>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="font-weight:700;font-size:14px;">${n.title}</span>
+            <span style="font-size:11px;color:var(--text-2);">${n.time}</span>
           </div>
-          <span style="color:var(--text-3);">›</span>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }
-  function renderThread(name){
-    const msgs = state.threads[name];
-    return `<div style="display:flex;flex-direction:column;height:100%;">
-      <div style="padding:8px 16px;"><span onclick="AgenOS.renderApp('messages')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Nachrichten</span></div>
-      <div class="app-scroll" style="padding:6px 16px;display:flex;flex-direction:column;gap:8px;" id="thread-scroll">
-        ${msgs.map(m=>`<div style="align-self:${m.me?'flex-end':'flex-start'};max-width:75%;padding:10px 14px;border-radius:16px;background:${m.me?'var(--accent-1)':'rgba(255,255,255,.08)'};font-size:15px;">${m.text}</div>`).join('')}
-      </div>
-      <div style="display:flex;gap:10px;padding:10px 16px 20px;">
-        <input id="thread-input" class="kb-input" placeholder="Nachricht" style="flex:1;background:rgba(255,255,255,.08);border:none;outline:none;border-radius:20px;padding:10px 16px;color:#fff;">
-        <button onclick="AgenOS.sendMsg('${name}')" class="press-scale" style="background:var(--accent-1);border:none;width:40px;height:40px;border-radius:50%;color:#fff;">➤</button>
-      </div>
-    </div>`;
-  }
-  function renderBrowserHome(){
-    const shortcuts = [{n:'Agen News', c:'#3b82f6'},{n:'Agen Store', c:'#8b5cf6'},{n:'Agen Cloud', c:'#22d3ee'},{n:'Agen Support', c:'#f59e0b'}];
-    return `<div style="padding:20px 22px;">
-      <div style="text-align:center;font-size:30px;font-weight:700;margin:20px 0 26px;" class="font-display accent-text">agen.com</div>
-      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;">
-        <span>🔍</span>
-        <input id="browser-url" class="kb-input" placeholder="Suchen oder Adresse eingeben" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;" onkeydown="if(event.key==='Enter')AgenOS.browserGo()">
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px;">
-        ${shortcuts.map(s=>`<div class="glass press-scale" style="border-radius:16px;padding:18px;cursor:pointer;" onclick="AgenOS.browserGoTo('${s.n}')"><div style="width:30px;height:30px;border-radius:8px;background:${s.c};margin-bottom:10px;"></div><div style="font-weight:600;font-size:14px;">${s.n}</div></div>`).join('')}
-      </div>
-    </div>`;
-  }
-  function renderBrowserPage(q){
-    return `<div style="padding:0;">
-      <div style="padding:12px 16px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);">
-        <span onclick="AgenOS.renderApp('browser')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹</span>
-        <div class="glass" style="flex:1;border-radius:10px;padding:6px 12px;font-size:13px;color:var(--text-2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">agen.com/search?q=${encodeURIComponent(q)}</div>
-      </div>
-      <div style="padding:26px 22px;">
-        <div style="font-size:22px;font-weight:700;margin-bottom:14px;" class="font-display">Ergebnisse für „${q}“</div>
-        ${[1,2,3].map(i=>`<div style="margin-bottom:18px;"><div style="color:#7dd3fc;font-size:14px;">agen.com/${q.toLowerCase().replace(/\\s+/g,'-')}-${i}</div><div style="font-weight:600;margin:2px 0;">${q} — Agen Wissensdatenbank #${i}</div><div style="color:var(--text-2);font-size:13px;">Alles über ${q} auf AgenOS, kuratiert für AgenPhone 1 Besitzer.</div></div>`).join('')}
-      </div>
-    </div>`;
+          <div style="font-size:13px;color:var(--text-2);margin-top:2px;">${n.body}</div>
+        </div>
+      </div>`).join('') || '<div style="text-align:center;color:var(--text-3);padding:40px 0;">Keine Mitteilungen</div>';
   }
 
   /* =========================================================
@@ -1618,9 +1972,9 @@ const AgenOS = (function(){
     if(id==='music') syncMusicUI();
     if(id==='camera') setTimeout(startCamera, 300);
     if(id==='compass') startCompass();
-    if(id==='measure') startMeasure();
     if(id==='currency') setTimeout(updateCurrency, 100);
     if(id==='clock') startClockHands();
+    if(id==='timer') updateTimerDisplay();
   }
   function renderApp(id){
     const def = APP_DEFS[id];
@@ -1640,6 +1994,16 @@ const AgenOS = (function(){
     hideKeyboard();
   }
   function goHome(){ closeApp(); }
+  function lockScreen(){
+    closeControlCenter();
+    const lock = document.getElementById('lock-screen');
+    if(lock){
+      lock.style.display = 'flex';
+      lock.style.opacity = '1';
+      lock.style.transform = 'translateY(0)';
+      state.unlocked = false;
+    }
+  }
   function startClockHands(){
     const update = ()=>{
       const d = new Date();
@@ -1655,44 +2019,9 @@ const AgenOS = (function(){
   }
 
   /* =========================================================
-     SETTINGS ACTIONS
+     NOTES / CALC / MUSIC
      ========================================================= */
-  function settingsNav(section){
-    const map = {
-      home:renderSettingsHome, display:renderSettingsDisplay, iconStyle:renderSettingsIconStyle,
-      sound:renderSettingsSound, battery:renderSettingsBattery, keyboard:renderSettingsKeyboard,
-      privacy:renderSettingsPrivacy, about:renderSettingsAbout
-    };
-    document.getElementById('content-settings').innerHTML = (map[section]||renderSettingsHome)();
-    if(section==='keyboard'){
-      setTimeout(()=>{ const inp = document.getElementById('kb-test-input'); if(inp) setupKeyboardInput(inp); }, 100);
-    }
-  }
-  function toggleSetting(key){
-    state.settings[key] = !state.settings[key];
-    const el = document.getElementById('tgl-'+key);
-    if(el) el.classList.toggle('on');
-  }
-  function setAccent(a1,a2){
-    document.documentElement.style.setProperty('--accent-1',a1);
-    document.documentElement.style.setProperty('--accent-2',a2);
-  }
-  function setWallpaper(key){
-    state.wallpaper = key;
-    document.documentElement.style.setProperty('--wp', wallpapers[key]);
-    settingsNav('display');
-  }
-  function setIconStyle(style){ state.settings.iconStyle = style; applyIconStyle(); settingsNav('iconStyle'); }
-  function setIconTint(color){ state.settings.iconTintColor = color; applyIconStyle(); settingsNav('iconStyle'); }
-
-  /* =========================================================
-     NOTES
-     ========================================================= */
-  function newNote(){
-    const n = {id:Date.now(), title:'Neue Notiz', body:''};
-    state.notes.push(n);
-    openNote(n.id);
-  }
+  function newNote(){ const n = {id:Date.now(), title:'Neue Notiz', body:''}; state.notes.push(n); openNote(n.id); }
   function openNote(id){
     document.getElementById('content-notes').innerHTML = renderNoteEditor(id);
     const ta = document.getElementById('note-input');
@@ -1709,9 +2038,6 @@ const AgenOS = (function(){
   }
   function deleteNote(id){ state.notes = state.notes.filter(n=>n.id!==id); renderApp('notes'); }
 
-  /* =========================================================
-     CALCULATOR
-     ========================================================= */
   function calcPress(k){
     const c = state.calc;
     if(k==='C'){ c.display='0'; c.stored=null; c.op=null; c.fresh=true; }
@@ -1740,14 +2066,8 @@ const AgenOS = (function(){
     if(hist) hist.innerHTML = c.history.slice(-4).reverse().map(h=>`<div>${h}</div>`).join('');
   }
 
-  /* =========================================================
-     MUSIC
-     ========================================================= */
   let musicTimer=null, elapsed=0;
-  function syncMusicUI(){
-    const btn = document.getElementById('music-toggle-btn');
-    if(btn) btn.textContent = state.playing? '⏸':'▶';
-  }
+  function syncMusicUI(){ const btn = document.getElementById('music-toggle-btn'); if(btn) btn.textContent = state.playing? '⏸':'▶'; }
   function musicToggle(){
     state.playing = !state.playing;
     syncMusicUI();
@@ -1766,39 +2086,29 @@ const AgenOS = (function(){
   function playTrack(i){ state.trackIndex=i; elapsed=0; renderApp('music'); if(state.playing){syncMusicUI(); musicToggle(); musicToggle();} }
 
   /* =========================================================
-     CAMERA (real with permission)
+     CAMERA
      ========================================================= */
   async function startCamera(){
     const video = document.getElementById('camera-video');
     const err = document.getElementById('camera-error');
     const status = document.getElementById('cam-status');
     if(!video) return;
-
-    // Check permissions first
     if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
       if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Dein Browser unterstützt keine Kamera.'; }
       return;
     }
-
-    // Request permission explicitly first
     if(state.settings.cameraPermission === null){
-      // Show custom modal
-      return new Promise((resolve)=>{
-        window._cameraPermissionResolve = resolve;
-        showPermissionModal();
-      });
+      return new Promise((resolve)=>{ window._cameraPermissionResolve = resolve; showPermissionModal(); });
     } else if(state.settings.cameraPermission === 'denied'){
-      if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff wurde verweigert. Erlaube ihn in den Browser-Einstellungen.'; }
+      if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff wurde verweigert.'; }
       return;
     }
-
     try{
       if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); }
-      const constraints = {
+      const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: state.cameraFacing, width:{ideal:1280}, height:{ideal:720} },
         audio: false
-      };
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      });
       state.cameraStream = stream;
       video.srcObject = stream;
       video.style.display = 'block';
@@ -1807,80 +2117,100 @@ const AgenOS = (function(){
       state.settings.cameraPermission = 'granted';
     }catch(e){
       console.warn('Camera error:', e);
-      if(e.name === 'NotAllowedError'){
-        state.settings.cameraPermission = 'denied';
-        if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert. Bitte erlaube ihn in den Browser-Einstellungen.'; }
-      } else if(e.name === 'NotFoundError'){
-        if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Keine Kamera gefunden.'; }
-      } else {
-        if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Fehler: '+e.message; }
-      }
+      if(e.name === 'NotAllowedError'){ state.settings.cameraPermission = 'denied'; if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert.'; } }
+      else if(e.name === 'NotFoundError'){ if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Keine Kamera gefunden.'; } }
+      else { if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Fehler: '+e.message; } }
       video.style.display = 'none';
       if(status) status.textContent = '● FEHLER';
     }
   }
-
   let permissionModalResolve = null;
-  function showPermissionModal(){
-    const modal = document.getElementById('permission-modal');
-    if(modal) modal.classList.add('show');
-    permissionModalResolve = window._cameraPermissionResolve;
-  }
+  function showPermissionModal(){ const modal = document.getElementById('permission-modal'); if(modal) modal.classList.add('show'); permissionModalResolve = window._cameraPermissionResolve; }
   function allowPermission(){
-    const modal = document.getElementById('permission-modal');
-    if(modal) modal.classList.remove('show');
+    const modal = document.getElementById('permission-modal'); if(modal) modal.classList.remove('show');
     state.settings.cameraPermission = 'granted';
     if(permissionModalResolve){ permissionModalResolve(); permissionModalResolve = null; }
     startCamera();
   }
   function denyPermission(){
-    const modal = document.getElementById('permission-modal');
-    if(modal) modal.classList.remove('show');
+    const modal = document.getElementById('permission-modal'); if(modal) modal.classList.remove('show');
     state.settings.cameraPermission = 'denied';
     if(permissionModalResolve){ permissionModalResolve(); permissionModalResolve = null; }
     const err = document.getElementById('camera-error');
-    if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert. Du kannst ihn später in den Einstellungen erlauben.'; }
+    if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert.'; }
   }
-
-  function stopCamera(){
-    if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); state.cameraStream=null; }
-    const video = document.getElementById('camera-video'); if(video) video.srcObject=null;
-  }
+  function stopCamera(){ if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); state.cameraStream=null; } const video = document.getElementById('camera-video'); if(video) video.srcObject=null; }
   function takePhoto(){
     const video = document.getElementById('camera-video');
     const flash = document.getElementById('flash');
     if(flash){ flash.style.transition='none'; flash.style.opacity='1'; requestAnimationFrame(()=>{ flash.style.transition='opacity .35s ease'; flash.style.opacity='0'; }); }
     if(video && video.videoWidth){
       const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
       const ctx = canvas.getContext('2d');
       if(state.cameraFacing==='user'){ ctx.translate(canvas.width,0); ctx.scale(-1,1); }
       ctx.drawImage(video,0,0);
-      try{
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        state.photos.unshift({g: photoGradients(), data: dataUrl});
-      }catch(e){ state.photos.unshift({g: photoGradients()}); }
-    } else {
-      state.photos.unshift({g: photoGradients()});
-    }
+      try{ const dataUrl = canvas.toDataURL('image/jpeg', 0.85); state.photos.unshift({g: photoGradients(), data: dataUrl}); }
+      catch(e){ state.photos.unshift({g: photoGradients()}); }
+    } else { state.photos.unshift({g: photoGradients()}); }
   }
-  function flipCamera(){
-    state.cameraFacing = state.cameraFacing==='environment'?'user':'environment';
-    startCamera();
-  }
+  function flipCamera(){ state.cameraFacing = state.cameraFacing==='environment'?'user':'environment'; startCamera(); }
   function retryCamera(){ state.settings.cameraPermission = null; startCamera(); }
 
   /* =========================================================
-     PHONE
+     PHONE / MESSAGES / BROWSER
      ========================================================= */
   let dialBuffer='';
   function dial(k){ dialBuffer += k; const d = document.getElementById('dial-display'); if(d) d.textContent = dialBuffer; }
   function call(){ document.getElementById('content-phone').innerHTML = renderCalling(dialBuffer); dialBuffer=''; }
-
-  /* =========================================================
-     MESSAGES
-     ========================================================= */
+  function renderPhone(){
+    return `<div style="padding:10px 20px 20px;display:flex;flex-direction:column;height:100%;">
+      <div style="text-align:center;font-size:34px;font-weight:300;letter-spacing:2px;min-height:44px;" id="dial-display" class="font-display">&nbsp;</div>
+      <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-content:center;margin-top:10px;">
+        ${['1','2','3','4','5','6','7','8','9','*','0','#'].map(k=>`<button class="keypad-btn press-scale" style="background:rgba(128,128,128,.15);color:var(--text-1);border:none;font-size:24px;" onclick="AgenOS.dial('${k}')">${k}</button>`).join('')}
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:10px;">
+        <button onclick="AgenOS.call()" class="press-scale" style="width:64px;height:64px;border-radius:50%;background:#22c55e;border:none;font-size:26px;">📞</button>
+      </div>
+    </div>`;
+  }
+  function renderCalling(number){
+    setTimeout(()=>{ if(state.activeApp==='phone') renderApp('phone'); }, 3200);
+    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a2e,#050508);">
+      <div style="width:96px;height:96px;border-radius:50%;" class="accent-grad"></div>
+      <div style="font-size:22px;font-weight:700;margin-top:20px;color:#fff;">${number||'Agen Support'}</div>
+      <div style="color:var(--text-2);margin-top:6px;">ruft an…</div>
+      <button onclick="AgenOS.closeApp()" class="press-scale" style="margin-top:50px;width:60px;height:60px;border-radius:50%;background:#ef4444;border:none;font-size:24px;">📞</button>
+    </div>`;
+  }
+  function renderMessagesList(){
+    return `<div style="padding:6px 4px 24px;">
+      ${Object.keys(state.threads).map(name=>{
+        const msgs = state.threads[name];
+        const last = msgs[msgs.length-1];
+        return `<div class="row press-scale" style="cursor:pointer;" onclick="AgenOS.openThread('${name}')">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">${name[0]}</div>
+            <div><div style="font-weight:600;">${name}</div><div style="color:var(--text-2);font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${last.text}</div></div>
+          </div>
+          <span style="color:var(--text-3);">›</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+  function renderThread(name){
+    const msgs = state.threads[name];
+    return `<div style="display:flex;flex-direction:column;height:100%;">
+      <div style="padding:8px 16px;"><span onclick="AgenOS.renderApp('messages')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Nachrichten</span></div>
+      <div class="app-scroll" style="padding:6px 16px;display:flex;flex-direction:column;gap:8px;" id="thread-scroll">
+        ${msgs.map(m=>`<div style="align-self:${m.me?'flex-end':'flex-start'};max-width:75%;padding:10px 14px;border-radius:16px;background:${m.me?'var(--accent-1)':'rgba(128,128,128,.2)'};color:${m.me?'#fff':'var(--text-1)'};font-size:15px;">${m.text}</div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;padding:10px 16px 20px;">
+        <input id="thread-input" class="kb-input" placeholder="Nachricht" style="flex:1;background:rgba(128,128,128,.15);border:none;outline:none;border-radius:20px;padding:10px 16px;color:var(--text-1);">
+        <button onclick="AgenOS.sendMsg('${name}')" class="press-scale" style="background:var(--accent-1);border:none;width:40px;height:40px;border-radius:50%;color:#fff;">➤</button>
+      </div>
+    </div>`;
+  }
   function openThread(name){
     state.activeThread = name;
     document.getElementById('content-messages').innerHTML = renderThread(name);
@@ -1902,42 +2232,46 @@ const AgenOS = (function(){
       }
     },1100);
   }
-
-  /* =========================================================
-     BROWSER
-     ========================================================= */
-  function browserGo(){
-    const v = document.getElementById('browser-url').value.trim();
-    if(!v) return;
-    document.getElementById('content-browser').innerHTML = renderBrowserPage(v);
+  function renderBrowserHome(){
+    const shortcuts = [{n:'Agen News', c:'#3b82f6'},{n:'Agen Store', c:'#8b5cf6'},{n:'Agen Cloud', c:'#22d3ee'},{n:'Agen Support', c:'#f59e0b'}];
+    return `<div style="padding:20px 22px;">
+      <div style="text-align:center;font-size:30px;font-weight:700;margin:20px 0 26px;" class="font-display accent-text">agen.com</div>
+      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;">
+        <span>🔍</span>
+        <input id="browser-url" class="kb-input" placeholder="Suchen oder Adresse eingeben" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;" onkeydown="if(event.key==='Enter')AgenOS.browserGo()">
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px;">
+        ${shortcuts.map(s=>`<div class="glass press-scale" style="border-radius:16px;padding:18px;cursor:pointer;" onclick="AgenOS.browserGoTo('${s.n}')"><div style="width:30px;height:30px;border-radius:8px;background:${s.c};margin-bottom:10px;"></div><div style="font-weight:600;font-size:14px;">${s.n}</div></div>`).join('')}
+      </div>
+    </div>`;
   }
+  function renderBrowserPage(q){
+    return `<div style="padding:0;">
+      <div style="padding:12px 16px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--separator);">
+        <span onclick="AgenOS.renderApp('browser')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹</span>
+        <div class="glass" style="flex:1;border-radius:10px;padding:6px 12px;font-size:13px;color:var(--text-2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">agen.com/search?q=${encodeURIComponent(q)}</div>
+      </div>
+      <div style="padding:26px 22px;">
+        <div style="font-size:22px;font-weight:700;margin-bottom:14px;" class="font-display">Ergebnisse für „${q}“</div>
+        ${[1,2,3].map(i=>`<div style="margin-bottom:18px;"><div style="color:#7dd3fc;font-size:14px;">agen.com/${q.toLowerCase().replace(/\\s+/g,'-')}-${i}</div><div style="font-weight:600;margin:2px 0;">${q} — Agen Wissensdatenbank #${i}</div><div style="color:var(--text-2);font-size:13px;">Alles über ${q} auf AgenOS, kuratiert für AgenPhone 1 Besitzer.</div></div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function browserGo(){ const v = document.getElementById('browser-url').value.trim(); if(!v) return; document.getElementById('content-browser').innerHTML = renderBrowserPage(v); }
   function browserGoTo(name){ document.getElementById('content-browser').innerHTML = renderBrowserPage(name); }
-
-  /* =========================================================
-     INSTALL APP
-     ========================================================= */
   function installApp(name){ alert(`${name} wird installiert… (Demo)`); }
+  function toggleFlashlight(){ state.flashlight.on = !state.flashlight.on; updateCCTiles(); if(state.activeApp==='flashlight') renderApp('flashlight'); }
 
   /* =========================================================
-     CUSTOM KEYBOARD
+     KEYBOARD
      ========================================================= */
   let activeInput = null;
   let kbShift = false;
   let kbNumbers = false;
-
   const KB_LAYOUT = {
-    letters: [
-      ['q','w','e','r','t','z','u','i','o','p'],
-      ['a','s','d','f','g','h','j','k','l'],
-      ['y','x','c','v','b','n','m']
-    ],
-    numbers: [
-      ['1','2','3','4','5','6','7','8','9','0'],
-      ['-','/',':',';','(',')','€','&','@','"'],
-      ['.',',','?','!','\'','#','%','+','=','*']
-    ]
+    letters: [['q','w','e','r','t','z','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['y','x','c','v','b','n','m']],
+    numbers: [['1','2','3','4','5','6','7','8','9','0'],['-','/',':',';','(',')','€','&','@','"'],['.',',','?','!','\'','#','%','+','=','*']]
   };
-
   function buildKeyboard(){
     const row1 = document.getElementById('kb-row-1');
     const row2 = document.getElementById('kb-row-2');
@@ -1955,21 +2289,16 @@ const AgenOS = (function(){
         el.appendChild(btn);
       });
     };
-    fill(row1, layout[0]);
-    fill(row2, layout[1]);
-    fill(row3, layout[2]);
+    fill(row1, layout[0]); fill(row2, layout[1]); fill(row3, layout[2]);
   }
-
   function showKeyboard(){ const kb = document.getElementById('keyboard'); if(kb) kb.classList.add('show'); }
   function hideKeyboard(){ const kb = document.getElementById('keyboard'); if(kb) kb.classList.remove('show'); activeInput = null; }
-
   function setupKeyboardInput(input){
     if(!input) return;
     input.setAttribute('readonly','readonly');
     input.addEventListener('focus', ()=>{ activeInput = input; buildKeyboard(); showKeyboard(); });
     input.addEventListener('click', ()=>{ activeInput = input; buildKeyboard(); showKeyboard(); });
   }
-
   function kbInsert(text){
     if(!activeInput) return;
     const start = activeInput.selectionStart ?? activeInput.value.length;
@@ -1985,16 +2314,10 @@ const AgenOS = (function(){
     const start = activeInput.selectionStart ?? 0;
     const end = activeInput.selectionEnd ?? 0;
     const val = activeInput.value;
-    if(start===end && start>0){
-      activeInput.value = val.slice(0,start-1) + val.slice(start);
-      activeInput.selectionStart = activeInput.selectionEnd = start-1;
-    } else if(start!==end){
-      activeInput.value = val.slice(0,start) + val.slice(end);
-      activeInput.selectionStart = activeInput.selectionEnd = start;
-    }
+    if(start===end && start>0){ activeInput.value = val.slice(0,start-1) + val.slice(start); activeInput.selectionStart = activeInput.selectionEnd = start-1; }
+    else if(start!==end){ activeInput.value = val.slice(0,start) + val.slice(end); activeInput.selectionStart = activeInput.selectionEnd = start; }
     activeInput.dispatchEvent(new Event('input', {bubbles:true}));
   }
-
   document.getElementById('keyboard').addEventListener('click', (e)=>{
     const btn = e.target.closest('.kb-key');
     if(!btn) return;
@@ -2008,17 +2331,12 @@ const AgenOS = (function(){
     else if(action==='space'){ kbInsert(' '); }
     else if(action==='enter'){ kbInsert('\n'); }
   });
-
   const backspaceBtn = document.createElement('button');
   backspaceBtn.className = 'kb-key special';
   backspaceBtn.textContent = '⌫';
   backspaceBtn.style.maxWidth = '60px';
   backspaceBtn.addEventListener('click', (e)=>{ e.stopPropagation(); kbBackspace(); });
-
-  document.querySelectorAll('.kb-suggestion').forEach(s=>{
-    s.addEventListener('click', ()=> kbInsert(s.textContent));
-  });
-
+  document.querySelectorAll('.kb-suggestion').forEach(s=>{ s.addEventListener('click', ()=> kbInsert(s.textContent)); });
   const observer = new MutationObserver(()=>{
     document.querySelectorAll('.kb-input').forEach(inp=>{
       if(!inp.dataset.kbSetup){ inp.dataset.kbSetup = '1'; setupKeyboardInput(inp); }
@@ -2027,7 +2345,7 @@ const AgenOS = (function(){
   observer.observe(document.body, {childList:true, subtree:true});
 
   /* =========================================================
-     BOOT / LOCK
+     BOOT / LOCK / GESTURES
      ========================================================= */
   function boot(){
     const fill = document.getElementById('boot-fill');
@@ -2048,10 +2366,7 @@ const AgenOS = (function(){
       lock.style.opacity='0';
       setTimeout(()=>{ lock.style.display='none'; state.unlocked=true; refreshWidget(); }, 480);
     }
-    function pointerDown(e){
-      dragging=true; startY=(e.touches?e.touches[0].clientY:e.clientY);
-      lock.style.transition='none';
-    }
+    function pointerDown(e){ dragging=true; startY=(e.touches?e.touches[0].clientY:e.clientY); lock.style.transition='none'; }
     function pointerMove(e){
       if(!dragging) return;
       const y=(e.touches?e.touches[0].clientY:e.clientY);
@@ -2063,8 +2378,7 @@ const AgenOS = (function(){
       if(!dragging) return;
       dragging=false;
       lock.style.transition='transform .45s cubic-bezier(.32,.72,0,1), opacity .4s ease';
-      if(dy < -90){ unlock(); }
-      else { lock.style.transform='translateY(0)'; lock.style.opacity='1'; }
+      if(dy < -90){ unlock(); } else { lock.style.transform='translateY(0)'; lock.style.opacity='1'; }
     }
     drag.addEventListener('mousedown', pointerDown);
     window.addEventListener('mousemove', pointerMove);
@@ -2075,43 +2389,101 @@ const AgenOS = (function(){
     lock.addEventListener('click', (e)=>{ if(e.target===lock) unlock(); });
   }
 
+  /* CC / NC Gestures */
+  function setupControlCenterGesture(){
+    const cc = document.getElementById('control-center');
+    let startY = 0, startX = 0, pulling = false, fromTop = false;
+    const screen = document.getElementById('screen');
+
+    screen.addEventListener('touchstart', (e)=>{
+      const t = e.touches[0];
+      if(t.clientY < 60 && t.clientX > window.innerWidth * 0.5){
+        fromTop = true; pulling = true;
+        startY = t.clientY; startX = t.clientX;
+        cc.style.transition = 'none';
+      } else if(t.clientY < 60 && t.clientX <= window.innerWidth * 0.5){
+        fromTop = false; pulling = true;
+        startY = t.clientY; startX = t.clientX;
+        const nc = document.getElementById('notification-center');
+        nc.style.transition = 'none';
+      }
+    }, {passive:true});
+    screen.addEventListener('touchmove', (e)=>{
+      if(!pulling) return;
+      const t = e.touches[0];
+      const dy = t.clientY - startY;
+      if(fromTop && dy > 0){
+        cc.style.transform = `translateY(${Math.min(0, -100 + (dy/300)*100)}%)`;
+      } else if(!fromTop && dy > 0){
+        const nc = document.getElementById('notification-center');
+        nc.style.transform = `translateX(${Math.min(0, -100 + (dy/300)*100)}%)`;
+      }
+    }, {passive:true});
+    screen.addEventListener('touchend', (e)=>{
+      if(!pulling) return;
+      pulling = false;
+      cc.style.transition = '';
+      const nc = document.getElementById('notification-center');
+      nc.style.transition = '';
+      const dy = (e.changedTouches[0]?.clientY || 0) - startY;
+      if(fromTop && dy > 80){ cc.classList.add('show'); cc.style.transform = ''; }
+      else { cc.classList.remove('show'); cc.style.transform = ''; }
+      if(!fromTop && dy > 80){ nc.classList.add('show'); nc.style.transform = ''; }
+      else { nc.classList.remove('show'); nc.style.transform = ''; }
+    });
+
+    // Click outside to close
+    cc.addEventListener('click', (e)=>{ if(e.target===cc) closeControlCenter(); });
+    const nc = document.getElementById('notification-center');
+    nc.addEventListener('click', (e)=>{ if(e.target===nc) nc.classList.remove('show'); });
+    nc.addEventListener('touchstart', (e)=>{
+      const t = e.touches[0];
+      if(t.clientY < 60) startY = t.clientY;
+    }, {passive:true});
+  }
+
   /* =========================================================
      INIT
      ========================================================= */
   function init(){
-    renderGrid();
+    buildHomePages();
+    renderDock();
     tickClock();
     setInterval(tickClock, 1000*15);
     setInterval(()=>{ refreshWidget(); }, 45000);
     refreshWidget();
     document.documentElement.style.setProperty('--wp', wallpapers.default);
+    applyTheme();
     applyIconStyle();
+    renderNotifications();
+    updateCCTiles();
+    setBrightness(state.brightness);
     boot();
     setupLockGesture();
-    // Add backspace to keyboard
+    setupHomeSwipe();
+    setupControlCenterGesture();
     const kb = document.getElementById('keyboard');
     const bottomRow = kb.children[4];
     if(bottomRow) bottomRow.appendChild(backspaceBtn);
-    // Setup all inputs
     document.querySelectorAll('.kb-input').forEach(inp=>{ inp.dataset.kbSetup='1'; setupKeyboardInput(inp); });
-    // Tap outside to close edit mode
+    // Tap outside edit mode
     document.getElementById('home-scroll').addEventListener('click', (e)=>{
-      if(e.target.id==='home-scroll' || e.target.id==='app-grid') exitEditMode();
+      if(dragState.isEditing && (e.target.id==='home-scroll' || e.target.classList.contains('home-page'))) exitEditMode();
     });
   }
   document.addEventListener('DOMContentLoaded', init);
 
   return {
-    openApp, closeApp, goHome, renderApp,
+    openApp, closeApp, goHome, renderApp, lockScreen,
     settingsNav, toggleSetting, setAccent, setWallpaper, setIconStyle, setIconTint,
+    setDarkMode, setBrightness, setVolume, downloadUpdate, installUpdate,
     newNote, openNote, deleteNote,
     calcPress, musicToggle, musicNext, musicPrev, playTrack,
-    takePhoto, flipCamera, retryCamera,
-    allowPermission, denyPermission,
-    dial, call,
-    openThread, sendMsg, browserGo, browserGoTo,
-    installApp, updateCurrency, swapCurrency, translateText,
-    toggleFlashlight, setTimer, toggleTimer, resetTimer, recordVoice, resetMeasure,
+    takePhoto, flipCamera, retryCamera, allowPermission, denyPermission,
+    dial, call, openThread, sendMsg, browserGo, browserGoTo, installApp,
+    updateCurrency, swapCurrency, translateText, toggleFlashlight,
+    setTimer, toggleTimer, resetTimer, recordVoice,
+    ccToggle, ccToggleDarkMode, ccOpenCamera,
   };
 })();
 </script>
