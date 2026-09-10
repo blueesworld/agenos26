@@ -3,187 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>AgenOS 5.0</title>
+<title>AgenOS 6.0</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --accent-1:#8b5cf6;
-    --accent-2:#3b6bf6;
-    --bg-deep:#050509;
-    --bg-surface:#0d0d17;
-    --bg-elevated:#1c1c22;
-    --glass:rgba(255,255,255,0.055);
-    --glass-strong:rgba(255,255,255,0.09);
+    --accent-1:#8b5cf6; --accent-2:#3b6bf6;
+    --bg-deep:#050509; --bg-surface:#0d0d17; --bg-elevated:#1c1c22;
+    --glass:rgba(255,255,255,0.055); --glass-strong:rgba(255,255,255,0.09);
     --glass-border:rgba(255,255,255,0.11);
-    --text-1:#f4f4f9;
-    --text-2:#9696ab;
-    --text-3:#5e5e72;
+    --text-1:#f4f4f9; --text-2:#9696ab; --text-3:#5e5e72;
     --separator:rgba(255,255,255,0.08);
-    --icon-tint-color: #8b5cf6;
-    --kb-height: 280px;
+    --icon-tint-color:#8b5cf6;
+    --kb-height:280px;
   }
   body.light-mode{
-    --bg-deep:#f2f2f7;
-    --bg-surface:#ffffff;
-    --bg-elevated:#ffffff;
-    --glass:rgba(255,255,255,0.7);
-    --glass-strong:rgba(255,255,255,0.85);
+    --bg-deep:#f2f2f7; --bg-surface:#ffffff; --bg-elevated:#ffffff;
+    --glass:rgba(255,255,255,0.7); --glass-strong:rgba(255,255,255,0.85);
     --glass-border:rgba(0,0,0,0.08);
-    --text-1:#000000;
-    --text-2:#6e6e73;
-    --text-3:#8e8e93;
+    --text-1:#000000; --text-2:#6e6e73; --text-3:#8e8e93;
     --separator:rgba(0,0,0,0.08);
   }
   body.light-mode .home-indicator{background:rgba(0,0,0,0.6);}
   body.light-mode .app-label{color:#000;text-shadow:none;}
-
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;margin:0;padding:0;overflow:hidden;}
   body{
-    background:
-      radial-gradient(ellipse 90% 60% at 50% -10%, #14122b 0%, transparent 60%),
-      radial-gradient(ellipse 80% 60% at 100% 100%, #0c1230 0%, transparent 55%),
-      var(--bg-deep);
-    font-family:'Inter',sans-serif;
-    color:var(--text-1);
-    user-select:none;
-    overscroll-behavior:none;
+    background:radial-gradient(ellipse 90% 60% at 50% -10%, #14122b 0%, transparent 60%),radial-gradient(ellipse 80% 60% at 100% 100%, #0c1230 0%, transparent 55%),var(--bg-deep);
+    font-family:'Inter',sans-serif; color:var(--text-1); user-select:none; overscroll-behavior:none;
     transition:background .4s ease, color .3s ease;
   }
-  body.light-mode{
-    background:
-      radial-gradient(ellipse 90% 60% at 50% -10%, #e0e0f0 0%, transparent 60%),
-      radial-gradient(ellipse 80% 60% at 100% 100%, #d0d8f0 0%, transparent 55%),
-      var(--bg-deep);
-  }
+  body.light-mode{background:radial-gradient(ellipse 90% 60% at 50% -10%, #e0e0f0 0%, transparent 60%),radial-gradient(ellipse 80% 60% at 100% 100%, #d0d8f0 0%, transparent 55%),var(--bg-deep);}
   .font-display{font-family:'Space Grotesk',sans-serif;}
-  ::-webkit-scrollbar{display:none;}
-  *{scrollbar-width:none;}
-
-  #screen{
-    position:fixed;inset:0;
-    width:100vw;height:100vh;
-    height:100dvh;
-    overflow:hidden;
-    background:#000;
-    display:flex;flex-direction:column;
-  }
-  #dynamic-island{
-    position:absolute;top:8px;left:50%;transform:translateX(-50%);
-    width:96px;height:28px;background:#000;border-radius:20px;z-index:1000;
-    box-shadow:0 0 0 1px rgba(255,255,255,0.06);
-    pointer-events:none;
-  }
-  .home-indicator{
-    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-    width:130px;height:4px;border-radius:3px;background:rgba(255,255,255,0.8);
-    z-index:2000;cursor:pointer;
-  }
-
-  .screen-layer{
-    position:absolute;inset:0;
-    display:flex;flex-direction:column;
-    transition:transform .48s cubic-bezier(.32,.72,0,1), opacity .4s ease;
-  }
-  .wallpaper{
-    background: var(--wp, radial-gradient(ellipse 120% 70% at 30% 0%, #4b3bd4 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 85% 15%, #8b5cf6 0%, transparent 50%), radial-gradient(ellipse 120% 80% at 50% 100%, #131335 0%, transparent 60%), linear-gradient(180deg,#0a0a18 0%,#050508 100%));
-  }
-
+  ::-webkit-scrollbar{display:none;} *{scrollbar-width:none;}
+  #screen{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;overflow:hidden;background:#000;display:flex;flex-direction:column;}
+  #dynamic-island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:96px;height:28px;background:#000;border-radius:20px;z-index:1000;box-shadow:0 0 0 1px rgba(255,255,255,0.06);pointer-events:none;}
+  .home-indicator{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:4px;border-radius:3px;background:rgba(255,255,255,0.8);z-index:2000;cursor:pointer;}
+  .screen-layer{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .48s cubic-bezier(.32,.72,0,1), opacity .4s ease;}
+  .wallpaper{background:var(--wp, radial-gradient(ellipse 120% 70% at 30% 0%, #4b3bd4 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 85% 15%, #8b5cf6 0%, transparent 50%), radial-gradient(ellipse 120% 80% at 50% 100%, #131335 0%, transparent 60%), linear-gradient(180deg,#0a0a18 0%,#050508 100%));}
   .statusbar{display:flex;align-items:center;justify-content:space-between;padding:14px 26px 4px;font-size:15px;font-weight:600;letter-spacing:.2px;flex-shrink:0;padding-top:max(14px, env(safe-area-inset-top));}
-
+  .statusbar-time{cursor:pointer;padding:4px 8px;margin:-4px -8px;border-radius:8px;transition:background .15s;pointer-events:auto;}
+  .statusbar-time:active{background:rgba(255,255,255,.1);}
   .glass{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
   .glass-strong{background:var(--glass-strong);border:1px solid var(--glass-border);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);}
-
   .accent-grad{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));}
   .accent-text{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
-
-  .app-icon{
-    width:58px;height:58px;border-radius:16px;
-    display:flex;align-items:center;justify-content:center;
-    position:relative;flex-shrink:0;
-    box-shadow:0 6px 14px -6px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07) inset;
-    transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .3s ease, box-shadow .25s ease;
-    overflow:hidden;
-    pointer-events:none;
-  }
+  .app-icon{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;box-shadow:0 6px 14px -6px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07) inset;transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .3s ease, box-shadow .25s ease;overflow:hidden;pointer-events:none;}
   .app-icon svg{width:60%;height:60%;}
-  .icon-tinted .app-icon{background: color-mix(in srgb, var(--icon-tint-color) 55%, transparent) !important; backdrop-filter: blur(6px);}
-  .icon-tinted .app-icon svg *{fill: var(--icon-tint-color) !important; stroke: var(--icon-tint-color) !important;}
-  .icon-dark .app-icon{ background: rgba(20,20,28,0.85) !important; backdrop-filter: blur(8px); }
-  .icon-dark .app-icon svg *{fill: #fff !important; stroke: #fff !important;}
-  .icon-clear .app-icon{ background: rgba(255,255,255,0.12) !important; backdrop-filter: blur(12px); border:1px solid rgba(255,255,255,0.25); }
-  .icon-clear .app-icon svg *{fill: #fff !important; stroke: #fff !important;}
-
-  .app-btn{
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    position:relative;
-    cursor:pointer;
-    touch-action:none;
-    transition:transform .2s cubic-bezier(.34,1.56,.64,1);
-    will-change:transform;
-  }
-  .app-btn.dragging{ z-index:10000; transition:none; cursor:grabbing; }
-  .app-btn.dragging .app-icon{
-    transform:scale(1.18);
-    box-shadow:0 20px 40px -10px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.15) inset;
-    filter:brightness(1.08);
-  }
+  .icon-tinted .app-icon{background: color-mix(in srgb, var(--icon-tint-color) 55%, transparent) !important;backdrop-filter:blur(6px);}
+  .icon-tinted .app-icon svg *{fill: var(--icon-tint-color) !important;stroke: var(--icon-tint-color) !important;}
+  .icon-dark .app-icon{background:rgba(20,20,28,0.85) !important;backdrop-filter:blur(8px);}
+  .icon-dark .app-icon svg *{fill:#fff !important;stroke:#fff !important;}
+  .icon-clear .app-icon{background:rgba(255,255,255,0.12) !important;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.25);}
+  .icon-clear .app-icon svg *{fill:#fff !important;stroke:#fff !important;}
+  .app-btn{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;cursor:pointer;touch-action:none;transition:transform .2s cubic-bezier(.34,1.56,.64,1);will-change:transform;}
+  .app-btn.dragging{z-index:10000;transition:none;cursor:grabbing;}
+  .app-btn.dragging .app-icon{transform:scale(1.18);box-shadow:0 20px 40px -10px rgba(0,0,0,0.8),0 0 0 1px rgba(255,255,255,0.15) inset;filter:brightness(1.08);}
   .app-btn.dragging .app-label{opacity:0;}
-  .app-btn.wiggle{ animation:wiggle .35s ease-in-out infinite alternate; }
+  .app-btn.wiggle{animation:wiggle .35s ease-in-out infinite alternate;}
   .app-btn.wiggle:nth-child(2n){animation-delay:.1s;}
   .app-btn.wiggle:nth-child(3n){animation-delay:.2s;}
-  @keyframes wiggle{ 0%{transform:rotate(-1.2deg) scale(1);} 100%{transform:rotate(1.2deg) scale(1);} }
-
-  .app-btn .delete-btn{
-    position:absolute;top:-6px;left:-6px;
-    width:24px;height:24px;border-radius:50%;
-    background:rgba(255,255,255,0.95);
-    color:#111;font-size:16px;font-weight:700;
-    display:none;align-items:center;justify-content:center;
-    box-shadow:0 2px 6px rgba(0,0,0,0.4);
-    z-index:5;
-    cursor:pointer;
-    pointer-events:auto;
-  }
+  @keyframes wiggle{0%{transform:rotate(-1.2deg) scale(1);}100%{transform:rotate(1.2deg) scale(1);}}
+  .app-btn .delete-btn{position:absolute;top:-6px;left:-6px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.95);color:#111;font-size:16px;font-weight:700;display:none;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,0.4);z-index:5;cursor:pointer;pointer-events:auto;}
   .app-btn.editing .delete-btn{display:flex;}
-  .app-btn.deleted{display:none !important;}
-
-  .drag-ghost{
-    position:fixed;z-index:99999;pointer-events:none;transition:none;
-    filter:drop-shadow(0 20px 30px rgba(0,0,0,0.6));
-    transform-origin:center;
-  }
+  .drag-ghost{position:fixed;z-index:99999;pointer-events:none;transition:none;filter:drop-shadow(0 20px 30px rgba(0,0,0,0.6));transform-origin:center;}
   .drag-ghost .app-icon{width:58px;height:58px;transform:scale(1.15);}
   .drag-ghost .app-label{opacity:0;}
-
   .app-label{font-size:11px;color:rgba(255,255,255,0.88);font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,0.5);transition:opacity .2s;}
-
-  .app-window{
-    position:absolute;inset:0;
-    transform:translateY(100%);
-    opacity:0;pointer-events:none;
-    transition:transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;
-    display:flex;flex-direction:column;
-    background:var(--bg-surface);
-    z-index:50;
-    color:var(--text-1);
-  }
+  .app-window{position:absolute;inset:0;transform:translateY(100%);opacity:0;pointer-events:none;transition:transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;display:flex;flex-direction:column;background:var(--bg-surface);z-index:50;color:var(--text-1);}
   .app-window.open{transform:translateY(0);opacity:1;pointer-events:auto;}
   #home-layer.dimmed{transform:scale(0.92);opacity:0;}
-
   .app-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0;padding-top:max(16px, env(safe-area-inset-top));}
   .app-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:40px;}
-
   .row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;}
   .divider{height:1px;background:var(--separator);margin:0 16px;}
-
   .toggle{width:46px;height:27px;border-radius:14px;background:rgba(128,128,128,0.3);position:relative;transition:background .25s;flex-shrink:0;}
   .toggle.on{background:var(--accent-1);}
   .toggle::after{content:'';position:absolute;top:2.5px;left:2.5px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.3,1.3,.5,1);box-shadow:0 1px 3px rgba(0,0,0,0.4);}
   .toggle.on::after{transform:translateX(19px);}
-
   #boot-screen{background:#050508;align-items:center;justify-content:center;z-index:3000;}
   .boot-logo{font-size:52px;font-weight:700;letter-spacing:1px;opacity:0;animation:bootIn 1.1s ease forwards .15s;}
   @keyframes bootIn{0%{opacity:0;transform:scale(.82);filter:blur(6px);}60%{opacity:1;filter:blur(0);}100%{opacity:1;transform:scale(1);}}
@@ -192,7 +90,6 @@
   @keyframes fadeIn{to{opacity:1;}}
   .pulse-ring{position:absolute;width:140px;height:140px;border-radius:50%;border:1px solid rgba(139,92,246,0.35);animation:ring 2.4s ease-out infinite;}
   @keyframes ring{0%{transform:scale(.4);opacity:0;}30%{opacity:.6;}100%{transform:scale(1.6);opacity:0;}}
-
   #lock-screen{align-items:center;touch-action:none;z-index:2500;}
   .lock-time{font-family:'Space Grotesk',sans-serif;line-height:1;letter-spacing:-2px;transition:font-size .3s ease, font-weight .3s ease;}
   .lock-time.size-large{font-size:96px;font-weight:700;}
@@ -205,33 +102,16 @@
   .chevrons span:nth-child(1){animation-delay:0s;}
   .chevrons span:nth-child(2){animation-delay:.15s;margin-top:-10px;}
   @keyframes chevUp{0%{opacity:0;transform:translateY(6px);}30%{opacity:.9;}60%{opacity:0;transform:translateY(-4px);}100%{opacity:0;}}
-
   .fade-in{animation:simpleFade .5s ease both;}
   @keyframes simpleFade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
   .press-scale:active{transform:scale(.94);}
   .press-scale{transition:transform .12s ease;}
-
   .keypad-btn{width:100%;aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:500;}
-
   .wp-swatch{width:100%;aspect-ratio:9/16;border-radius:12px;cursor:pointer;position:relative;box-shadow:0 4px 10px -4px rgba(0,0,0,.5);}
   .wp-swatch.selected::after{content:'';position:absolute;inset:0;border-radius:12px;border:2.5px solid var(--accent-1);}
-
   input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(128,128,128,0.3);}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);}
-
-  #keyboard{
-    position:absolute;bottom:0;left:0;right:0;
-    height:var(--kb-height);
-    background:rgba(28,28,36,0.96);
-    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-    border-top:1px solid var(--separator);
-    transform:translateY(100%);
-    transition:transform .3s cubic-bezier(.32,.72,0,1);
-    z-index:5000;
-    padding:8px 4px max(8px, env(safe-area-inset-bottom));
-    display:flex;flex-direction:column;gap:8px;
-  }
+  #keyboard{position:absolute;bottom:0;left:0;right:0;height:var(--kb-height);background:rgba(28,28,36,0.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--separator);transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);z-index:5000;padding:8px 4px max(8px, env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;}
   body.light-mode #keyboard{background:rgba(240,240,245,0.97);}
   #keyboard.show{transform:translateY(0);}
   .kb-row{display:flex;justify-content:center;gap:6px;flex:1;}
@@ -244,23 +124,8 @@
   .kb-suggestions{display:flex;gap:8px;padding:0 8px;height:38px;align-items:center;}
   .kb-suggestion{flex:1;text-align:center;padding:6px 4px;background:rgba(128,128,128,0.15);border-radius:6px;font-size:14px;color:var(--text-1);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .kb-suggestion:active{background:rgba(128,128,128,0.3);}
-
   #camera-video{width:100%;height:100%;object-fit:cover;background:#000;display:block;}
-
-  .store-card{border-radius:20px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);display:flex;gap:14px;align-items:center;margin-bottom:12px;}
-  .store-icon{width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;}
-
-  #control-center{
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    z-index:15000;
-    background:rgba(0,0,0,0.5);
-    backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-    transform:translateY(-100%);
-    opacity:0;pointer-events:none;
-    transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;
-    padding:60px 16px 40px;
-    overflow-y:auto;
-  }
+  #control-center{position:fixed;top:0;left:0;right:0;bottom:0;z-index:15000;background:rgba(0,0,0,0.5);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);transform:translateY(-100%);opacity:0;pointer-events:none;transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;padding:60px 16px 40px;overflow-y:auto;}
   body.light-mode #control-center{background:rgba(255,255,255,0.6);}
   #control-center.show{transform:translateY(0);opacity:1;pointer-events:auto;}
   .cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
@@ -280,23 +145,11 @@
   .cc-small-tile{flex:1;background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:22px;padding:16px;backdrop-filter:blur(20px);aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;transition:transform .15s ease;}
   .cc-small-tile:active{transform:scale(.94);}
   .cc-small-tile.on{background:var(--accent-1);}
-
-  #notification-center{
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    z-index:14000;
-    background:rgba(0,0,0,0.4);
-    backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-    transform:translateX(-100%);
-    opacity:0;pointer-events:none;
-    transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;
-    padding:60px 16px 40px;
-    overflow-y:auto;
-  }
+  #notification-center{position:fixed;top:0;left:0;right:0;bottom:0;z-index:14000;background:rgba(0,0,0,0.4);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);transform:translateX(-100%);opacity:0;pointer-events:none;transition:transform .4s cubic-bezier(.32,.72,0,1), opacity .3s ease;padding:60px 16px 40px;overflow-y:auto;}
   #notification-center.show{transform:translateX(0);opacity:1;pointer-events:auto;}
   .notif-card{background:var(--glass-strong);border:1px solid var(--glass-border);border-radius:20px;padding:14px 16px;backdrop-filter:blur(20px);margin-bottom:10px;display:flex;gap:12px;animation:notifIn .4s cubic-bezier(.34,1.56,.64,1) both;}
   @keyframes notifIn{from{opacity:0;transform:translateY(-20px) scale(.95);}to{opacity:1;transform:translateY(0) scale(1);}}
   .notif-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;}
-
   .permission-modal{position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:24px;}
   .permission-modal.show{display:flex;}
   .permission-card{background:var(--bg-elevated);border-radius:24px;padding:26px 24px;max-width:340px;width:100%;text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,0.9);border:1px solid var(--glass-border);animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);}
@@ -308,31 +161,34 @@
   .permission-btn{flex:1;padding:12px;border-radius:14px;border:none;font-weight:600;font-size:15px;cursor:pointer;}
   .permission-btn.deny{background:rgba(128,128,128,0.2);color:var(--text-1);}
   .permission-btn.allow{background:var(--accent-1);color:#fff;}
-
   #home-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y;position:relative;}
   #home-pages{display:flex;flex-direction:row;height:100%;transition:transform .4s cubic-bezier(.32,.72,0,1);touch-action:pan-x;}
   .home-page{width:100vw;flex-shrink:0;padding:20px 18px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
   .home-page .page-grid{display:grid;grid-template-columns:repeat(4,1fr);row-gap:22px;justify-items:center;}
-
   #page-dots{display:flex;justify-content:center;gap:6px;padding:6px 0 2px;flex-shrink:0;}
   .page-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.35);transition:background .2s, transform .2s;}
   .page-dot.active{background:#fff;transform:scale(1.1);}
   body.light-mode .page-dot{background:rgba(0,0,0,0.25);}
   body.light-mode .page-dot.active{background:#000;}
-
-  /* Battery charging animation */
-  .charging-bolt{animation:boltPulse 1.5s ease-in-out infinite;}
-  @keyframes boltPulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-
-  /* Network icon */
   .net-icon{font-size:11px;font-weight:700;letter-spacing:.3px;}
-
-  /* Lockscreen widgets */
   .lock-widget{background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;padding:12px 14px;backdrop-filter:blur(20px);display:flex;align-items:center;gap:12px;}
-
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
-  }
+  /* Store */
+  .store-hero{border-radius:24px;padding:24px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;margin-bottom:20px;position:relative;overflow:hidden;}
+  .store-hero::after{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,0.25),transparent 70%);border-radius:50%;}
+  .store-section-title{font-size:20px;font-weight:700;font-family:'Space Grotesk',sans-serif;margin-bottom:14px;letter-spacing:-0.3px;}
+  .store-card{border-radius:20px;padding:16px;background:var(--glass);border:1px solid var(--glass-border);display:flex;gap:14px;align-items:center;margin-bottom:12px;transition:transform .15s ease;}
+  .store-card:active{transform:scale(.98);}
+  .store-icon{width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;}
+  .store-btn{background:var(--accent-1);border:none;color:#fff;font-weight:600;font-size:13px;padding:7px 16px;border-radius:20px;cursor:pointer;min-width:74px;text-align:center;transition:all .2s;}
+  .store-btn.installed{background:rgba(128,128,128,.2);color:var(--text-1);}
+  .store-btn:active{transform:scale(.94);}
+  .install-spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;display:inline-block;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .store-category{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;}
+  .store-category-item{display:flex;flex-direction:column;align-items:center;gap:8px;flex-shrink:0;cursor:pointer;}
+  .store-category-icon{width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 6px 14px -6px rgba(0,0,0,.5);}
+  .store-category-label{font-size:11px;font-weight:600;color:var(--text-2);}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
 </style>
 </head>
 <body>
@@ -347,23 +203,15 @@
     <div class="boot-bar-track"><div class="boot-bar-fill" id="boot-fill"></div></div>
   </div>
 
-  <!-- LOCK SCREEN -->
   <div id="lock-screen" class="screen-layer wallpaper" style="opacity:0;padding-top:80px;">
     <div class="statusbar" style="position:absolute;top:0;left:0;right:0;" id="statusbar-lock"></div>
-
-    <!-- Lock widgets (top) -->
     <div id="lock-widgets-top" style="padding:0 22px 10px;display:flex;flex-direction:column;gap:8px;"></div>
-
     <div style="flex:1;"></div>
-
     <div id="lock-clock-wrap" style="text-align:center;padding:0 22px;">
       <div class="lock-time size-large" id="lock-time">9:41</div>
       <div class="lock-date" id="lock-date">Donnerstag, 10. September</div>
     </div>
-
-    <!-- Lock widgets (bottom) -->
     <div id="lock-widgets-bottom" style="padding:10px 22px 0;display:flex;flex-direction:column;gap:8px;"></div>
-
     <div style="flex:1;"></div>
     <div class="swipe-hint">
       <div class="chevrons" style="margin-bottom:6px;"><span>⌃</span><span>⌃</span></div>
@@ -372,10 +220,8 @@
     <div class="home-indicator" id="lock-drag"></div>
   </div>
 
-  <!-- HOME -->
   <div id="home-layer" class="screen-layer wallpaper">
     <div class="statusbar statusbar-slot"></div>
-
     <div style="padding:14px 18px 4px;">
       <div class="glass fade-in" style="border-radius:26px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="AgenOS.openApp('weather')">
         <div>
@@ -386,13 +232,8 @@
         <svg id="widget-icon" width="54" height="54" viewBox="0 0 24 24" fill="none"></svg>
       </div>
     </div>
-
-    <div id="home-scroll">
-      <div id="home-pages"></div>
-    </div>
-
+    <div id="home-scroll"><div id="home-pages"></div></div>
     <div id="page-dots"></div>
-
     <div style="padding:6px 16px 30px;">
       <div class="glass-strong" style="border-radius:28px;padding:12px 14px;display:flex;justify-content:space-between;" id="dock"></div>
     </div>
@@ -404,40 +245,13 @@
   <div id="control-center">
     <div style="max-width:500px;margin:0 auto;">
       <div class="cc-grid">
-        <div class="cc-tile" id="cc-wifi" onclick="AgenOS.ccToggle('wifi')">
-          <div class="cc-icon">📶</div>
-          <div><div class="cc-label">WLAN</div><div class="cc-sub" id="cc-wifi-sub">Agen_Home</div></div>
-        </div>
-        <div class="cc-tile" id="cc-bt" onclick="AgenOS.ccToggle('bluetooth')">
-          <div class="cc-icon">ᛒ</div>
-          <div><div class="cc-label">Bluetooth</div><div class="cc-sub" id="cc-bt-sub">Ein</div></div>
-        </div>
-        <div class="cc-tile" id="cc-cellular" onclick="AgenOS.ccToggle('cellular')">
-          <div class="cc-icon">📡</div>
-          <div><div class="cc-label">Mobile Daten</div><div class="cc-sub" id="cc-cellular-sub">5G</div></div>
-        </div>
-        <div class="cc-tile" id="cc-airplane" onclick="AgenOS.ccToggle('airplane')">
-          <div class="cc-icon">✈</div>
-          <div><div class="cc-label">Flugmodus</div><div class="cc-sub" id="cc-airplane-sub">Aus</div></div>
-        </div>
+        <div class="cc-tile" id="cc-wifi" onclick="AgenOS.ccToggle('wifi')"><div class="cc-icon">📶</div><div><div class="cc-label">WLAN</div><div class="cc-sub" id="cc-wifi-sub">Agen_Home</div></div></div>
+        <div class="cc-tile" id="cc-bt" onclick="AgenOS.ccToggle('bluetooth')"><div class="cc-icon">ᛒ</div><div><div class="cc-label">Bluetooth</div><div class="cc-sub" id="cc-bt-sub">Ein</div></div></div>
+        <div class="cc-tile" id="cc-cellular" onclick="AgenOS.ccToggle('cellular')"><div class="cc-icon">📡</div><div><div class="cc-label">Mobile Daten</div><div class="cc-sub" id="cc-cellular-sub">5G</div></div></div>
+        <div class="cc-tile" id="cc-airplane" onclick="AgenOS.ccToggle('airplane')"><div class="cc-icon">✈</div><div><div class="cc-label">Flugmodus</div><div class="cc-sub" id="cc-airplane-sub">Aus</div></div></div>
       </div>
-
-      <div class="cc-slider">
-        <div class="cc-slider-icon">☀️</div>
-        <div class="cc-slider-inner">
-          <div class="cc-slider-label"><span>Helligkeit</span><span id="cc-bright-val">80%</span></div>
-          <input type="range" min="10" max="100" value="80" id="cc-bright" oninput="AgenOS.setBrightness(this.value)">
-        </div>
-      </div>
-
-      <div class="cc-slider">
-        <div class="cc-slider-icon">🔊</div>
-        <div class="cc-slider-inner">
-          <div class="cc-slider-label"><span>Lautstärke</span><span id="cc-vol-val">65%</span></div>
-          <input type="range" min="0" max="100" value="65" id="cc-vol" oninput="AgenOS.setVolume(this.value)">
-        </div>
-      </div>
-
+      <div class="cc-slider"><div class="cc-slider-icon">☀️</div><div class="cc-slider-inner"><div class="cc-slider-label"><span>Helligkeit</span><span id="cc-bright-val">80%</span></div><input type="range" min="10" max="100" value="80" id="cc-bright" oninput="AgenOS.setBrightness(this.value)"></div></div>
+      <div class="cc-slider"><div class="cc-slider-icon">🔊</div><div class="cc-slider-inner"><div class="cc-slider-label"><span>Lautstärke</span><span id="cc-vol-val">65%</span></div><input type="range" min="0" max="100" value="65" id="cc-vol" oninput="AgenOS.setVolume(this.value)"></div></div>
       <div class="cc-row">
         <div class="cc-small-tile" id="cc-flash" onclick="AgenOS.ccToggle('flashlight')">🔦</div>
         <div class="cc-small-tile" id="cc-camera" onclick="AgenOS.ccOpenCamera()">📷</div>
@@ -490,88 +304,63 @@
 
 <script>
 /* =========================================================================
-   AgenOS 5.0 — Customizable Lock Screen + Real Battery + Network + Uninstall
+   AgenOS 6.0 — Full App Store + Premium Apps + Tappable Clock
    ========================================================================= */
 const AgenOS = (function(){
 
   const state = {
-    unlocked:false,
-    activeApp:null,
+    unlocked:false, activeApp:null,
     accent:{a1:'#8b5cf6', a2:'#3b6bf6'},
-    wallpaper:'default',
-    darkMode:true,
-    brightness:80,
-    volume:65,
+    wallpaper:'default', darkMode:true, brightness:80, volume:65,
     settings:{
       wifi:true,bluetooth:true,airplane:false,dnd:false,saver:false,location:true,
       cellular:true, faceId:true, trueTone:true, nightShift:false, autoBrightness:true,
       keyboardHaptics:true, keyboardClick:true, predictive:true,
       iconStyle:'color', iconTintColor:'#8b5cf6',
-      cameraPermission: null,
-      softwareUpdate: 'pending',
+      cameraPermission:null,
+      softwareUpdate:'pending',
       language:'de', region:'DE'
     },
-    // Lock screen customization
     lockScreen:{
-      clockSize:'large', // large | medium | small | tiny
-      clockStyle:'default', // default | rounded | mono
-      showDate:true,
-      showWeatherWidget:true,
-      showBatteryWidget:true,
-      showCalendarWidget:false,
-      showMusicWidget:false,
+      clockSize:'large', clockStyle:'default', showDate:true,
+      showWeatherWidget:true, showBatteryWidget:true,
+      showCalendarWidget:false, showMusicWidget:false
     },
-    battery:{
-      level: 87,
-      charging: false,
-      chargingTime: 0,
-      dischargingTime: 0,
-      supported: false
-    },
-    network:{
-      effectiveType: '4g',
-      downlink: 0,
-      rtt: 0,
-      type: 'wifi', // wifi | cellular | none
-      carrier: 'Agen Mobile'
-    },
-    battery:87,
+    battery:{ level:87, charging:false, chargingTime:0, dischargingTime:0, supported:false },
+    network:{ effectiveType:'4g', downlink:0, rtt:0, type:'wifi', carrier:'Agen Mobile' },
+    installedApps:['weather','notes','gallery','calculator','music','clock','calendar','maps','health','compass'],
     notes:[
-      {id:1,title:'Launch checklist',body:'AgenOS 5.0 Build abschließen.\nBoot-Animation polieren.\nAgenPhone 1 Vorbestellungen versenden.'},
+      {id:1,title:'Launch checklist',body:'AgenOS 6.0 Build abschließen.\nBoot-Animation polieren.\nAgenPhone 1 Vorbestellungen versenden.'},
       {id:2,title:'Ideen',body:'Matte Black Finish für die zweite Farbvariante.\nAgen Cloud Sync für Notes.'}
     ],
     photos:[],
     calc:{display:'0', stored:null, op:null, fresh:true, history:[]},
     tracks:[
-      {title:'Ambient Horizon', artist:'Agen Waves', dur:'3:24'},
-      {title:'Violet Signal', artist:'Agen Waves', dur:'2:58'},
-      {title:'Night Mode', artist:'Agen Sound Lab', dur:'4:02'},
-      {title:'Deep Space', artist:'Agen Sound Lab', dur:'3:45'},
-      {title:'Neon Drift', artist:'Agen Waves', dur:'4:18'}
+      {title:'Ambient Horizon', artist:'Agen Waves', dur:'3:24', cover:'linear-gradient(135deg,#8b5cf6,#3b6bf6)'},
+      {title:'Violet Signal', artist:'Agen Waves', dur:'2:58', cover:'linear-gradient(135deg,#f472b6,#a855f7)'},
+      {title:'Night Mode', artist:'Agen Sound Lab', dur:'4:02', cover:'linear-gradient(135deg,#1e293b,#0f172a)'},
+      {title:'Deep Space', artist:'Agen Sound Lab', dur:'3:45', cover:'linear-gradient(135deg,#0ea5e9,#1e40af)'},
+      {title:'Neon Drift', artist:'Agen Waves', dur:'4:18', cover:'linear-gradient(135deg,#fb7185,#ec4899)'}
     ],
-    trackIndex:0,
-    playing:false,
+    trackIndex:0, playing:false,
     threads:{
       'Mira': [{me:false,text:'Hey — sind die AgenPhone 1 Einheiten schon versendet?'},{me:true,text:'Ja, sind heute raus 🚀'}],
-      'Agen Support': [{me:false,text:'Dein AgenPhone 1 ist jetzt auf AgenOS 5.0 aktiv.'}],
+      'Agen Support': [{me:false,text:'Dein AgenPhone 1 ist jetzt auf AgenOS 6.0 aktiv.'}],
       'Theo': [{me:false,text:'Das Matte Black Finish ist unglaublich.'}]
     },
     activeThread:null,
-    cameraStream:null,
-    cameraFacing:'environment',
-    pageCount:2,
-    currentPage:0,
-    installedApps: null, // null = all apps installed
+    cameraStream:null, cameraFacing:'environment',
+    pageCount:2, currentPage:0,
     notifications:[
       {icon:'💬', color:'#34d399', title:'Mira', body:'Ja, sind heute raus 🚀', time:'jetzt'},
       {icon:'📦', color:'#3b82f6', title:'Agen Store', body:'Dein AgenPhone 1 ist unterwegs', time:'vor 2 Min'},
-      {icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 5.1 ist verfügbar', time:'vor 1 Std'},
+      {icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 6.1 ist verfügbar', time:'vor 1 Std'},
     ],
-    alarm: { enabled:false, time:'07:30' },
-    health: { steps:6248, goal:10000, calories:412, distance:4.7, heartRate:72 },
-    compass: { heading:0 },
-    timer: { running:false, remaining:0, interval:null },
-    flashlight: { on:false },
+    alarm:{ enabled:false, time:'07:30' },
+    health:{ steps:6248, goal:10000, calories:412, distance:4.7, heartRate:72 },
+    compass:{ heading:0 },
+    timer:{ running:false, remaining:0, interval:null },
+    flashlight:{ on:false },
   };
 
   const wallpapers = {
@@ -582,10 +371,12 @@ const AgenOS = (function(){
     ember:'radial-gradient(ellipse 110% 70% at 15% 0%, #f9731633 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #8b5cf6 0%, transparent 50%), linear-gradient(180deg,#160a08 0%,#050508 100%)',
     ocean:'radial-gradient(ellipse 110% 70% at 20% 0%, #0ea5e933 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #3b82f6 0%, transparent 50%), linear-gradient(180deg,#04121f 0%,#050508 100%)',
     forest:'radial-gradient(ellipse 110% 70% at 20% 0%, #22c55e33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #059669 0%, transparent 50%), linear-gradient(180deg,#04140a 0%,#050508 100%)',
-    light:'linear-gradient(180deg,#e8ecf5 0%,#d8dff0 100%)',
     sunset:'radial-gradient(ellipse 120% 70% at 50% 0%, #ff9a56 0%, transparent 60%), radial-gradient(ellipse 100% 60% at 20% 30%, #ff6b9d 0%, transparent 50%), linear-gradient(180deg,#2a0f1e 0%,#050508 100%)',
   };
 
+  // ============================================================
+  // ICONS — hochwertige SVG-Icons
+  // ============================================================
   const ICONS = {
     weather:`<svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="10" r="5" fill="#ffd166"/><path d="M8 17a5 5 0 0 1 0-10 6 6 0 0 1 11.8 1.6A4 4 0 0 1 18.5 17H8Z" fill="#fff" opacity=".92"/></svg>`,
     browser:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/><path d="M3 12h18M12 3c2.6 2.6 4 5.7 4 9s-1.4 6.4-4 9c-2.6-2.6-4-5.7-4-9s1.4-6.4 4-9Z" stroke="#fff" stroke-width="1.4"/></svg>`,
@@ -608,9 +399,70 @@ const AgenOS = (function(){
     compass:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#1c1c22"/><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.2"/><path d="M12 5l2 7-2 7-2-7 2-7Z" fill="#ef4444"/></svg>`,
     timer:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" fill="#fff"/><path d="M12 9v4l2.5 2" stroke="#111" stroke-width="1.8" stroke-linecap="round"/><rect x="10" y="3" width="4" height="2" rx="1" fill="#fff"/></svg>`,
     voice:`<svg viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="12" rx="3" fill="#fff"/><path d="M5 12a7 7 0 0 0 14 0M12 19v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+    chat:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3.4V17H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="#fff"/><circle cx="8" cy="11" r="1" fill="#3b82f6"/><circle cx="12" cy="11" r="1" fill="#3b82f6"/><circle cx="16" cy="11" r="1" fill="#3b82f6"/></svg>`,
+    wallet:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="3" fill="#fff"/><rect x="3" y="6" width="18" height="6" fill="#1e40af"/><circle cx="17" cy="16" r="2" fill="#1e40af"/></svg>`,
+    news:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" fill="#fff"/><rect x="6" y="7" width="8" height="6" fill="#2563eb"/><path d="M6 15h12M6 17h8" stroke="#2563eb" stroke-width="1.2"/></svg>`,
+    games:`<svg viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="11" rx="5" fill="#fff"/><circle cx="7" cy="12" r="1.5" fill="#7c3aed"/><circle cx="10" cy="10" r="1.5" fill="#7c3aed"/><circle cx="17" cy="10" r="1.5" fill="#ef4444"/><circle cx="15" cy="13" r="1.5" fill="#10b981"/></svg>`,
+    fitness:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M8 12h8M12 8v8" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/></svg>`,
+    food:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#fff"/><circle cx="12" cy="12" r="5" fill="#f59e0b"/></svg>`,
+    travel:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#fff"/><path d="M12 3v18M3 12h18" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="2 2"/></svg>`,
+    photo_editor:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="3" fill="#fff"/><circle cx="9" cy="10" r="2" fill="#f472b6"/><path d="M4 18l5-5 4 4 3-3 4 4" stroke="#8b5cf6" stroke-width="1.5" fill="none"/></svg>`,
+    video:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="14" height="12" rx="3" fill="#fff"/><path d="M17 9l4-2v10l-4-2V9Z" fill="#fff"/></svg>`,
+    podcast:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#fff"/><rect x="10" y="6" width="4" height="9" rx="2" fill="#7c3aed"/><circle cx="12" cy="18" r="1.5" fill="#7c3aed"/></svg>`,
+    bank:`<svg viewBox="0 0 24 24" fill="none"><path d="M3 10 12 4l9 6v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9Z" fill="#fff"/><rect x="6" y="12" width="3" height="6" fill="#1e40af"/><rect x="10.5" y="12" width="3" height="6" fill="#1e40af"/><rect x="15" y="12" width="3" height="6" fill="#1e40af"/></svg>`,
+    weather_pro:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" fill="#0ea5e9"/><circle cx="9" cy="11" r="3" fill="#fff"/><circle cx="15" cy="12" r="2.5" fill="#fff" opacity=".85"/></svg>`,
+    notebook:`<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2.5" fill="#fff"/><rect x="5" y="3" width="4" height="18" fill="#f59e0b"/><path d="M11 8h5M11 12h5M11 16h3" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>`,
   };
 
-  const ALL_APPS = [
+  // ============================================================
+  // STORE CATALOG — alle verfügbaren Store-Apps
+  // ============================================================
+  const STORE_CATALOG = [
+    {id:'chat', name:'Agen Chat', dev:'Agen Labs', icon:'chat', bg:'linear-gradient(160deg,#3b82f6,#1d4ed8)',
+     desc:'KI-gestützter Messenger mit Ende-zu-Ende-Verschlüsselung und Smart Replies.',
+     cat:'Soziales', size:'42 MB', rating:4.8, reviews:'12.4k', version:'2.1.0', price:'Gratis'},
+    {id:'wallet', name:'Agen Wallet', dev:'Agen Financial', icon:'wallet', bg:'linear-gradient(160deg,#1e40af,#1e3a8a)',
+     desc:'Alle Karten, Tickets und Ausweise an einem sicheren Ort.',
+     cat:'Finanzen', size:'34 MB', rating:4.7, reviews:'8.2k', version:'3.0.1', price:'Gratis'},
+    {id:'news', name:'Agen News', dev:'Agen Media', icon:'news', bg:'linear-gradient(160deg,#2563eb,#1e3a8a)',
+     desc:'Kuratierte Nachrichten aus aller Welt, personalisiert für dich.',
+     cat:'Nachrichten', size:'28 MB', rating:4.5, reviews:'22.1k', version:'5.4.0', price:'Gratis'},
+    {id:'games', name:'Agen Games', dev:'Agen Studios', icon:'games', bg:'linear-gradient(160deg,#7c3aed,#5b21b6)',
+     desc:'Hunderte Spiele direkt spielbar, kein Download nötig.',
+     cat:'Spiele', size:'210 MB', rating:4.6, reviews:'45.8k', version:'1.8.2', price:'Gratis'},
+    {id:'fitness', name:'Agen Fitness', dev:'Agen Health', icon:'fitness', bg:'linear-gradient(160deg,#16a34a,#166534)',
+     desc:'Workouts, Trainingspläne und Gesundheitsziele verfolgen.',
+     cat:'Gesundheit', size:'78 MB', rating:4.9, reviews:'18.7k', version:'4.2.0', price:'Gratis'},
+    {id:'food', name:'Agen Food', dev:'Agen Delivery', icon:'food', bg:'linear-gradient(160deg,#f59e0b,#b45309)',
+     desc:'Essen bestellen, Rezepte entdecken, Lieferung verfolgen.',
+     cat:'Essen', size:'92 MB', rating:4.4, reviews:'9.3k', version:'2.5.1', price:'Gratis'},
+    {id:'travel', name:'Agen Travel', dev:'Agen Voyage', icon:'travel', bg:'linear-gradient(160deg,#0ea5e9,#0369a1)',
+     desc:'Flüge, Hotels und Aktivitäten weltweit buchen.',
+     cat:'Reisen', size:'120 MB', rating:4.7, reviews:'15.6k', version:'3.8.0', price:'Gratis'},
+    {id:'photo_editor', name:'Agen Photo', dev:'Agen Creative', icon:'photo_editor', bg:'linear-gradient(160deg,#f472b6,#8b5cf6)',
+     desc:'Professionelle Fotobearbeitung mit KI-Werkzeugen.',
+     cat:'Foto & Video', size:'156 MB', rating:4.8, reviews:'31.2k', version:'6.1.3', price:'Gratis'},
+    {id:'video', name:'Agen Video', dev:'Agen Creative', icon:'video', bg:'linear-gradient(160deg,#0f172a,#1e293b)',
+     desc:'Video-Editor mit Effekten und 4K-Export.',
+     cat:'Foto & Video', size:'188 MB', rating:4.6, reviews:'11.9k', version:'4.0.5', price:'Gratis'},
+    {id:'podcast', name:'Agen Podcast', dev:'Agen Media', icon:'podcast', bg:'linear-gradient(160deg,#7c3aed,#4c1d95)',
+     desc:'Millionen Podcasts und Hörbücher, offline verfügbar.',
+     cat:'Unterhaltung', size:'56 MB', rating:4.7, reviews:'26.4k', version:'2.9.0', price:'Gratis'},
+    {id:'bank', name:'Agen Bank', dev:'Agen Financial', icon:'bank', bg:'linear-gradient(160deg,#1e40af,#0f172a)',
+     desc:'Konten verwalten, überweisen und sparen – alles an einem Ort.',
+     cat:'Finanzen', size:'68 MB', rating:4.5, reviews:'7.8k', version:'5.2.1', price:'Gratis'},
+    {id:'weather_pro', name:'Agen Weather Pro', dev:'Agen Labs', icon:'weather_pro', bg:'linear-gradient(160deg,#0ea5e9,#1e40af)',
+     desc:'Radar, Vorhersagen und Unwetterwarnungen in Echtzeit.',
+     cat:'Wetter', size:'48 MB', rating:4.9, reviews:'19.5k', version:'3.1.0', price:'Gratis'},
+    {id:'notebook', name:'Agen Notebook', dev:'Agen Productivity', icon:'notebook', bg:'linear-gradient(160deg,#f59e0b,#b45309)',
+     desc:'Handschriftliche Notizen, Zeichnungen und PDF-Import.',
+     cat:'Produktivität', size:'62 MB', rating:4.8, reviews:'13.7k', version:'2.4.2', price:'Gratis'},
+  ];
+
+  // ============================================================
+  // ALL_APPS — alle Apps die im System existieren (vorinstalliert + Store)
+  // ============================================================
+  const PREINSTALLED = [
     {id:'weather', name:'Wetter', bg:'linear-gradient(160deg,#3b82f6,#1d4ed8)', removable:true},
     {id:'notes', name:'Notizen', bg:'linear-gradient(160deg,#3a3a44,#18181d)', removable:true},
     {id:'gallery', name:'Galerie', bg:'linear-gradient(160deg,#f472b6,#a855f7)', removable:true},
@@ -636,6 +488,9 @@ const AgenOS = (function(){
     {id:'camera', name:'Kamera', bg:'linear-gradient(160deg,#60a5fa,#2563eb)', removable:false},
   ];
 
+  // Combine for lookup
+  const ALL_APPS = [...PREINSTALLED, ...DOCK, ...STORE_CATALOG.map(a=>({...a, removable:true, storeApp:true}))];
+
   const APP_DEFS = {
     weather:{title:'Wetter', render:()=>renderWeather()},
     notes:{title:'Notizen', render:()=>renderNotesList()},
@@ -658,9 +513,25 @@ const AgenOS = (function(){
     compass:{title:'Kompass', render:()=>renderCompass()},
     timer:{title:'Timer', render:()=>renderTimerApp()},
     voice:{title:'Sprachmemo', render:()=>renderVoice()},
+    // Store apps
+    chat:{title:'Agen Chat', render:()=>renderChatApp()},
+    wallet:{title:'Agen Wallet', render:()=>renderWalletApp()},
+    news:{title:'Agen News', render:()=>renderNewsApp()},
+    games:{title:'Agen Games', render:()=>renderGamesApp()},
+    fitness:{title:'Agen Fitness', render:()=>renderFitnessApp()},
+    food:{title:'Agen Food', render:()=>renderFoodApp()},
+    travel:{title:'Agen Travel', render:()=>renderTravelApp()},
+    photo_editor:{title:'Agen Photo', render:()=>renderPhotoEditorApp()},
+    video:{title:'Agen Video', render:()=>renderVideoApp()},
+    podcast:{title:'Agen Podcast', render:()=>renderPodcastApp()},
+    bank:{title:'Agen Bank', render:()=>renderBankApp()},
+    weather_pro:{title:'Agen Weather Pro', render:()=>renderWeatherProApp()},
+    notebook:{title:'Agen Notebook', render:()=>renderNotebookApp()},
   };
 
-  /* ---------- Helpers ---------- */
+  /* ============================================================
+     HELPERS
+     ============================================================ */
   function fmtTime(d){
     let h=d.getHours(), m=d.getMinutes();
     const ap = h>=12?'PM':'AM'; h = h%12; if(h===0)h=12;
@@ -674,15 +545,14 @@ const AgenOS = (function(){
     return `${m} Min`;
   }
   function getNetworkLabel(){
-    if(state.settings.airplane) return '✈';
-    if(!state.settings.cellular && !state.settings.wifi) return '';
-    if(state.settings.wifi) return '📶';
+    if(state.settings.airplane) return '';
+    if(state.settings.wifi) return '';
+    if(!state.settings.cellular) return '';
     const t = state.network.effectiveType;
     if(t === '5g') return '5G';
     if(t === '4g') return '4G';
     if(t === '3g') return '3G';
     if(t === '2g') return '2G';
-    if(t === 'slow-2g') return 'E';
     return '5G';
   }
   function statusBarHTML(){
@@ -690,16 +560,15 @@ const AgenOS = (function(){
     const netLabel = getNetworkLabel();
     const batt = state.battery.level;
     const charging = state.battery.charging;
-    const showBattIcon = state.settings.wifi || state.settings.cellular;
-    return `<span style="color:${color}">${fmtTime(new Date())}</span>
+    return `<span class="statusbar-time" onclick="AgenOS.showLockScreen()">${fmtTime(new Date())}</span>
       <div style="display:flex;align-items:center;gap:6px;">
-        ${netLabel && !state.settings.airplane ? `<span class="net-icon" style="color:${color};font-size:12px;font-weight:700;">${netLabel}</span>` : ''}
-        ${state.settings.airplane ? `<span style="color:${color};font-size:12px;">✈</span>` : ''}
+        ${netLabel ? `<span class="net-icon" style="color:${color};font-size:12px;font-weight:700;">${netLabel}</span>` : ''}
+        ${state.settings.airplane ? `<span style="color:${color};font-size:13px;">✈</span>` : ''}
         ${state.settings.wifi ? `<svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M8.5 10.2a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z" fill="${color}"/><path d="M8.5 6.4c1.6 0 3 .6 4.1 1.6l1.2-1.3A9 9 0 0 0 3.2 6.7l1.2 1.3a6 6 0 0 1 4.1-1.6Z" fill="${color}"/><path d="M8.5 2.5c2.8 0 5.4 1.1 7.3 3l1.2-1.3A12 12 0 0 0 0 4.2l1.2 1.3a10.3 10.3 0 0 1 7.3-3Z" fill="${color}" opacity=".55"/></svg>` : ''}
-        ${showBattIcon ? `<div style="position:relative;display:inline-flex;align-items:center;">
+        <div style="position:relative;display:inline-flex;align-items:center;">
           <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="19" height="10" rx="2.5" stroke="${color}" stroke-opacity=".6"/><rect x="2.5" y="2.5" width="${(batt/100*16).toFixed(0)}" height="7" rx="1.5" fill="${charging?'#34d399':color}"/><rect x="21.5" y="4" width="1.6" height="4" rx="1" fill="${color}" opacity=".6"/></svg>
-          ${charging?'<span style="position:absolute;left:6px;top:-1px;font-size:8px;" class="charging-bolt">⚡</span>':''}
-        </div>` : ''}
+          ${charging?'<span style="position:absolute;left:6px;top:-2px;font-size:8px;" class="charging-bolt">⚡</span>':''}
+        </div>
         <span style="font-size:12px;font-weight:600;color:${color}">${batt}%</span>
       </div>`;
   }
@@ -717,9 +586,11 @@ const AgenOS = (function(){
       const time = state.battery.charging ? state.battery.chargingTime : state.battery.dischargingTime;
       lw.textContent = state.battery.charging ? `⚡ Lädt · ${fmtDuration(time)}` : `${fmtDuration(time)} verbleibend`;
     }
+    const lwb = document.getElementById('lock-widget-battery-level');
+    if(lwb) lwb.textContent = state.battery.level+'%';
   }
 
-  /* ---------- Weather ---------- */
+  /* Weather */
   let weatherBase = 21;
   function weatherIconSVG(cond){
     if(cond==='Clear') return `<circle cx="12" cy="12" r="6" fill="#ffd166"/>`;
@@ -733,7 +604,7 @@ const AgenOS = (function(){
     const lw = document.getElementById('lock-widget-weather-temp'); if(lw) lw.textContent = t+'°';
   }
 
-  /* ---------- Battery & Network (real) ---------- */
+  /* Battery & Network */
   async function initBattery(){
     if(!('getBattery' in navigator)) return;
     try{
@@ -744,7 +615,6 @@ const AgenOS = (function(){
         state.battery.charging = battery.charging;
         state.battery.chargingTime = battery.chargingTime;
         state.battery.dischargingTime = battery.dischargingTime;
-        state.battery = {...state.battery};
         tickClock();
       };
       update();
@@ -752,7 +622,7 @@ const AgenOS = (function(){
       battery.addEventListener('chargingchange', update);
       battery.addEventListener('chargingtimechange', update);
       battery.addEventListener('dischargingtimechange', update);
-    }catch(e){ console.warn('Battery API error', e); }
+    }catch(e){}
   }
   function initNetwork(){
     const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -771,7 +641,7 @@ const AgenOS = (function(){
     window.addEventListener('offline', ()=>{ update(); tickClock(); });
   }
 
-  /* ---------- Theme ---------- */
+  /* Theme */
   function applyTheme(){
     document.body.classList.toggle('light-mode', !state.darkMode);
     applyIconStyle();
@@ -786,16 +656,20 @@ const AgenOS = (function(){
     root.style.setProperty('--icon-tint-color', state.settings.iconTintColor);
   }
 
-  /* ---------- Installed Apps ---------- */
+  /* Installed Apps */
   function getInstalledApps(){
-    if(state.installedApps === null) return [...ALL_APPS];
-    return ALL_APPS.filter(a=> state.installedApps.includes(a.id));
+    return PREINSTALLED.filter(a => state.installedApps.includes(a.id));
+  }
+  function isAppInstalled(id){
+    return state.installedApps.includes(id);
+  }
+  function getAppById(id){
+    return ALL_APPS.find(a => a.id === id);
   }
 
-  /* ---------- Home Screen Pages ---------- */
+  /* Home Pages */
   function buildHomePages(){
-    const pagesEl = document.getElementById('home-pages');
-    if(!pagesEl) return;
+    const pagesEl = document.getElementById('home-pages'); if(!pagesEl) return;
     pagesEl.innerHTML = '';
     const apps = getInstalledApps();
     const perPage = 16;
@@ -812,12 +686,10 @@ const AgenOS = (function(){
       pagesEl.appendChild(page);
     }
     if(state.currentPage >= pageCount) state.currentPage = pageCount-1;
-    updatePageDots();
-    updateHomePageTransform();
+    updatePageDots(); updateHomePageTransform();
   }
   function updatePageDots(){
-    const dotsEl = document.getElementById('page-dots');
-    if(!dotsEl) return;
+    const dotsEl = document.getElementById('page-dots'); if(!dotsEl) return;
     dotsEl.innerHTML = '';
     for(let i=0; i<state.pageCount; i++){
       const dot = document.createElement('div');
@@ -827,56 +699,37 @@ const AgenOS = (function(){
     }
   }
   function updateHomePageTransform(){
-    const pagesEl = document.getElementById('home-pages');
-    if(!pagesEl) return;
+    const pagesEl = document.getElementById('home-pages'); if(!pagesEl) return;
     pagesEl.style.transform = `translateX(${-state.currentPage * 100}vw)`;
-    const scroll = document.getElementById('home-scroll');
-    if(scroll) scroll.scrollTop = 0;
+    const scroll = document.getElementById('home-scroll'); if(scroll) scroll.scrollTop = 0;
   }
-
-  /* ---------- Icon ---------- */
   function iconEl(app){
     const div = document.createElement('div');
     div.className='app-btn';
     div.dataset.appId = app.id;
     div.innerHTML = `
-      <div class="app-icon" style="background:${app.bg};width:58px;height:58px;">${ICONS[app.id]||''}</div>
+      <div class="app-icon" style="background:${app.bg};width:58px;height:58px;">${ICONS[app.icon||app.id]||''}</div>
       <div class="app-label">${app.name}</div>
       ${app.removable!==false ? `<div class="delete-btn" data-delete="${app.id}">×</div>` : ''}
     `;
     const delBtn = div.querySelector('.delete-btn');
     if(delBtn){
-      delBtn.addEventListener('pointerdown', (e)=>{
-        e.stopPropagation();
-        e.preventDefault();
-        deleteApp(app.id);
-      });
+      delBtn.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); e.preventDefault(); deleteApp(app.id); });
       delBtn.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); deleteApp(app.id); });
     }
     attachDragHandlers(div, app.id);
     return div;
   }
   function deleteApp(id){
-    const app = ALL_APPS.find(a=>a.id===id);
-    if(!app) return;
-    if(state.installedApps === null){
-      state.installedApps = ALL_APPS.map(a=>a.id).filter(x=>x!==id);
-    } else {
-      state.installedApps = state.installedApps.filter(x=>x!==id);
-    }
-    // Remove from DOM
-    document.querySelectorAll(`.app-btn[data-app-id="${id}"]`).forEach(el=> el.remove());
-    // Rebuild to fill gaps and update page count
-    setTimeout(()=>{
-      buildHomePages();
-      exitEditMode();
-    }, 250);
+    const app = getAppById(id);
+    if(!app || app.removable === false) return;
+    state.installedApps = state.installedApps.filter(x => x !== id);
+    document.querySelectorAll(`.app-btn[data-app-id="${id}"]`).forEach(el => el.remove());
+    setTimeout(()=>{ buildHomePages(); exitEditMode(); }, 250);
     addNotification({icon:'🗑', color:'#ef4444', title:'App gelöscht', body:`${app.name} wurde entfernt`, time:'jetzt'});
   }
-
   function renderDock(){
-    const dock = document.getElementById('dock');
-    if(!dock) return;
+    const dock = document.getElementById('dock'); if(!dock) return;
     dock.innerHTML='';
     DOCK.forEach(a=>{
       const wrap=document.createElement('div');
@@ -887,24 +740,15 @@ const AgenOS = (function(){
     });
   }
 
-  /* ---------- Drag ---------- */
-  let dragState = {
-    active:false, ghost:null, sourceEl:null, appId:null,
-    offsetX:0, offsetY:0, longPressTimer:null,
-    startX:0, startY:0, isEditing:false, moved:false
-  };
-  function attachDragHandlers(el, appId){
-    el.addEventListener('pointerdown', (e)=> onPointerDown(e, el, appId));
-  }
+  /* Drag */
+  let dragState = { active:false, ghost:null, sourceEl:null, appId:null, offsetX:0, offsetY:0, longPressTimer:null, startX:0, startY:0, isEditing:false, moved:false };
+  function attachDragHandlers(el, appId){ el.addEventListener('pointerdown', (e)=> onPointerDown(e, el, appId)); }
   function onPointerDown(e, el, appId){
     if(e.target.closest('.delete-btn')) return;
     if(e.button !== undefined && e.button !== 0) return;
-    dragState.startX = e.clientX;
-    dragState.startY = e.clientY;
-    dragState.sourceEl = el;
-    dragState.appId = appId;
-    dragState.active = false;
-    dragState.moved = false;
+    dragState.startX = e.clientX; dragState.startY = e.clientY;
+    dragState.sourceEl = el; dragState.appId = appId;
+    dragState.active = false; dragState.moved = false;
     dragState.longPressTimer = setTimeout(()=>{ startDrag(el, appId, e.clientX, e.clientY); }, 450);
     const moveHandler = (ev)=> onPointerMove(ev);
     const upHandler = (ev)=> onPointerUp(ev);
@@ -919,8 +763,7 @@ const AgenOS = (function(){
     clearTimeout(dragState.longPressTimer);
     if(navigator.vibrate) navigator.vibrate(10);
     const rect = el.getBoundingClientRect();
-    dragState.offsetX = x - rect.left;
-    dragState.offsetY = y - rect.top;
+    dragState.offsetX = x - rect.left; dragState.offsetY = y - rect.top;
     const ghost = el.cloneNode(true);
     ghost.className = 'drag-ghost';
     ghost.style.left = (x - dragState.offsetX) + 'px';
@@ -942,8 +785,7 @@ const AgenOS = (function(){
   }
   function onPointerMove(e){
     if(!dragState.active){
-      const dx = e.clientX - dragState.startX;
-      const dy = e.clientY - dragState.startY;
+      const dx = e.clientX - dragState.startX, dy = e.clientY - dragState.startY;
       if(Math.hypot(dx,dy) > 8){ dragState.moved = true; clearTimeout(dragState.longPressTimer); }
       return;
     }
@@ -958,26 +800,20 @@ const AgenOS = (function(){
     }
   }
   function reorderApps(sourceEl, targetEl){
-    const grid = sourceEl.parentElement;
-    if(!grid) return;
+    const grid = sourceEl.parentElement; if(!grid) return;
     const children = Array.from(grid.children);
-    const sourceIdx = children.indexOf(sourceEl);
-    const targetIdx = children.indexOf(targetEl);
+    const sourceIdx = children.indexOf(sourceEl), targetIdx = children.indexOf(targetEl);
     if(sourceIdx === -1 || targetIdx === -1) return;
     if(sourceIdx < targetIdx) grid.insertBefore(sourceEl, targetEl.nextSibling);
     else grid.insertBefore(sourceEl, targetEl);
   }
   function onPointerUp(e){
     clearTimeout(dragState.longPressTimer);
-    if(dragState.sourceEl && dragState.sourceEl._cleanup){
-      dragState.sourceEl._cleanup();
-      dragState.sourceEl._cleanup = null;
-    }
+    if(dragState.sourceEl && dragState.sourceEl._cleanup){ dragState.sourceEl._cleanup(); dragState.sourceEl._cleanup = null; }
     if(dragState.active){
       if(dragState.ghost){ dragState.ghost.remove(); dragState.ghost = null; }
       if(dragState.sourceEl) dragState.sourceEl.classList.remove('dragging');
-      dragState.active = false;
-      dragState.sourceEl = null;
+      dragState.active = false; dragState.sourceEl = null;
       clearTimeout(window._editTimeout);
       window._editTimeout = setTimeout(()=> exitEditMode(), 3000);
     } else {
@@ -990,11 +826,10 @@ const AgenOS = (function(){
     }
   }
 
-  /* ---------- App shell ---------- */
+  /* App shell */
   function buildAppShell(id, title, contentHTML, opts={}){
     const win = document.createElement('div');
-    win.className='app-window';
-    win.id='win-'+id;
+    win.className='app-window'; win.id='win-'+id;
     win.innerHTML = `
       ${opts.noStatusBar? '' : '<div class="statusbar statusbar-slot"></div>'}
       <div class="app-header">
@@ -1008,17 +843,14 @@ const AgenOS = (function(){
     return win;
   }
 
-  /* =========================================================
-     APPS (mostly same as before)
-     ========================================================= */
+  /* ============================================================
+     PREINSTALLED APPS
+     ============================================================ */
   function renderWeather(){
     const days=['Heute','Fr','Sa','So','Mo','Di'];
     const conds=['☀️','⛅','⛅','🌧️','☀️','⛅'];
     const temps=[21,23,19,17,22,24];
-    const hours=Array.from({length:8},(_,i)=>{
-      const hr=(new Date().getHours()+i)%24;
-      return {h: hr%12===0?12:hr%12, ap: hr<12?'AM':'PM', t: Math.round(weatherBase+Math.sin(i)*3)};
-    });
+    const hours=Array.from({length:8},(_,i)=>{ const hr=(new Date().getHours()+i)%24; return {h: hr%12===0?12:hr%12, ap: hr<12?'AM':'PM', t: Math.round(weatherBase+Math.sin(i)*3)}; });
     return `<div style="padding:10px 22px 30px;text-align:center;">
         <div style="font-size:15px;color:var(--text-2);font-weight:600;letter-spacing:.5px;margin-top:4px;">AGEN CITY</div>
         <div class="font-display" style="font-size:88px;font-weight:600;line-height:1;margin:6px 0;">${weatherBase}°</div>
@@ -1028,6 +860,12 @@ const AgenOS = (function(){
         </div>
         <div class="glass" style="margin-top:16px;border-radius:20px;text-align:left;">
           ${days.map((d,i)=>`<div class="row" style="${i<days.length-1?'border-bottom:1px solid var(--separator);':''}"><div style="width:70px;font-weight:600;">${d}</div><div style="font-size:20px;">${conds[i]}</div><div style="color:var(--text-2);width:34px;text-align:right;">${temps[i]-5}°</div><div style="flex:1;margin:0 12px;height:3px;border-radius:2px;background:linear-gradient(90deg,#60a5fa,#f59e0b);"></div><div style="width:34px;font-weight:600;">${temps[i]}°</div></div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+          <div class="glass" style="border-radius:18px;padding:14px;text-align:left;"><div style="font-size:12px;color:var(--text-2);">LUFTFEUCHTIGKEIT</div><div style="font-size:24px;font-weight:600;margin-top:4px;">58%</div></div>
+          <div class="glass" style="border-radius:18px;padding:14px;text-align:left;"><div style="font-size:12px;color:var(--text-2);">WIND</div><div style="font-size:24px;font-weight:600;margin-top:4px;">11 km/h</div></div>
+          <div class="glass" style="border-radius:18px;padding:14px;text-align:left;"><div style="font-size:12px;color:var(--text-2);">UV-INDEX</div><div style="font-size:24px;font-weight:600;margin-top:4px;">4 · Mittel</div></div>
+          <div class="glass" style="border-radius:18px;padding:14px;text-align:left;"><div style="font-size:12px;color:var(--text-2);">SICHT</div><div style="font-size:24px;font-weight:600;margin-top:4px;">14 km</div></div>
         </div>
       </div>`;
   }
@@ -1066,7 +904,7 @@ const AgenOS = (function(){
   function renderMusic(){
     const t = state.tracks[state.trackIndex];
     return `<div style="padding:20px 26px 30px;display:flex;flex-direction:column;align-items:center;height:100%;">
-      <div id="album-art" style="width:100%;max-width:270px;aspect-ratio:1;border-radius:20px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 20px 40px -16px rgba(0,0,0,.6);margin-top:10px;"></div>
+      <div id="album-art" style="width:100%;max-width:270px;aspect-ratio:1;border-radius:20px;background:${t.cover};box-shadow:0 20px 40px -16px rgba(0,0,0,.6);margin-top:10px;"></div>
       <div style="margin-top:30px;text-align:center;"><div style="font-size:20px;font-weight:700;">${t.title}</div><div style="color:var(--text-2);margin-top:4px;">${t.artist}</div></div>
       <div style="width:100%;margin-top:26px;"><div style="height:4px;border-radius:2px;background:rgba(128,128,128,.3);overflow:hidden;"><div id="music-progress" style="height:100%;width:0%;background:var(--accent-1);transition:width .3s linear;"></div></div>
       <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-2);margin-top:6px;"><span id="music-elapsed">0:00</span><span>${t.dur}</span></div></div>
@@ -1074,6 +912,10 @@ const AgenOS = (function(){
         <button onclick="AgenOS.musicPrev()" class="press-scale" style="background:none;border:none;color:var(--text-1);font-size:22px;">⏮</button>
         <button onclick="AgenOS.musicToggle()" class="press-scale" id="music-toggle-btn" style="background:var(--text-1);color:var(--bg-surface);border:none;width:58px;height:58px;border-radius:50%;font-size:22px;">${state.playing?'⏸':'▶'}</button>
         <button onclick="AgenOS.musicNext()" class="press-scale" style="background:none;border:none;color:var(--text-1);font-size:22px;">⏭</button>
+      </div>
+      <div style="margin-top:24px;width:100%;">
+        <div style="font-size:12px;color:var(--text-2);margin-bottom:8px;">PLAYLIST</div>
+        ${state.tracks.map((tr,i)=>`<div class="row press-scale" onclick="AgenOS.playTrack(${i})" style="cursor:pointer;border-radius:10px;background:${i===state.trackIndex?'rgba(128,128,128,.15)':'transparent'};"><div style="display:flex;align-items:center;gap:12px;"><div style="width:32px;height:32px;border-radius:8px;background:${tr.cover};"></div><div><div style="font-size:14px;font-weight:${i===state.trackIndex?'700':'500'};">${tr.title}</div><div style="font-size:11px;color:var(--text-2);">${tr.artist}</div></div></div><span style="font-size:12px;color:var(--text-3);">${tr.dur}</span></div>`).join('')}
       </div>
     </div>`;
   }
@@ -1098,217 +940,466 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
+
+  /* ============================================================
+     APP STORE (Premium)
+     ============================================================ */
   function renderStore(){
-    const apps = [
-      {name:'Agen Chat', icon:'💬', desc:'KI-gestützter Messenger', size:'42 MB', cat:'Soziales'},
-      {name:'Agen Maps', icon:'🗺️', desc:'Karten & Navigation', size:'86 MB', cat:'Reisen'},
-      {name:'Agen Pay', icon:'💳', desc:'Sichere Zahlungen', size:'34 MB', cat:'Finanzen'},
-      {name:'Agen Photos', icon:'🖼️', desc:'KI-Fotobearbeitung', size:'120 MB', cat:'Foto & Video'},
-      {name:'Agen News', icon:'📰', desc:'Kuratierte Nachrichten', size:'28 MB', cat:'Nachrichten'},
+    const featured = STORE_CATALOG[0];
+    const categories = [
+      {name:'Soziales', icon:'💬', color:'#3b82f6'},
+      {name:'Finanzen', icon:'💳', color:'#1e40af'},
+      {name:'Spiele', icon:'🎮', color:'#7c3aed'},
+      {name:'Foto', icon:'🖼️', color:'#f472b6'},
+      {name:'Reisen', icon:'✈️', color:'#0ea5e9'},
+      {name:'Essen', icon:'🍔', color:'#f59e0b'},
+      {name:'Gesundheit', icon:'❤️', color:'#16a34a'},
     ];
     return `<div style="padding:6px 16px 24px;">
-      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:18px;"><span>🔍</span><input placeholder="Apps durchsuchen" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;"></div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin-bottom:12px;">EMPFOHLEN</div>
-      ${apps.map(a=>`<div class="store-card"><div class="store-icon" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">${a.icon}</div><div style="flex:1;"><div style="font-weight:700;font-size:15px;">${a.name}</div><div style="color:var(--text-2);font-size:12px;">${a.desc}</div><div style="color:var(--text-3);font-size:11px;margin-top:2px;">${a.cat} · ${a.size}</div></div><button class="press-scale" onclick="AgenOS.installApp('${a.name}')" style="background:var(--accent-1);border:none;color:#fff;font-weight:600;font-size:13px;padding:7px 16px;border-radius:20px;">Laden</button></div>`).join('')}
-    </div>`;
-  }
-  function renderClock(){
-    const d = new Date();
-    return `<div style="padding:20px;text-align:center;">
-      <div class="font-display" id="live-clock" style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:1;margin-top:20px;color:var(--text-1);">${fmtTime(d)}</div>
-      <div id="live-clock-date" style="color:var(--text-2);font-size:16px;margin-top:10px;">${d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>
-      <div style="display:flex;justify-content:center;margin-top:40px;"><div style="position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset,0 20px 40px -16px rgba(0,0,0,.8);">
-        ${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180;const x=110+Math.sin(a)*90;const y=110-Math.cos(a)*90;return `<div style="position:absolute;left:${x-6}px;top:${y-8}px;font-size:12px;color:var(--text-2);font-weight:600;">${i===0?12:i}</div>`;}).join('')}
-        <div id="clock-hand-hour" style="position:absolute;left:50%;top:50%;width:5px;height:60px;background:var(--text-1);border-radius:3px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${(d.getHours()%12)*30+d.getMinutes()*0.5}deg);"></div>
-        <div id="clock-hand-min" style="position:absolute;left:50%;top:50%;width:3px;height:85px;background:var(--text-1);border-radius:2px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getMinutes()*6}deg);"></div>
-        <div id="clock-hand-sec" style="position:absolute;left:50%;top:50%;width:1.5px;height:95px;background:var(--accent-1);border-radius:1px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getSeconds()*6}deg);"></div>
-      </div></div>
-    </div>`;
-  }
-  function renderCalendar(){
-    const now = new Date();
-    const month = now.getMonth(), year = now.getFullYear();
-    const firstDay = new Date(year,month,1).getDay();
-    const daysInMonth = new Date(year,month+1,0).getDate();
-    const offset = (firstDay+6)%7;
-    const mn = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-    let cells = '';
-    for(let i=0;i<offset;i++) cells += '<div></div>';
-    for(let d=1;d<=daysInMonth;d++){
-      const isToday = d===now.getDate();
-      cells += `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;${isToday?'background:var(--accent-1);color:#fff;':''}font-size:14px;font-weight:${isToday?'700':'500'};">${d}</div>`;
-    }
-    return `<div style="padding:14px 18px;">
-      <div style="text-align:center;font-size:20px;font-weight:700;margin-bottom:14px;" class="font-display">${mn[month]} ${year}</div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;color:var(--text-2);font-size:11px;font-weight:600;margin-bottom:6px;"><div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div></div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>
-    </div>`;
-  }
-  function renderMaps(){
-    return `<div style="position:relative;height:100%;min-height:70vh;background:linear-gradient(135deg,#0a1a0a,#0a0a18);overflow:hidden;">
-      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(34,197,94,.15) 1px, transparent 1px),linear-gradient(90deg, rgba(34,197,94,.15) 1px, transparent 1px);background-size:40px 40px;"></div>
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"><div style="width:20px;height:20px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 6px rgba(59,130,246,.3),0 0 0 14px rgba(59,130,246,.15);"></div></div>
-      <div class="glass" style="position:absolute;top:16px;left:16px;right:16px;border-radius:14px;padding:12px 16px;display:flex;gap:10px;align-items:center;"><span>🔍</span><input placeholder="Ziel suchen" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;"></div>
-    </div>`;
-  }
-  function renderHealth(){
-    const h = state.health;
-    const pct = Math.min(100, h.steps/h.goal*100);
-    return `<div style="padding:16px 18px 24px;">
-      <div style="text-align:center;margin-top:10px;"><div style="position:relative;width:200px;height:200px;margin:0 auto;">
-        <svg viewBox="0 0 200 200" style="transform:rotate(-90deg);">
-          <circle cx="100" cy="100" r="85" fill="none" stroke="rgba(128,128,128,.2)" stroke-width="14"/>
-          <circle cx="100" cy="100" r="85" fill="none" stroke="url(#g1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${2*Math.PI*85}" stroke-dashoffset="${2*Math.PI*85*(1-pct/100)}"/>
-          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs>
-        </svg>
-        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-          <div style="font-size:12px;color:var(--text-2);">SCHRITTE</div>
-          <div class="font-display" style="font-size:36px;font-weight:700;">${h.steps.toLocaleString('de-DE')}</div>
-          <div style="font-size:12px;color:var(--text-2);">von ${h.goal.toLocaleString('de-DE')}</div>
-        </div>
-      </div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;">
-        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">KALORIEN</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.calories} kcal</div></div>
-        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">DISTANZ</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.distance} km</div></div>
-        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">HERZFREQUENZ</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.heartRate} bpm</div></div>
-        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">AKTIVITÄT</div><div style="font-size:22px;font-weight:600;margin-top:4px;">42 Min</div></div>
+      <!-- Search -->
+      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:18px;">
+        <span>🔍</span>
+        <input id="store-search" class="kb-input" placeholder="Apps, Spiele und mehr" oninput="AgenOS.storeSearch(this.value)" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;">
       </div>
-    </div>`;
-  }
-  function renderCurrency(){
-    const rates = {EUR:1, USD:1.08, GBP:0.86, JPY:161.5, CHF:0.96};
-    return `<div style="padding:18px;">
-      <div class="glass" style="border-radius:20px;padding:20px;">
-        <div style="font-size:12px;color:var(--text-2);">BETRAG</div>
-        <input id="cur-amount" type="number" value="100" oninput="AgenOS.updateCurrency()" style="width:100%;background:none;border:none;outline:none;color:var(--text-1);font-size:34px;font-weight:600;margin-top:6px;font-family:'Space Grotesk',sans-serif;">
-        <div style="display:flex;gap:8px;margin-top:14px;">
-          <select id="cur-from" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">${Object.keys(rates).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
-          <button onclick="AgenOS.swapCurrency()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:10px 16px;border-radius:12px;font-size:18px;">⇄</button>
-          <select id="cur-to" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">${Object.keys(rates).map(k=>`<option value="${k}" ${k==='USD'?'selected':''}>${k}</option>`).join('')}</select>
+
+      <!-- Hero -->
+      <div class="store-hero">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;opacity:.8;">HEUTE IM APP STORE</div>
+        <div style="font-size:26px;font-weight:700;margin-top:8px;font-family:'Space Grotesk',sans-serif;">${featured.name}</div>
+        <div style="font-size:14px;opacity:.9;margin-top:6px;max-width:70%;">${featured.desc}</div>
+        <div style="display:flex;gap:10px;margin-top:16px;position:relative;z-index:1;">
+          <button class="press-scale" onclick="AgenOS.storeInstall('${featured.id}')" style="background:#fff;color:#000;border:none;padding:10px 22px;border-radius:20px;font-weight:600;font-size:14px;">${isAppInstalled(featured.id)?'Öffnen':'Laden'}</button>
+          <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.2);padding:10px 14px;border-radius:20px;font-size:13px;font-weight:600;">
+            ⭐ ${featured.rating}
+          </div>
         </div>
       </div>
-      <div class="glass" style="border-radius:20px;padding:20px;margin-top:16px;text-align:center;">
-        <div style="font-size:12px;color:var(--text-2);">ERGEBNIS</div>
-        <div id="cur-result" class="font-display" style="font-size:42px;font-weight:700;margin-top:6px;">108,00</div>
-        <div id="cur-rate" style="font-size:12px;color:var(--text-2);margin-top:4px;">1 EUR = 1,08 USD</div>
+
+      <!-- Categories -->
+      <div class="store-section-title">Kategorien</div>
+      <div class="store-category">
+        ${categories.map(c=>`<div class="store-category-item" onclick="AgenOS.storeCategory('${c.name}')">
+          <div class="store-category-icon" style="background:${c.color};">${c.icon}</div>
+          <div class="store-category-label">${c.name}</div>
+        </div>`).join('')}
       </div>
-    </div>`;
-  }
-  function updateCurrency(){
-    const rates = {EUR:1, USD:1.08, GBP:0.86, JPY:161.5, CHF:0.96};
-    const amt = parseFloat(document.getElementById('cur-amount').value)||0;
-    const from = document.getElementById('cur-from').value;
-    const to = document.getElementById('cur-to').value;
-    const eur = amt / rates[from];
-    const result = eur * rates[to];
-    const resEl = document.getElementById('cur-result');
-    const rateEl = document.getElementById('cur-rate');
-    if(resEl) resEl.textContent = result.toLocaleString('de-DE',{minimumFractionDigits:2, maximumFractionDigits:2});
-    if(rateEl) rateEl.textContent = `1 ${from} = ${(rates[to]/rates[from]).toFixed(4)} ${to}`;
-  }
-  function swapCurrency(){
-    const from = document.getElementById('cur-from'), to = document.getElementById('cur-to');
-    const tmp = from.value; from.value = to.value; to.value = tmp; updateCurrency();
-  }
-  function renderTranslate(){
-    return `<div style="padding:18px;">
-      <div class="glass" style="border-radius:20px;padding:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:12px;color:var(--text-2);">DEUTSCH</span><span style="font-size:12px;color:var(--accent-1);">⇄</span><span style="font-size:12px;color:var(--text-2);">ENGLISCH</span></div>
-        <textarea id="trans-input" class="kb-input" placeholder="Text eingeben…" style="width:100%;min-height:100px;background:rgba(128,128,128,.1);border:none;outline:none;border-radius:14px;padding:14px;color:var(--text-1);font-size:16px;resize:none;"></textarea>
+
+      <!-- Recommended -->
+      <div class="store-section-title">Empfohlen für dich</div>
+      <div id="store-app-list">
+        ${STORE_CATALOG.slice(0,6).map(a => renderStoreCard(a)).join('')}
       </div>
-      <button onclick="AgenOS.translateText()" class="press-scale" style="width:100%;margin-top:14px;background:var(--accent-1);border:none;color:#fff;padding:14px;border-radius:14px;font-weight:600;font-size:15px;">Übersetzen</button>
-      <div class="glass" style="border-radius:20px;padding:16px;margin-top:16px;"><div style="font-size:12px;color:var(--text-2);margin-bottom:8px;">ÜBERSETZUNG</div><div id="trans-output" style="font-size:16px;line-height:1.5;color:var(--text-1);">—</div></div>
+
+      <!-- New -->
+      <div class="store-section-title" style="margin-top:22px;">Neu und bemerkenswert</div>
+      ${STORE_CATALOG.slice(6).map(a => renderStoreCard(a)).join('')}
     </div>`;
   }
-  function translateText(){
-    const dict = { 'hallo':'hello','welt':'world','guten morgen':'good morning','danke':'thank you','wie geht es dir':'how are you','ich liebe dich':'i love you','agen':'agen' };
-    const inp = document.getElementById('trans-input'), out = document.getElementById('trans-output');
-    if(!inp || !out) return;
-    const text = inp.value.toLowerCase().trim();
-    let result = dict[text] || text.split(' ').map(w=>dict[w]||w).join(' ');
-    out.textContent = result.charAt(0).toUpperCase()+result.slice(1);
-  }
-  function renderFlashlight(){
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,${state.flashlight.on?'#fbbf24':'var(--bg-elevated)'},${state.flashlight.on?'#d97706':'var(--bg-deep)'});box-shadow:${state.flashlight.on?'0 0 80px 20px rgba(251,191,36,.5)':'none'};display:flex;align-items:center;justify-content:center;font-size:60px;transition:all .3s;cursor:pointer;" onclick="AgenOS.toggleFlashlight()">🔦</div>
-      <div style="margin-top:36px;font-size:18px;font-weight:700;">Taschenlampe</div>
-      <div style="color:var(--text-2);margin-top:6px;">${state.flashlight.on?'AN':'AUS'}</div>
-      <button onclick="AgenOS.toggleFlashlight()" class="press-scale" style="margin-top:30px;background:${state.flashlight.on?'#ef4444':'var(--accent-1)'};border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">${state.flashlight.on?'Ausschalten':'Einschalten'}</button>
-    </div>`;
-  }
-  function renderCompass(){
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div style="position:relative;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset;">
-        ${['N','O','S','W'].map((d,i)=>{const a=i*90;const x=130+Math.sin(a*Math.PI/180)*110;const y=130-Math.cos(a*Math.PI/180)*110;return `<div style="position:absolute;left:${x-8}px;top:${y-10}px;font-weight:700;font-size:16px;color:${i===0?'#ef4444':'var(--text-1)'};">${d}</div>`;}).join('')}
-        <div id="compass-needle" style="position:absolute;left:50%;top:50%;width:4px;height:100px;background:linear-gradient(180deg,#ef4444 50%,var(--text-1) 50%);border-radius:2px;transform-origin:center bottom;transform:translate(-50%,-100%) rotate(0deg);transition:transform .2s;"></div>
-        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--text-1);border-radius:50%;transform:translate(-50%,-50%);"></div>
+  function renderStoreCard(app){
+    const installed = isAppInstalled(app.id);
+    const installing = state._installingApp === app.id;
+    return `<div class="store-card" data-store-id="${app.id}" onclick="AgenOS.openStoreDetail('${app.id}')">
+      <div class="store-icon" style="background:${app.bg};">${ICONS[app.icon]}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${app.name}</div>
+        <div style="color:var(--text-2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${app.desc}</div>
+        <div style="color:var(--text-3);font-size:11px;margin-top:2px;">⭐ ${app.rating} · ${app.cat} · ${app.size}</div>
       </div>
-      <div class="font-display" style="font-size:36px;font-weight:700;margin-top:30px;"><span id="compass-heading">0</span>°</div>
-      <div style="color:var(--text-2);margin-top:4px;">Richtung: <span id="compass-dir">N</span></div>
+      <button class="store-btn ${installed?'installed':''}" onclick="event.stopPropagation();AgenOS.storeInstall('${app.id}')">
+        ${installing ? '<span class="install-spinner"></span>' : (installed ? 'Öffnen' : 'Laden')}
+      </button>
     </div>`;
   }
-  function startCompass(){
-    if(window.DeviceOrientationEvent){
-      window.addEventListener('deviceorientationabsolute', handleCompass, true);
-      window.addEventListener('deviceorientation', handleCompass, true);
+  function storeSearch(q){
+    const list = document.getElementById('store-app-list');
+    if(!list) return;
+    if(!q.trim()){
+      list.innerHTML = STORE_CATALOG.slice(0,6).map(a=>renderStoreCard(a)).join('');
+      return;
+    }
+    const results = STORE_CATALOG.filter(a =>
+      a.name.toLowerCase().includes(q.toLowerCase()) ||
+      a.desc.toLowerCase().includes(q.toLowerCase()) ||
+      a.cat.toLowerCase().includes(q.toLowerCase())
+    );
+    list.innerHTML = results.length ? results.map(a=>renderStoreCard(a)).join('') :
+      '<div style="text-align:center;color:var(--text-3);padding:40px 0;">Keine Apps gefunden</div>';
+  }
+  function storeCategory(cat){
+    const list = document.getElementById('store-app-list');
+    if(!list) return;
+    const results = STORE_CATALOG.filter(a => a.cat === cat);
+    if(!results.length){
+      list.innerHTML = `<div style="text-align:center;color:var(--text-3);padding:40px 0;">Noch keine Apps in "${cat}"</div>`;
+      return;
+    }
+    list.innerHTML = results.map(a=>renderStoreCard(a)).join('');
+  }
+  function openStoreDetail(id){
+    const app = STORE_CATALOG.find(a => a.id === id);
+    if(!app) return;
+    let win = document.getElementById('win-store');
+    if(!win) return;
+    const installed = isAppInstalled(id);
+    const installing = state._installingApp === id;
+    document.getElementById('content-store').innerHTML = `
+      <div style="padding:6px 16px 30px;">
+        <div style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;cursor:pointer;margin-bottom:14px;" onclick="AgenOS.renderApp('store')">‹ App Store</div>
+        <div style="text-align:center;padding:20px 0;">
+          <div style="width:96px;height:96px;border-radius:22px;margin:0 auto;background:${app.bg};display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px -16px rgba(0,0,0,.6);">
+            <div style="width:60px;height:60px;">${ICONS[app.icon]}</div>
+          </div>
+          <div style="font-size:24px;font-weight:700;margin-top:16px;" class="font-display">${app.name}</div>
+          <div style="color:var(--text-2);font-size:14px;">${app.dev}</div>
+          <button class="press-scale" onclick="AgenOS.storeInstall('${app.id}')" style="margin-top:18px;background:${installed?'rgba(128,128,128,.2)':'var(--accent-1)'};color:${installed?'var(--text-1)':'#fff'};border:none;padding:12px 50px;border-radius:20px;font-weight:600;font-size:15px;min-width:140px;">
+            ${installing ? '<span class="install-spinner"></span>' : (installed?'Öffnen':'Laden · Gratis')}
+          </button>
+        </div>
+
+        <div class="glass" style="border-radius:20px;padding:16px;display:flex;justify-content:space-around;text-align:center;margin-top:12px;">
+          <div><div style="font-size:11px;color:var(--text-2);">BEWERTUNG</div><div style="font-size:18px;font-weight:700;margin-top:4px;">${app.rating} ⭐</div><div style="font-size:10px;color:var(--text-3);">${app.reviews}</div></div>
+          <div style="width:1px;background:var(--separator);"></div>
+          <div><div style="font-size:11px;color:var(--text-2);">KATEGORIE</div><div style="font-size:14px;font-weight:600;margin-top:4px;">${app.cat}</div></div>
+          <div style="width:1px;background:var(--separator);"></div>
+          <div><div style="font-size:11px;color:var(--text-2);">GRÖSSE</div><div style="font-size:14px;font-weight:600;margin-top:4px;">${app.size}</div></div>
+        </div>
+
+        <div class="glass" style="border-radius:20px;padding:18px;margin-top:14px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:8px;">Über diese App</div>
+          <div style="font-size:14px;line-height:1.6;color:var(--text-2);">${app.desc}</div>
+        </div>
+
+        <div class="glass" style="border-radius:20px;padding:18px;margin-top:14px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:12px;">Was ist neu</div>
+          <div style="font-size:13px;color:var(--text-2);line-height:1.6;">
+            Version ${app.version}<br>
+            • Verbesserte Leistung<br>
+            • Neue Funktionen<br>
+            • Fehlerbehebungen
+          </div>
+        </div>
+      </div>`;
+  }
+  function storeInstall(id){
+    const app = STORE_CATALOG.find(a => a.id === id);
+    if(!app) return;
+    if(isAppInstalled(id)){
+      closeApp();
+      setTimeout(()=> openApp(id), 400);
+      return;
+    }
+    // Start installation
+    state._installingApp = id;
+    refreshStoreUI();
+    if(navigator.vibrate) navigator.vibrate(10);
+    setTimeout(()=>{
+      state._installingApp = null;
+      state.installedApps.push(id);
+      buildHomePages();
+      refreshStoreUI();
+      if(navigator.vibrate) navigator.vibrate([10,50,10]);
+      addNotification({icon:'✅', color:'#34d399', title:'Installiert', body:`${app.name} wurde installiert`, time:'jetzt'});
+      // Show a toast
+      showToast(`${app.name} installiert`);
+    }, 1800);
+  }
+  function refreshStoreUI(){
+    const win = document.getElementById('win-store');
+    if(!win || !win.classList.contains('open')) return;
+    const content = document.getElementById('content-store');
+    if(!content) return;
+    // If detail view is open (contains "Über diese App"), re-render it
+    if(content.innerHTML.includes('Über diese App')){
+      const match = content.innerHTML.match(/data-store-id="([^"]+)"/);
+      // Try to find which detail was open - use any installing state
+      if(state._installingApp) openStoreDetail(state._installingApp);
+    } else {
+      renderApp('store');
     }
   }
-  function handleCompass(e){
-    let heading = e.webkitCompassHeading || (e.alpha ? 360 - e.alpha : null);
-    if(heading==null) return;
-    const dial = document.getElementById('compass-needle'), headEl = document.getElementById('compass-heading'), dirEl = document.getElementById('compass-dir');
-    if(dial) dial.style.transform = `translate(-50%,-100%) rotate(${-heading}deg)`;
-    if(headEl) headEl.textContent = Math.round(heading);
-    if(dirEl){ const dirs = ['N','NO','O','SO','S','SW','W','NW']; dirEl.textContent = dirs[Math.round(heading/45)%8]; }
-  }
-  function renderTimerApp(){
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div class="font-display" id="timer-display" style="font-size:72px;font-weight:300;letter-spacing:-2px;">00:00</div>
-      <div style="color:var(--text-2);margin-top:8px;">Minuten : Sekunden</div>
-      <div style="display:flex;gap:8px;margin-top:24px;flex-wrap:wrap;justify-content:center;">${[1,3,5,10,15,30].map(m=>`<button onclick="AgenOS.setTimer(${m})" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:10px 16px;border-radius:12px;font-size:14px;">${m}m</button>`).join('')}</div>
-      <div style="display:flex;gap:12px;margin-top:30px;">
-        <button onclick="AgenOS.toggleTimer()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">${state.timer.running?'Pause':'Start'}</button>
-        <button onclick="AgenOS.resetTimer()" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:14px 30px;border-radius:14px;font-weight:600;">Reset</button>
-      </div>
-    </div>`;
-  }
-  function setTimer(m){ state.timer.remaining = m*60; updateTimerDisplay(); }
-  function toggleTimer(){
-    if(state.timer.running){ clearInterval(state.timer.interval); state.timer.running = false; }
-    else { if(state.timer.remaining<=0) return; state.timer.running = true;
-      state.timer.interval = setInterval(()=>{ state.timer.remaining--; updateTimerDisplay(); if(state.timer.remaining<=0){ clearInterval(state.timer.interval); state.timer.running=false; if(navigator.vibrate) navigator.vibrate([200,100,200]); alert('Timer abgelaufen!'); } },1000);
-    }
-    renderApp('timer');
-  }
-  function resetTimer(){ clearInterval(state.timer.interval); state.timer.running=false; state.timer.remaining=0; updateTimerDisplay(); renderApp('timer'); }
-  function updateTimerDisplay(){ const el = document.getElementById('timer-display'); if(!el) return; const m = Math.floor(state.timer.remaining/60); const s = state.timer.remaining%60; el.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
-  function renderVoice(){
-    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
-      <div style="font-size:60px;">🎙️</div>
-      <div style="font-size:18px;font-weight:700;margin-top:20px;">Sprachmemo</div>
-      <div style="color:var(--text-2);margin-top:6px;font-size:14px;text-align:center;">Nimm deine Stimme auf und speichere sie lokal.</div>
-      <button onclick="AgenOS.recordVoice()" class="press-scale" style="margin-top:30px;background:#ef4444;border:none;color:#fff;width:80px;height:80px;border-radius:50%;font-size:30px;">●</button>
-      <div id="voice-status" style="color:var(--text-2);margin-top:16px;font-size:13px;">Bereit</div>
-    </div>`;
-  }
-  let mediaRecorder = null, recordedChunks = [];
-  async function recordVoice(){
-    const status = document.getElementById('voice-status');
-    if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.stop(); if(status) status.textContent = 'Aufnahme beendet'; return; }
-    try{
-      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-      mediaRecorder = new MediaRecorder(stream);
-      recordedChunks = [];
-      mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
-      mediaRecorder.onstop = ()=>{ const blob = new Blob(recordedChunks, {type:'audio/webm'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'agen-voice-memo.webm'; a.click(); stream.getTracks().forEach(t=>t.stop()); if(status) status.textContent = 'Gespeichert ✓'; };
-      mediaRecorder.start();
-      if(status) status.textContent = '● Aufnahme läuft…';
-    }catch(e){ if(status) status.textContent = 'Mikrofon nicht verfügbar'; }
+  function showToast(msg){
+    const toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.9);color:#fff;padding:12px 24px;border-radius:24px;font-size:14px;font-weight:600;z-index:99999;backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);animation:fadeIn .3s ease;';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(()=>{ toast.style.transition='opacity .3s'; toast.style.opacity='0'; setTimeout(()=> toast.remove(), 300); }, 1800);
   }
 
-  /* =========================================================
-     SETTINGS
-     ========================================================= */
+  /* ============================================================
+     STORE APPS (hochwertig)
+     ============================================================ */
+  function renderChatApp(){
+    const chats = [
+      {name:'Mira', last:'Ja, sind heute raus 🚀', time:'jetzt', unread:1, color:'#34d399'},
+      {name:'Team Agen', last:'Design-Review um 15:00', time:'14:22', unread:3, color:'#8b5cf6'},
+      {name:'Theo', last:'Das Matte Black Finish ist unglaublich.', time:'gestern', color:'#f472b6'},
+      {name:'Agen Support', last:'Dein Gerät ist auf AgenOS 6.0', time:'Mo', color:'#3b82f6'},
+    ];
+    return `<div style="padding:6px 4px 24px;">
+      ${chats.map(c=>`<div class="row press-scale" style="cursor:pointer;border-bottom:1px solid var(--separator);">
+        <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+          <div style="width:48px;height:48px;border-radius:50%;background:${c.color};display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;">${c.name[0]}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-weight:600;">${c.name}</span>
+              <span style="font-size:12px;color:var(--text-2);">${c.time}</span>
+            </div>
+            <div style="color:var(--text-2);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.last}</div>
+          </div>
+        </div>
+        ${c.unread?`<div style="background:var(--accent-1);color:#fff;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-left:8px;">${c.unread}</div>`:''}
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderWalletApp(){
+    return `<div style="padding:16px;">
+      <div style="border-radius:22px;padding:24px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;box-shadow:0 20px 40px -16px rgba(0,0,0,.5);">
+        <div style="font-size:12px;font-weight:600;letter-spacing:1px;opacity:.85;">AGEN CARD</div>
+        <div style="font-size:22px;font-weight:600;margin-top:20px;letter-spacing:2px;font-family:'Space Grotesk',sans-serif;">•••• •••• •••• 4718</div>
+        <div style="display:flex;justify-content:space-between;margin-top:18px;">
+          <div><div style="font-size:10px;opacity:.7;">INHABER</div><div style="font-size:13px;font-weight:600;">MAX MUSTERMANN</div></div>
+          <div><div style="font-size:10px;opacity:.7;">GÜLTIG</div><div style="font-size:13px;font-weight:600;">09/28</div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        <div class="glass" style="border-radius:16px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">GUTHABEN</div><div style="font-size:22px;font-weight:700;margin-top:4px;">2.418,50 €</div></div>
+        <div class="glass" style="border-radius:16px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">DIESEN MONAT</div><div style="font-size:22px;font-weight:700;margin-top:4px;">-482,20 €</div></div>
+      </div>
+      <div class="glass" style="border-radius:20px;padding:14px;margin-top:14px;">
+        <div style="font-weight:700;margin-bottom:10px;">Letzte Transaktionen</div>
+        ${[
+          {n:'Agen Store', a:'-89,00 €', d:'heute', i:'🛍️'},
+          {n:'Restaurant Aurora', a:'-42,50 €', d:'gestern', i:'🍽️'},
+          {n:'Gehalt', a:'+3.200,00 €', d:'1. Sept', i:'💼'},
+          {n:'Tankstelle', a:'-65,30 €', d:'30. Aug', i:'⛽'},
+        ].map(t=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--separator);">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:34px;height:34px;border-radius:10px;background:rgba(128,128,128,.15);display:flex;align-items:center;justify-content:center;font-size:16px;">${t.i}</div>
+            <div><div style="font-weight:600;font-size:14px;">${t.n}</div><div style="font-size:11px;color:var(--text-2);">${t.d}</div></div>
+          </div>
+          <div style="font-weight:600;color:${t.a.startsWith('+')?'#34d399':'var(--text-1)'};">${t.a}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function renderNewsApp(){
+    const articles = [
+      {t:'AgenOS 6.0 veröffentlicht', s:'Das größte Update seit dem Start', c:'#3b82f6', i:'📱'},
+      {t:'AgenPhone 1 gewinnt Design-Award', s:'Auszeichnung für Matte Black Finish', c:'#8b5cf6', i:'🏆'},
+      {t:'KI-Integration in Agen Apps', s:'Neue Features für alle Nutzer', c:'#22d3ee', i:'🤖'},
+      {t:'Agen Cloud: Jetzt mit 5 TB', s:'Speicher-Update für alle', c:'#f59e0b', i:'☁️'},
+    ];
+    return `<div style="padding:6px 16px 24px;">
+      ${articles.map(a=>`<div class="glass press-scale" style="border-radius:20px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;gap:14px;">
+        <div style="width:60px;height:60px;border-radius:14px;background:${a.c};display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">${a.i}</div>
+        <div><div style="font-weight:700;font-size:15px;">${a.t}</div><div style="color:var(--text-2);font-size:13px;margin-top:4px;">${a.s}</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderGamesApp(){
+    const games = [
+      {n:'Agen Puzzle', c:'#7c3aed', i:'🧩'},
+      {n:'Sky Racer', c:'#0ea5e9', i:'✈️'},
+      {n:'Chess Master', c:'#f59e0b', i:'♟️'},
+      {n:'Word Zen', c:'#16a34a', i:'📝'},
+      {n:'Galaxy Quest', c:'#ef4444', i:'🚀'},
+      {n:'Tower Builder', c:'#8b5cf6', i:'🏰'},
+    ];
+    return `<div style="padding:6px 16px 24px;">
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px;">Jetzt spielen</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        ${games.map(g=>`<div class="press-scale" style="border-radius:18px;padding:18px;background:${g.c};display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;">
+          <div style="font-size:36px;">${g.i}</div>
+          <div style="font-weight:700;font-size:14px;color:#fff;">${g.n}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function renderFitnessApp(){
+    return `<div style="padding:16px;">
+      <div style="text-align:center;margin:20px 0;">
+        <div style="position:relative;width:180px;height:180px;margin:0 auto;">
+          <svg viewBox="0 0 180 180" style="transform:rotate(-90deg);">
+            <circle cx="90" cy="90" r="78" fill="none" stroke="rgba(128,128,128,.2)" stroke-width="12"/>
+            <circle cx="90" cy="90" r="78" fill="none" stroke="#16a34a" stroke-width="12" stroke-linecap="round" stroke-dasharray="${2*Math.PI*78}" stroke-dashoffset="${2*Math.PI*78*(1-0.72)}"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="font-size:44px;font-weight:700;" class="font-display">72%</div>
+            <div style="font-size:13px;color:var(--text-2);">Tagesziel</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="glass" style="border-radius:18px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">SCHRITTE</div><div style="font-size:24px;font-weight:700;margin-top:4px;">7.248</div></div>
+        <div class="glass" style="border-radius:18px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">KALORIEN</div><div style="font-size:24px;font-weight:700;margin-top:4px;">512</div></div>
+        <div class="glass" style="border-radius:18px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">AKTIV</div><div style="font-size:24px;font-weight:700;margin-top:4px;">48 Min</div></div>
+        <div class="glass" style="border-radius:18px;padding:16px;"><div style="font-size:11px;color:var(--text-2);">HERZ</div><div style="font-size:24px;font-weight:700;margin-top:4px;">68 bpm</div></div>
+      </div>
+      <div style="font-weight:700;font-size:16px;margin-top:24px;margin-bottom:12px;">Heutige Workouts</div>
+      ${[
+        {n:'Morgenlauf', d:'32 Min · 5,2 km', i:'🏃', c:'#16a34a'},
+        {n:'Krafttraining', d:'45 Min · 12 Übungen', i:'💪', c:'#0ea5e9'},
+      ].map(w=>`<div class="glass press-scale" style="border-radius:16px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;">
+        <div style="width:44px;height:44px;border-radius:12px;background:${w.c};display:flex;align-items:center;justify-content:center;font-size:20px;">${w.i}</div>
+        <div><div style="font-weight:600;">${w.n}</div><div style="font-size:12px;color:var(--text-2);">${w.d}</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderFoodApp(){
+    const restaurants = [
+      {n:'Bella Italia', d:'Pizza · Pasta · 25-35 Min', r:4.8, c:'#ef4444', i:'🍕'},
+      {n:'Sushi Zen', d:'Japanisch · 30-40 Min', r:4.9, c:'#0ea5e9', i:'🍣'},
+      {n:'Burger House', d:'Amerikanisch · 20-30 Min', r:4.6, c:'#f59e0b', i:'🍔'},
+      {n:'Green Bowl', d:'Gesund · 25-35 Min', r:4.7, c:'#16a34a', i:'🥗'},
+    ];
+    return `<div style="padding:6px 16px 24px;">
+      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:18px;">
+        <span>🔍</span>
+        <input placeholder="Restaurant oder Gericht" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;">
+      </div>
+      ${restaurants.map(r=>`<div class="glass press-scale" style="border-radius:20px;padding:14px;margin-bottom:12px;display:flex;gap:14px;cursor:pointer;">
+        <div style="width:70px;height:70px;border-radius:16px;background:${r.c};display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;">${r.i}</div>
+        <div style="flex:1;">
+          <div style="font-weight:700;font-size:15px;">${r.n}</div>
+          <div style="color:var(--text-2);font-size:12px;margin-top:2px;">${r.d}</div>
+          <div style="color:#f59e0b;font-size:12px;margin-top:4px;">⭐ ${r.r}</div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderTravelApp(){
+    return `<div style="padding:6px 16px 24px;">
+      <div style="border-radius:22px;padding:24px;background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff;margin-bottom:18px;position:relative;overflow:hidden;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;opacity:.85;">NÄCHSTE REISE</div>
+        <div style="font-size:24px;font-weight:700;margin-top:8px;" class="font-display">Berlin → Tokio</div>
+        <div style="font-size:14px;opacity:.9;margin-top:4px;">15. Oktober · 11:45 Uhr · Flug AG 4718</div>
+        <div style="display:flex;gap:10px;margin-top:16px;">
+          <div style="background:rgba(255,255,255,.2);padding:6px 12px;border-radius:12px;font-size:12px;font-weight:600;">Terminal 1</div>
+          <div style="background:rgba(255,255,255,.2);padding:6px 12px;border-radius:12px;font-size:12px;font-weight:600;">Gate B22</div>
+        </div>
+      </div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px;">Schnellzugriff</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        ${[
+          {n:'Flüge', i:'✈️', c:'#0ea5e9'},
+          {n:'Hotels', i:'🏨', c:'#8b5cf6'},
+          {n:'Mietwagen', i:'🚗', c:'#f59e0b'},
+          {n:'Aktivitäten', i:'🎫', c:'#16a34a'},
+        ].map(s=>`<div class="glass press-scale" style="border-radius:16px;padding:18px;cursor:pointer;">
+          <div style="font-size:28px;">${s.i}</div>
+          <div style="font-weight:600;margin-top:10px;">${s.n}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function renderPhotoEditorApp(){
+    return `<div style="padding:6px 16px 24px;">
+      <div style="border-radius:20px;overflow:hidden;margin-bottom:16px;aspect-ratio:4/3;background:linear-gradient(135deg,#f472b6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:60px;">🖼️</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px;">Werkzeuge</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        ${[
+          {n:'Filter', i:'🎨'},{n:'Zuschneiden', i:'✂️'},{n:'Helligkeit', i:'☀️'},{n:'Kontrast', i:'◐'},
+          {n:'Sättigung', i:'🌈'},{n:'Weichzeichnen', i:'💧'},{n:'Text', i:'🔤'},{n:'Sticker', i:'😀'},
+        ].map(t=>`<div class="glass press-scale" style="border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;">
+          <div style="font-size:22px;">${t.i}</div>
+          <div style="font-size:11px;font-weight:600;">${t.n}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function renderVideoApp(){
+    return `<div style="padding:6px 16px 24px;">
+      <div style="border-radius:20px;overflow:hidden;margin-bottom:16px;aspect-ratio:16/9;background:linear-gradient(135deg,#0f172a,#1e293b);display:flex;align-items:center;justify-content:center;font-size:50px;color:#fff;cursor:pointer;">▶</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-weight:700;font-size:16px;">Projekte</div>
+        <button style="background:var(--accent-1);border:none;color:#fff;padding:8px 16px;border-radius:12px;font-weight:600;font-size:13px;">+ Neues</button>
+      </div>
+      ${['Urlaub 2025','Geburtstag','Produktdemo'].map(p=>`<div class="glass press-scale" style="border-radius:16px;padding:12px;margin-bottom:10px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <div style="width:56px;height:40px;border-radius:8px;background:linear-gradient(135deg,#8b5cf6,#3b82f6);"></div>
+        <div><div style="font-weight:600;font-size:14px;">${p}</div><div style="font-size:11px;color:var(--text-2);">4K · bearbeitet</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderPodcastApp(){
+    const podcasts = [
+      {n:'Agen Tech Weekly', e:'Folge 142: KI und Zukunft', d:'42 Min', c:'#7c3aed'},
+      {n:'Design Talks', e:'Minimalismus im Interface', d:'38 Min', c:'#0ea5e9'},
+      {n:'Business Stories', e:'Von Null zum Startup', d:'51 Min', c:'#f59e0b'},
+      {n:'Night Stories', e:'Entspannung vor dem Schlafen', d:'28 Min', c:'#1e293b'},
+    ];
+    return `<div style="padding:6px 16px 24px;">
+      <div style="font-weight:700;font-size:16px;margin-bottom:12px;">Für dich</div>
+      ${podcasts.map(p=>`<div class="glass press-scale" style="border-radius:16px;padding:14px;margin-bottom:10px;display:flex;gap:14px;align-items:center;cursor:pointer;">
+        <div style="width:60px;height:60px;border-radius:14px;background:${p.c};display:flex;align-items:center;justify-content:center;font-size:26px;">🎙️</div>
+        <div style="flex:1;"><div style="font-weight:700;font-size:14px;">${p.n}</div><div style="color:var(--text-2);font-size:12px;margin-top:2px;">${p.e}</div><div style="color:var(--text-3);font-size:11px;margin-top:2px;">${p.d}</div></div>
+        <button style="width:36px;height:36px;border-radius:50%;background:var(--accent-1);border:none;color:#fff;font-size:14px;">▶</button>
+      </div>`).join('')}
+    </div>`;
+  }
+  function renderBankApp(){
+    return `<div style="padding:16px;">
+      <div class="glass" style="border-radius:22px;padding:20px;">
+        <div style="font-size:12px;color:var(--text-2);">GESAMTGUTHABEN</div>
+        <div style="font-size:36px;font-weight:700;margin-top:6px;" class="font-display">12.847,32 €</div>
+        <div style="font-size:13px;color:#34d399;margin-top:4px;">↑ 4,2% diesen Monat</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
+        ${[
+          {n:'Überweisen', i:'💸'},{n:'Einzahlen', i:'📥'},{n:'Karten', i:'💳'},{n:'Sparen', i:'🎯'},
+        ].map(a=>`<div class="glass press-scale" style="border-radius:14px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;">
+          <div style="font-size:22px;">${a.i}</div><div style="font-size:11px;font-weight:600;">${a.n}</div>
+        </div>`).join('')}
+      </div>
+      <div class="glass" style="border-radius:20px;padding:14px;margin-top:16px;">
+        <div style="font-weight:700;margin-bottom:10px;">Konten</div>
+        ${[
+          {n:'Girokonto', b:'8.421,18 €', c:'#1e40af'},
+          {n:'Sparkonto', b:'4.426,14 €', c:'#16a34a'},
+        ].map(a=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--separator);">
+          <div style="display:flex;align-items:center;gap:12px;"><div style="width:34px;height:34px;border-radius:10px;background:${a.c};"></div><div style="font-weight:600;">${a.n}</div></div>
+          <div style="font-weight:600;">${a.b}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  function renderWeatherProApp(){
+    return `<div style="padding:16px;">
+      <div class="glass" style="border-radius:22px;padding:24px;text-align:center;">
+        <div style="font-size:14px;color:var(--text-2);font-weight:600;">AGEN CITY</div>
+        <div style="font-size:72px;font-weight:600;line-height:1;margin:8px 0;" class="font-display">21°</div>
+        <div style="font-size:15px;color:var(--text-2);">Teilweise bewölkt</div>
+      </div>
+      <div class="glass" style="border-radius:20px;padding:16px;margin-top:14px;">
+        <div style="font-weight:700;margin-bottom:10px;">Nächste 6 Stunden</div>
+        <div style="display:flex;justify-content:space-between;">
+          ${['14','15','16','17','18','19'].map((h,i)=>`<div style="text-align:center;"><div style="font-size:12px;color:var(--text-2);">${h}:00</div><div style="margin:6px 0;font-size:18px;">${['⛅','⛅','☀️','☀️','⛅','🌧️'][i]}</div><div style="font-size:12px;font-weight:600;">${[21,22,23,23,22,19][i]}°</div></div>`).join('')}
+        </div>
+      </div>
+      <div class="glass" style="border-radius:20px;padding:16px;margin-top:14px;">
+        <div style="font-weight:700;margin-bottom:10px;">Wetterwarnungen</div>
+        <div style="color:var(--text-2);font-size:13px;">Keine aktiven Warnungen für deinen Standort.</div>
+      </div>
+    </div>`;
+  }
+  function renderNotebookApp(){
+    return `<div style="padding:6px 16px 24px;">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <button class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:8px 16px;border-radius:12px;font-weight:600;font-size:13px;">+ Neue Seite</button>
+      </div>
+      ${[
+        {n:'Meeting Notizen', d:'14. Sept · 3 Seiten'},
+        {n:'Ideen für AgenOS', d:'12. Sept · 8 Seiten'},
+        {n:'Reiseplanung Tokio', d:'10. Sept · 12 Seiten'},
+      ].map(p=>`<div class="glass press-scale" style="border-radius:16px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+        <div style="width:44px;height:56px;border-radius:8px;background:linear-gradient(160deg,#fff,#e5e7eb);box-shadow:0 2px 6px rgba(0,0,0,.2);"></div>
+        <div><div style="font-weight:600;font-size:14px;">${p.n}</div><div style="font-size:11px;color:var(--text-2);margin-top:2px;">${p.d}</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  /* ============================================================
+     SETTINGS (bewahrt)
+     ============================================================ */
   function settingsToggleRow(key,label,sub,onclick){
     return `<div class="row press-scale" onclick="${onclick||`AgenOS.toggleSetting('${key}')`}" style="cursor:pointer;">
       <div><div>${label}</div>${sub?`<div style="font-size:12px;color:var(--text-2);margin-top:2px;">${sub}</div>`:''}</div>
@@ -1353,10 +1444,6 @@ const AgenOS = (function(){
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.settingsNav('privacy')" style="cursor:pointer;"><span>Datenschutz & Sicherheit</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('language')" style="cursor:pointer;"><span>Sprache & Region</span><span style="color:var(--text-3);">Deutsch</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('accessibility')" style="cursor:pointer;"><span>Bedienungshilfen</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
         ${settingsToggleRow('dnd','Nicht stören','')}
         <div class="divider"></div>
         ${settingsToggleRow('location','Standortdienste','')}
@@ -1371,7 +1458,6 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
-
   function renderSettingsLockScreen(){
     const clockSizes = [
       {id:'large', name:'Groß', desc:'96px'},
@@ -1379,24 +1465,16 @@ const AgenOS = (function(){
       {id:'small', name:'Klein', desc:'60px'},
       {id:'tiny', name:'Sehr klein', desc:'42px'},
     ];
-    return `<div style="padding:4px 18px 24px;">
-      ${settingsBack()}
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">UHR-GRÖSSE</div>
       <div class="glass" style="border-radius:18px;overflow:hidden;">
-        ${clockSizes.map((s,i)=>`
-          <div class="row press-scale" onclick="AgenOS.setClockSize('${s.id}')" style="cursor:pointer;${i<clockSizes.length-1?'border-bottom:1px solid var(--separator);':''}">
-            <div><div style="font-weight:600;">${s.name}</div><div style="font-size:12px;color:var(--text-2);">${s.desc}</div></div>
-            <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.lockScreen.clockSize===s.id?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">
-              ${state.lockScreen.clockSize===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}
-            </div>
-          </div>`).join('')}
+        ${clockSizes.map((s,i)=>`<div class="row press-scale" onclick="AgenOS.setClockSize('${s.id}')" style="cursor:pointer;${i<clockSizes.length-1?'border-bottom:1px solid var(--separator);':''}">
+          <div><div style="font-weight:600;">${s.name}</div><div style="font-size:12px;color:var(--text-2);">${s.desc}</div></div>
+          <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.lockScreen.clockSize===s.id?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">${state.lockScreen.clockSize===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}</div>
+        </div>`).join('')}
       </div>
-
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">DATUM</div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;">
-        ${settingsToggleRow('_showDate','Datum anzeigen','',"AgenOS.toggleLockOption('showDate')")}
-      </div>
-
+      <div class="glass" style="border-radius:20px;overflow:hidden;">${settingsToggleRow('_showDate','Datum anzeigen','',"AgenOS.toggleLockOption('showDate')")}</div>
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">WIDGETS</div>
       <div class="glass" style="border-radius:20px;overflow:hidden;">
         ${settingsToggleRow('_weather','Wetter-Widget','',"AgenOS.toggleLockOption('showWeatherWidget')")}
@@ -1409,19 +1487,17 @@ const AgenOS = (function(){
       </div>
     </div>`;
   }
-
   function renderSettingsAppearance(){
-    return `<div style="padding:4px 18px 24px;">
-      ${settingsBack()}
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ERSCHEINUNGSBILD</div>
       <div class="glass" style="border-radius:20px;overflow:hidden;">
         <div class="row press-scale" onclick="AgenOS.setDarkMode(false)" style="cursor:pointer;">
-          <div><div style="font-weight:600;">Hell</div><div style="font-size:12px;color:var(--text-2);">Heller Modus für den Tag</div></div>
+          <div><div style="font-weight:600;">Hell</div></div>
           <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${!state.darkMode?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">${!state.darkMode?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}</div>
         </div>
         <div class="divider"></div>
         <div class="row press-scale" onclick="AgenOS.setDarkMode(true)" style="cursor:pointer;">
-          <div><div style="font-weight:600;">Dunkel</div><div style="font-size:12px;color:var(--text-2);">Dunkler Modus für die Nacht</div></div>
+          <div><div style="font-weight:600;">Dunkel</div></div>
           <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.darkMode?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">${state.darkMode?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}</div>
         </div>
       </div>
@@ -1430,41 +1506,28 @@ const AgenOS = (function(){
         ${[
           {n:'Violett',a1:'#8b5cf6',a2:'#3b6bf6'},{n:'Aqua',a1:'#22d3ee',a2:'#3b82f6'},{n:'Rose',a1:'#fb7185',a2:'#a855f7'},
           {n:'Amber',a1:'#f59e0b',a2:'#ef4444'},{n:'Mint',a1:'#34d399',a2:'#059669'},{n:'Ozean',a1:'#0ea5e9',a2:'#2563eb'},
-        ].map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(128,128,128,.2);" title="${c.n}"></div>`).join('')}
+        ].map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(128,128,128,.2);"></div>`).join('')}
       </div>
     </div>`;
   }
   function renderSettingsDisplay(){
     const wpKeys = Object.keys(wallpapers);
-    return `<div style="padding:4px 18px 24px;">
-      ${settingsBack()}
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">HELLIGKEIT</div>
-      <div class="glass" style="border-radius:18px;padding:16px;">
-        <input type="range" min="10" max="100" value="${state.brightness}" oninput="AgenOS.setBrightness(this.value)" style="width:100%;">
-        <div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;">${state.brightness}%</div>
-      </div>
+      <div class="glass" style="border-radius:18px;padding:16px;"><input type="range" min="10" max="100" value="${state.brightness}" oninput="AgenOS.setBrightness(this.value)" style="width:100%;"><div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;">${state.brightness}%</div></div>
       <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">HINTERGRUNDBILD</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-        ${wpKeys.map(k=>`<div class="wp-swatch ${state.wallpaper===k?'selected':''}" style="background:${wallpapers[k]};" onclick="AgenOS.setWallpaper('${k}')"></div>`).join('')}
-      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">${wpKeys.map(k=>`<div class="wp-swatch ${state.wallpaper===k?'selected':''}" style="background:${wallpapers[k]};" onclick="AgenOS.setWallpaper('${k}')"></div>`).join('')}</div>
     </div>`;
   }
   function renderSettingsIconStyle(){
     const styles = [
-      {id:'color', name:'Farbig', desc:'Original App-Farben'},
-      {id:'tinted', name:'Getönt', desc:'Einfarbig mit Akzentfarbe'},
-      {id:'dark', name:'Dunkel', desc:'Dunkler Hintergrund, weiße Symbole'},
-      {id:'clear', name:'Klar', desc:'Transparent mit Glaseffekt'},
+      {id:'color', name:'Farbig'},{id:'tinted', name:'Getönt'},{id:'dark', name:'Dunkel'},{id:'clear', name:'Klar'},
     ];
     const tintColors = ['#8b5cf6','#3b82f6','#22d3ee','#34d399','#f59e0b','#ef4444','#ec4899','#a855f7'];
-    return `<div style="padding:4px 18px 24px;">
-      ${settingsBack()}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ICON-STIL (iOS 26)</div>
+    return `<div style="padding:4px 18px 24px;">${settingsBack()}
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ICON-STIL</div>
       <div class="glass" style="border-radius:18px;overflow:hidden;">
-        ${styles.map((s,i)=>`<div class="row press-scale" onclick="AgenOS.setIconStyle('${s.id}')" style="cursor:pointer;${i<styles.length-1?'border-bottom:1px solid var(--separator);':''}">
-          <div><div style="font-weight:600;">${s.name}</div><div style="font-size:12px;color:var(--text-2);">${s.desc}</div></div>
-          <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.settings.iconStyle===s.id?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">${state.settings.iconStyle===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}</div>
-        </div>`).join('')}
+        ${styles.map((s,i)=>`<div class="row press-scale" onclick="AgenOS.setIconStyle('${s.id}')" style="cursor:pointer;${i<styles.length-1?'border-bottom:1px solid var(--separator);':''}"><div style="font-weight:600;">${s.name}</div><div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.settings.iconStyle===s.id?'var(--accent-1)':'rgba(128,128,128,.3)'};display:flex;align-items:center;justify-content:center;">${state.settings.iconStyle===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}</div></div>`).join('')}
       </div>
       ${state.settings.iconStyle==='tinted'?`<div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TÖNUNGSFARBE</div>
       <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">${tintColors.map(c=>`<div onclick="AgenOS.setIconTint('${c}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:${c};box-shadow:0 0 0 2px ${state.settings.iconTintColor===c?'#fff':'rgba(128,128,128,.2)'};"></div>`).join('')}</div>`:''}
@@ -1472,11 +1535,8 @@ const AgenOS = (function(){
   }
   function renderSettingsSound(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">KLINGELTON-LAUTSTÄRKE</div>
-      <div class="glass" style="border-radius:18px;padding:16px;">
-        <input type="range" min="0" max="100" value="${state.volume}" oninput="AgenOS.setVolume(this.value)" style="width:100%;">
-        <div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;">${state.volume}%</div>
-      </div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">LAUTSTÄRKE</div>
+      <div class="glass" style="border-radius:18px;padding:16px;"><input type="range" min="0" max="100" value="${state.volume}" oninput="AgenOS.setVolume(this.value)" style="width:100%;"><div style="text-align:right;font-size:12px;color:var(--text-2);margin-top:6px;">${state.volume}%</div></div>
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:20px;">
         ${settingsToggleRow('dnd','Stiller Modus','')}
         <div class="divider"></div>
@@ -1497,25 +1557,17 @@ const AgenOS = (function(){
       </div>
       <div class="glass" style="border-radius:20px;padding:16px;margin-bottom:16px;">
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span>Batteriezustand</span><span style="color:#34d399;">100% · Neu</span></div>
-        <div style="height:8px;border-radius:4px;background:rgba(128,128,128,.2);overflow:hidden;">
-          <div style="width:${b.level}%;height:100%;background:${b.charging?'#34d399':'var(--accent-1)'};transition:width .5s;"></div>
-        </div>
+        <div style="height:8px;border-radius:4px;background:rgba(128,128,128,.2);overflow:hidden;"><div style="width:${b.level}%;height:100%;background:${b.charging?'#34d399':'var(--accent-1)'};transition:width .5s;"></div></div>
       </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;">${settingsToggleRow('saver','Energiesparmodus','')}</div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:16px;">
-        <div class="row"><span>Bildschirmzeit</span><span style="color:var(--text-2);">4h 32m</span></div>
-        <div class="divider"></div>
-        <div class="row"><span>Letzte volle Ladung</span><span style="color:var(--text-2);">Gestern 18:42</span></div>
-        ${b.supported?`<div class="divider"></div><div class="row"><span>Live-Wert</span><span style="color:var(--text-2);">${b.level}%</span></div>`:''}
-      </div>
     </div>`;
   }
   function renderSettingsStorage(){
     const used = 41, total = 512;
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div class="glass" style="border-radius:20px;padding:20px;margin-top:18px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-weight:700;">${used} GB</span><span style="color:var(--text-2);">von ${total} GB belegt</span></div>
-        <div style="height:12px;border-radius:6px;background:rgba(128,128,128,.2);overflow:hidden;display:flex;"><div style="width:${used/512*100}%;background:var(--accent-1);"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;"><span style="font-weight:700;">${used} GB</span><span style="color:var(--text-2);">von ${total} GB</span></div>
+        <div style="height:12px;border-radius:6px;background:rgba(128,128,128,.2);overflow:hidden;"><div style="width:${used/512*100}%;background:var(--accent-1);height:100%;"></div></div>
       </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:16px;">
         ${[
@@ -1528,43 +1580,30 @@ const AgenOS = (function(){
   function renderSettingsNetwork(){
     const net = state.network;
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">AKTUELLES NETZWERK</div>
-      <div class="glass" style="border-radius:20px;padding:16px;">
-        <div class="row" style="padding:6px 0;"><span>Verbindungstyp</span><span style="font-weight:600;">${state.settings.wifi?'WLAN':state.settings.cellular?net.effectiveType.toUpperCase():'Keine'}</span></div>
+      <div class="glass" style="border-radius:20px;padding:16px;margin-top:18px;">
+        <div class="row" style="padding:6px 0;"><span>Verbindung</span><span style="font-weight:600;">${state.settings.wifi?'WLAN':state.settings.cellular?net.effectiveType.toUpperCase():'Keine'}</span></div>
         <div class="divider"></div>
-        <div class="row" style="padding:6px 0;"><span>Effektiver Typ</span><span style="font-weight:600;">${net.effectiveType.toUpperCase()}</span></div>
+        <div class="row" style="padding:6px 0;"><span>Typ</span><span style="font-weight:600;">${net.effectiveType.toUpperCase()}</span></div>
         <div class="divider"></div>
         <div class="row" style="padding:6px 0;"><span>Downlink</span><span style="font-weight:600;">${net.downlink} Mbps</span></div>
         <div class="divider"></div>
         <div class="row" style="padding:6px 0;"><span>Latenz</span><span style="font-weight:600;">${net.rtt} ms</span></div>
       </div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">MOBILFUNK</div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;">
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:16px;">
         ${settingsToggleRow('cellular','Mobile Daten', state.settings.cellular?net.effectiveType.toUpperCase()+' aktiv':'Aus')}
         <div class="divider"></div>
-        <div class="row"><span>Datenroaming</span><div class="toggle"></div></div>
-      </div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">WLAN</div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;">
         ${settingsToggleRow('wifi','WLAN', state.settings.wifi?'Agen_Home_5G':'Aus')}
-        <div class="divider"></div>
-        <div class="row"><span>Andere Netzwerke</span><span style="color:var(--text-3);">›</span></div>
       </div>
     </div>`;
   }
   function renderSettingsKeyboard(){
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">TASTATUR</div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;">
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:18px;">
         ${settingsToggleRow('keyboardHaptics','Haptik','')}
         <div class="divider"></div>
         ${settingsToggleRow('keyboardClick','Klickgeräusch','')}
         <div class="divider"></div>
         ${settingsToggleRow('predictive','Prädiktiver Text','')}
-      </div>
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TASTATUR-TEST</div>
-      <div class="glass" style="border-radius:18px;padding:16px;">
-        <input id="kb-test-input" class="kb-input" placeholder="Tippe hier…" style="width:100%;background:rgba(128,128,128,.15);border:none;outline:none;border-radius:12px;padding:12px 16px;color:var(--text-1);font-size:16px;">
       </div>
     </div>`;
   }
@@ -1575,64 +1614,31 @@ const AgenOS = (function(){
         <div class="divider"></div>
         <div class="row"><span>Passcode ändern</span><span style="color:var(--text-3);">›</span></div>
         <div class="divider"></div>
-        <div class="row"><span>Notfall-SOS</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
         <div class="row"><span>Ortungsdienste</span><span style="color:var(--text-3);">›</span></div>
-      </div>
-    </div>`;
-  }
-  function renderSettingsLanguage(){
-    return `<div style="padding:4px 18px 24px;">${settingsBack()}
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:18px;">
-        <div class="row"><span>Sprache</span><span style="color:var(--text-2);">Deutsch</span></div>
-        <div class="divider"></div>
-        <div class="row"><span>Region</span><span style="color:var(--text-2);">Deutschland</span></div>
-        <div class="divider"></div>
-        <div class="row"><span>Kalender</span><span style="color:var(--text-2);">Gregorianisch</span></div>
-        <div class="divider"></div>
-        <div class="row"><span>Temperatureinheit</span><span style="color:var(--text-2);">Celsius</span></div>
-      </div>
-    </div>`;
-  }
-  function renderSettingsAccessibility(){
-    return `<div style="padding:4px 18px 24px;">${settingsBack()}
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:18px;">
-        <div class="row"><span>Sprachsteuerung</span><div class="toggle"></div></div>
-        <div class="divider"></div>
-        <div class="row"><span>Vergrößerung</span><div class="toggle"></div></div>
-        <div class="divider"></div>
-        <div class="row"><span>Fettgedruckter Text</span><div class="toggle"></div></div>
-        <div class="divider"></div>
-        <div class="row"><span>Bewegung reduzieren</span><div class="toggle"></div></div>
-        <div class="divider"></div>
-        <div class="row"><span>Größerer Text</span><span style="color:var(--text-3);">›</span></div>
       </div>
     </div>`;
   }
   function renderSettingsSoftwareUpdate(){
     const st = state.settings.softwareUpdate;
-    if(st==='installed') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div style="font-size:60px;margin-bottom:16px;">✅</div><div style="font-size:22px;font-weight:700;">AgenOS ist aktuell</div><div style="color:var(--text-2);margin-top:8px;">Version 5.0.1 · Letzte Prüfung: gerade eben</div></div></div>`;
-    if(st==='downloading') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div class="update-spinner" style="margin:0 auto 20px;"></div><div style="font-size:20px;font-weight:700;">Wird heruntergeladen…</div><div style="color:var(--text-2);margin-top:8px;">AgenOS 5.1 · 2,4 GB</div></div></div>`;
-    if(st==='ready') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div style="font-size:60px;margin-bottom:16px;">📦</div><div style="font-size:22px;font-weight:700;">Bereit zur Installation</div><div style="color:var(--text-2);margin-top:8px;">AgenOS 5.1 wurde heruntergeladen.</div><button onclick="AgenOS.installUpdate()" class="press-scale" style="margin-top:24px;background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">Jetzt installieren</button></div></div>`;
+    if(st==='installed') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div style="font-size:60px;margin-bottom:16px;">✅</div><div style="font-size:22px;font-weight:700;">AgenOS ist aktuell</div></div></div>`;
+    if(st==='downloading') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div style="width:60px;height:60px;border:3px solid rgba(128,128,128,.2);border-top-color:var(--accent-1);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;"></div><div style="font-size:20px;font-weight:700;">Wird heruntergeladen…</div></div></div>`;
+    if(st==='ready') return `<div style="padding:4px 18px 24px;">${settingsBack()}<div style="text-align:center;padding:40px 0;"><div style="font-size:60px;margin-bottom:16px;">📦</div><div style="font-size:22px;font-weight:700;">Bereit zur Installation</div><button onclick="AgenOS.installUpdate()" class="press-scale" style="margin-top:24px;background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">Jetzt installieren</button></div></div>`;
     return `<div style="padding:4px 18px 24px;">${settingsBack()}
       <div class="glass" style="border-radius:20px;padding:20px;margin-top:18px;">
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:24px;">⬆️</div>
-          <div><div style="font-weight:700;font-size:17px;">AgenOS 5.1</div><div style="color:var(--text-2);font-size:13px;">2,4 GB · Verfügbar</div></div>
+          <div><div style="font-weight:700;font-size:17px;">AgenOS 6.1</div><div style="color:var(--text-2);font-size:13px;">2,4 GB · Verfügbar</div></div>
         </div>
-        <div style="margin-top:16px;font-size:14px;line-height:1.5;color:var(--text-2);">• Verbesserte Kamera-Qualität<br>• Neue Sperrbildschirm-Optionen<br>• Fehlerbehebungen und Leistungsverbesserungen<br>• Sicherheitsupdates</div>
       </div>
       <button onclick="AgenOS.downloadUpdate()" class="press-scale" style="width:100%;margin-top:16px;background:var(--accent-1);border:none;color:#fff;padding:16px;border-radius:16px;font-weight:600;">Herunterladen und installieren</button>
     </div>`;
   }
   function renderSettingsAbout(){
     const rows = [
-      ['Name','AgenPhone 1'],['Edition','Matte Black'],['OS Version','AgenOS 5.0'],
-      ['Chip','Agen A1 Neural Engine'],['Speicher','512 GB (471,2 GB verfügbar)'],
-      ['Modellnummer','AGN-PH1-BLK-512'],['Seriennummer','AGN-8841-KX02'],
-      ['Display','6,4" LTPO OLED, 120Hz Agen Flow'],
-      ['Kamera','Dual: 50MP Weitwinkel + 12MP Ultraweitwinkel'],
-      ['Batteriekapazität','4.650 mAh'],
+      ['Name','AgenPhone 1'],['Edition','Matte Black'],['OS Version','AgenOS 6.0'],
+      ['Chip','Agen A1 Neural Engine'],['Speicher','512 GB'],
+      ['Modellnummer','AGN-PH1-BLK-512'],['Display','6,4" LTPO OLED, 120Hz'],
+      ['Kamera','Dual: 50MP + 12MP'],
     ];
     return `<div style="padding:4px 18px 30px;">${settingsBack()}
       <div style="text-align:center;margin:22px 0 18px;">
@@ -1646,41 +1652,29 @@ const AgenOS = (function(){
     </div>`;
   }
 
-  /* ---------- Settings Actions ---------- */
+  /* Settings Actions */
   function settingsNav(section){
     const map = {
       home:renderSettingsHome, display:renderSettingsDisplay, iconStyle:renderSettingsIconStyle,
       appearance:renderSettingsAppearance, sound:renderSettingsSound, battery:renderSettingsBattery,
       storage:renderSettingsStorage, network:renderSettingsNetwork, keyboard:renderSettingsKeyboard,
-      privacy:renderSettingsPrivacy, language:renderSettingsLanguage, accessibility:renderSettingsAccessibility,
-      softwareupdate:renderSettingsSoftwareUpdate, about:renderSettingsAbout,
+      privacy:renderSettingsPrivacy, softwareupdate:renderSettingsSoftwareUpdate, about:renderSettingsAbout,
       lockScreen: renderSettingsLockScreen
     };
     const el = document.getElementById('content-settings');
     if(el) el.innerHTML = (map[section]||renderSettingsHome)();
-    if(section==='keyboard') setTimeout(()=>{ const inp = document.getElementById('kb-test-input'); if(inp) setupKeyboardInput(inp); }, 100);
     if(section==='lockScreen') renderLockWidgets();
   }
   function toggleSetting(key){
     state.settings[key] = !state.settings[key];
     const el = document.getElementById('tgl-'+key);
     if(el) el.classList.toggle('on');
-    updateCCTiles();
-    tickClock();
+    updateCCTiles(); tickClock();
   }
-  function toggleLockOption(key){
-    state.lockScreen[key] = !state.lockScreen[key];
-    settingsNav('lockScreen');
-    renderLockWidgets();
-  }
-  function setClockSize(size){
-    state.lockScreen.clockSize = size;
-    applyLockClockSize();
-    settingsNav('lockScreen');
-  }
+  function toggleLockOption(key){ state.lockScreen[key] = !state.lockScreen[key]; settingsNav('lockScreen'); renderLockWidgets(); }
+  function setClockSize(size){ state.lockScreen.clockSize = size; applyLockClockSize(); settingsNav('lockScreen'); }
   function applyLockClockSize(){
-    const el = document.getElementById('lock-time');
-    if(!el) return;
+    const el = document.getElementById('lock-time'); if(!el) return;
     el.classList.remove('size-large','size-medium','size-small','size-tiny');
     el.classList.add('size-'+state.lockScreen.clockSize);
   }
@@ -1699,7 +1693,7 @@ const AgenOS = (function(){
     if(bottom){
       let html = '';
       if(state.lockScreen.showBatteryWidget){
-        html += `<div class="lock-widget"><div style="font-size:24px;">🔋</div><div style="flex:1;"><div style="font-size:12px;color:var(--text-2);">Batterie</div><div style="font-size:16px;font-weight:600;"><span id="lock-widget-battery">-- verbleibend</span></div></div><div style="font-size:16px;font-weight:600;">${state.battery.level}%</div></div>`;
+        html += `<div class="lock-widget"><div style="font-size:24px;">🔋</div><div style="flex:1;"><div style="font-size:12px;color:var(--text-2);">Batterie</div><div style="font-size:16px;font-weight:600;"><span id="lock-widget-battery">-- verbleibend</span></div></div><div style="font-size:16px;font-weight:600;" id="lock-widget-battery-level">${state.battery.level}%</div></div>`;
       }
       if(state.lockScreen.showCalendarWidget){
         const d = new Date();
@@ -1731,17 +1725,15 @@ const AgenOS = (function(){
   function downloadUpdate(){
     state.settings.softwareUpdate = 'downloading'; settingsNav('softwareupdate');
     setTimeout(()=>{ state.settings.softwareUpdate = 'ready'; settingsNav('softwareupdate');
-      addNotification({icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 5.1 ist bereit zur Installation', time:'jetzt'});
+      addNotification({icon:'⚙️', color:'#8b5cf6', title:'Softwareupdate', body:'AgenOS 6.1 ist bereit', time:'jetzt'});
     }, 3000);
   }
   function installUpdate(){
     state.settings.softwareUpdate = 'installed'; settingsNav('softwareupdate');
-    setTimeout(()=>{ addNotification({icon:'✅', color:'#34d399', title:'Update installiert', body:'AgenOS 5.1 wurde erfolgreich installiert', time:'jetzt'}); }, 500);
+    setTimeout(()=>{ addNotification({icon:'✅', color:'#34d399', title:'Update installiert', body:'AgenOS 6.1 wurde installiert', time:'jetzt'}); }, 500);
   }
 
-  /* =========================================================
-     CONTROL CENTER
-     ========================================================= */
+  /* Control Center */
   function updateCCTiles(){
     const s = state.settings;
     const set = (id, on, sub)=>{
@@ -1754,7 +1746,6 @@ const AgenOS = (function(){
     set('cc-bt', s.bluetooth, s.bluetooth?'Ein':'Aus');
     set('cc-cellular', s.cellular, s.cellular ? state.network.effectiveType.toUpperCase() : 'Aus');
     set('cc-airplane', s.airplane, s.airplane?'Ein':'Aus');
-    set('cc-dnd', s.dnd, s.dnd?'Ein':'Aus');
     const fl = document.getElementById('cc-flash'); if(fl) fl.classList.toggle('on', state.flashlight.on);
     const dm = document.getElementById('cc-darkmode'); if(dm) dm.classList.toggle('on', state.darkMode);
   }
@@ -1767,18 +1758,14 @@ const AgenOS = (function(){
   function ccOpenCamera(){ closeControlCenter(); openApp('camera'); }
   function closeControlCenter(){ document.getElementById('control-center').classList.remove('show'); }
 
-  /* =========================================================
-     NOTIFICATIONS
-     ========================================================= */
+  /* Notifications */
   function addNotification(n){ state.notifications.unshift(n); renderNotifications(); }
   function renderNotifications(){
     const el = document.getElementById('notif-list'); if(!el) return;
     el.innerHTML = state.notifications.map(n=>`<div class="notif-card"><div class="notif-icon" style="background:${n.color};">${n.icon}</div><div style="flex:1;"><div style="display:flex;justify-content:space-between;"><span style="font-weight:700;font-size:14px;">${n.title}</span><span style="font-size:11px;color:var(--text-2);">${n.time}</span></div><div style="font-size:13px;color:var(--text-2);margin-top:2px;">${n.body}</div></div></div>`).join('') || '<div style="text-align:center;color:var(--text-3);padding:40px 0;">Keine Mitteilungen</div>';
   }
 
-  /* =========================================================
-     APP OPEN/CLOSE
-     ========================================================= */
+  /* App open/close */
   function openApp(id){
     if(dragState.isEditing){ exitEditMode(); return; }
     if(state.activeApp===id) return;
@@ -1825,6 +1812,12 @@ const AgenOS = (function(){
     const lock = document.getElementById('lock-screen');
     if(lock){ lock.style.display = 'flex'; lock.style.opacity = '1'; lock.style.transform = 'translateY(0)'; state.unlocked = false; }
   }
+  function showLockScreen(){
+    if(!state.unlocked) return; // already locked
+    // Dismiss any open app first
+    closeApp();
+    lockScreen();
+  }
   function startClockHands(){
     const update = ()=>{
       const d = new Date();
@@ -1839,9 +1832,7 @@ const AgenOS = (function(){
     update();
   }
 
-  /* =========================================================
-     NOTES / CALC / MUSIC
-     ========================================================= */
+  /* Notes / Calc / Music */
   function newNote(){ const n = {id:Date.now(), title:'Neue Notiz', body:''}; state.notes.push(n); openNote(n.id); }
   function openNote(id){
     document.getElementById('content-notes').innerHTML = renderNoteEditor(id);
@@ -1888,9 +1879,7 @@ const AgenOS = (function(){
   function musicPrev(){ state.trackIndex=(state.trackIndex-1+state.tracks.length)%state.tracks.length; elapsed=0; renderApp('music'); }
   function playTrack(i){ state.trackIndex=i; elapsed=0; renderApp('music'); if(state.playing){syncMusicUI(); musicToggle(); musicToggle();} }
 
-  /* =========================================================
-     CAMERA
-     ========================================================= */
+  /* Camera */
   async function startCamera(){
     const video = document.getElementById('camera-video');
     const err = document.getElementById('camera-error');
@@ -1907,15 +1896,13 @@ const AgenOS = (function(){
       state.settings.cameraPermission = 'granted';
     }catch(e){
       if(e.name === 'NotAllowedError'){ state.settings.cameraPermission = 'denied'; if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert.'; } }
-      else if(e.name === 'NotFoundError'){ if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Keine Kamera gefunden.'; } }
-      else { if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Fehler: '+e.message; } }
       video.style.display = 'none'; if(status) status.textContent = '● FEHLER';
     }
   }
   let permissionModalResolve = null;
   function showPermissionModal(){ const modal = document.getElementById('permission-modal'); if(modal) modal.classList.add('show'); permissionModalResolve = window._cameraPermissionResolve; }
   function allowPermission(){ const modal = document.getElementById('permission-modal'); if(modal) modal.classList.remove('show'); state.settings.cameraPermission = 'granted'; if(permissionModalResolve){ permissionModalResolve(); permissionModalResolve = null; } startCamera(); }
-  function denyPermission(){ const modal = document.getElementById('permission-modal'); if(modal) modal.classList.remove('show'); state.settings.cameraPermission = 'denied'; if(permissionModalResolve){ permissionModalResolve(); permissionModalResolve = null; } const err = document.getElementById('camera-error'); if(err){ err.style.display='flex'; document.getElementById('cam-err-msg').textContent='Kamera-Zugriff verweigert.'; } }
+  function denyPermission(){ const modal = document.getElementById('permission-modal'); if(modal) modal.classList.remove('show'); state.settings.cameraPermission = 'denied'; if(permissionModalResolve){ permissionModalResolve(); permissionModalResolve = null; } }
   function stopCamera(){ if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); state.cameraStream=null; } const video = document.getElementById('camera-video'); if(video) video.srcObject=null; }
   function takePhoto(){
     const video = document.getElementById('camera-video');
@@ -1929,13 +1916,12 @@ const AgenOS = (function(){
       try{ const dataUrl = canvas.toDataURL('image/jpeg', 0.85); state.photos.unshift({g: photoGradients(), data: dataUrl}); }
       catch(e){ state.photos.unshift({g: photoGradients()}); }
     } else { state.photos.unshift({g: photoGradients()}); }
+    showToast('Foto aufgenommen');
   }
   function flipCamera(){ state.cameraFacing = state.cameraFacing==='environment'?'user':'environment'; startCamera(); }
   function retryCamera(){ state.settings.cameraPermission = null; startCamera(); }
 
-  /* =========================================================
-     PHONE / MESSAGES / BROWSER
-     ========================================================= */
+  /* Phone / Messages / Browser */
   let dialBuffer='';
   function dial(k){ dialBuffer += k; const d = document.getElementById('dial-display'); if(d) d.textContent = dialBuffer; }
   function call(){ document.getElementById('content-phone').innerHTML = renderCalling(dialBuffer); dialBuffer=''; }
@@ -1961,7 +1947,7 @@ const AgenOS = (function(){
     return `<div style="padding:6px 4px 24px;">
       ${Object.keys(state.threads).map(name=>{
         const msgs = state.threads[name]; const last = msgs[msgs.length-1];
-        return `<div class="row press-scale" style="cursor:pointer;" onclick="AgenOS.openThread('${name}')"><div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;">${name[0]}</div><div><div style="font-weight:600;">${name}</div><div style="color:var(--text-2);font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${last.text}</div></div></div><span style="color:var(--text-3);">›</span></div>`;
+        return `<div class="row press-scale" style="cursor:pointer;border-bottom:1px solid var(--separator);" onclick="AgenOS.openThread('${name}')"><div style="display:flex;align-items:center;gap:12px;"><div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;">${name[0]}</div><div><div style="font-weight:600;">${name}</div><div style="color:var(--text-2);font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${last.text}</div></div></div><span style="color:var(--text-3);">›</span></div>`;
       }).join('')}
     </div>`;
   }
@@ -1989,7 +1975,7 @@ const AgenOS = (function(){
     state.threads[name].push({me:true,text:input.value.trim()}); input.value='';
     document.getElementById('content-messages').innerHTML = renderThread(name);
     const inp2 = document.getElementById('thread-input'); if(inp2) setupKeyboardInput(inp2);
-    setTimeout(()=>{ state.threads[name].push({me:false,text:'👍 verstanden — auf AgenOS synchronisiert sich alles.'});
+    setTimeout(()=>{ state.threads[name].push({me:false,text:'👍 verstanden!'});
       if(state.activeThread===name){ document.getElementById('content-messages').innerHTML = renderThread(name); const inp3 = document.getElementById('thread-input'); if(inp3) setupKeyboardInput(inp3); }
     },1100);
   }
@@ -2014,12 +2000,179 @@ const AgenOS = (function(){
   }
   function browserGo(){ const v = document.getElementById('browser-url').value.trim(); if(!v) return; document.getElementById('content-browser').innerHTML = renderBrowserPage(v); }
   function browserGoTo(name){ document.getElementById('content-browser').innerHTML = renderBrowserPage(name); }
-  function installApp(name){ alert(`${name} wird installiert… (Demo)`); }
   function toggleFlashlight(){ state.flashlight.on = !state.flashlight.on; updateCCTiles(); if(state.activeApp==='flashlight') renderApp('flashlight'); }
+  function renderFlashlight(){
+    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
+      <div style="width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,${state.flashlight.on?'#fbbf24':'var(--bg-elevated)'},${state.flashlight.on?'#d97706':'var(--bg-deep)'});box-shadow:${state.flashlight.on?'0 0 80px 20px rgba(251,191,36,.5)':'none'};display:flex;align-items:center;justify-content:center;font-size:60px;transition:all .3s;cursor:pointer;" onclick="AgenOS.toggleFlashlight()">🔦</div>
+      <div style="margin-top:36px;font-size:18px;font-weight:700;">Taschenlampe</div>
+      <div style="color:var(--text-2);margin-top:6px;">${state.flashlight.on?'AN':'AUS'}</div>
+      <button onclick="AgenOS.toggleFlashlight()" class="press-scale" style="margin-top:30px;background:${state.flashlight.on?'#ef4444':'var(--accent-1)'};border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">${state.flashlight.on?'Ausschalten':'Einschalten'}</button>
+    </div>`;
+  }
+  function renderClock(){
+    const d = new Date();
+    return `<div style="padding:20px;text-align:center;">
+      <div class="font-display" id="live-clock" style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:1;margin-top:20px;color:var(--text-1);">${fmtTime(d)}</div>
+      <div id="live-clock-date" style="color:var(--text-2);font-size:16px;margin-top:10px;">${d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'})}</div>
+      <div style="display:flex;justify-content:center;margin-top:40px;"><div style="position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset,0 20px 40px -16px rgba(0,0,0,.8);">
+        ${Array.from({length:12},(_,i)=>{const a=i*30*Math.PI/180;const x=110+Math.sin(a)*90;const y=110-Math.cos(a)*90;return `<div style="position:absolute;left:${x-6}px;top:${y-8}px;font-size:12px;color:var(--text-2);font-weight:600;">${i===0?12:i}</div>`;}).join('')}
+        <div id="clock-hand-hour" style="position:absolute;left:50%;top:50%;width:5px;height:60px;background:var(--text-1);border-radius:3px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${(d.getHours()%12)*30+d.getMinutes()*0.5}deg);"></div>
+        <div id="clock-hand-min" style="position:absolute;left:50%;top:50%;width:3px;height:85px;background:var(--text-1);border-radius:2px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getMinutes()*6}deg);"></div>
+        <div id="clock-hand-sec" style="position:absolute;left:50%;top:50%;width:1.5px;height:95px;background:var(--accent-1);border-radius:1px;transform-origin:bottom center;transform:translate(-50%,-100%) rotate(${d.getSeconds()*6}deg);"></div>
+      </div></div>
+    </div>`;
+  }
+  function renderCalendar(){
+    const now = new Date(); const month = now.getMonth(), year = now.getFullYear();
+    const firstDay = new Date(year,month,1).getDay(); const daysInMonth = new Date(year,month+1,0).getDate();
+    const offset = (firstDay+6)%7;
+    const mn = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    let cells = '';
+    for(let i=0;i<offset;i++) cells += '<div></div>';
+    for(let d=1;d<=daysInMonth;d++){
+      const isToday = d===now.getDate();
+      cells += `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;${isToday?'background:var(--accent-1);color:#fff;':''}font-size:14px;font-weight:${isToday?'700':'500'};">${d}</div>`;
+    }
+    return `<div style="padding:14px 18px;"><div style="text-align:center;font-size:20px;font-weight:700;margin-bottom:14px;" class="font-display">${mn[month]} ${year}</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;color:var(--text-2);font-size:11px;font-weight:600;margin-bottom:6px;"><div>MO</div><div>DI</div><div>MI</div><div>DO</div><div>FR</div><div>SA</div><div>SO</div></div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">${cells}</div>
+    </div>`;
+  }
+  function renderMaps(){
+    return `<div style="position:relative;height:100%;min-height:70vh;background:linear-gradient(135deg,#0a1a0a,#0a0a18);overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(34,197,94,.15) 1px, transparent 1px),linear-gradient(90deg, rgba(34,197,94,.15) 1px, transparent 1px);background-size:40px 40px;"></div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);"><div style="width:20px;height:20px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 6px rgba(59,130,246,.3),0 0 0 14px rgba(59,130,246,.15);"></div></div>
+      <div class="glass" style="position:absolute;top:16px;left:16px;right:16px;border-radius:14px;padding:12px 16px;display:flex;gap:10px;align-items:center;"><span>🔍</span><input placeholder="Ziel suchen" style="flex:1;background:none;border:none;outline:none;color:var(--text-1);font-size:15px;"></div>
+    </div>`;
+  }
+  function renderHealth(){
+    const h = state.health; const pct = Math.min(100, h.steps/h.goal*100);
+    return `<div style="padding:16px 18px 24px;">
+      <div style="text-align:center;margin-top:10px;"><div style="position:relative;width:200px;height:200px;margin:0 auto;">
+        <svg viewBox="0 0 200 200" style="transform:rotate(-90deg);"><circle cx="100" cy="100" r="85" fill="none" stroke="rgba(128,128,128,.2)" stroke-width="14"/><circle cx="100" cy="100" r="85" fill="none" stroke="url(#g1)" stroke-width="14" stroke-linecap="round" stroke-dasharray="${2*Math.PI*85}" stroke-dashoffset="${2*Math.PI*85*(1-pct/100)}"/><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;"><div style="font-size:12px;color:var(--text-2);">SCHRITTE</div><div class="font-display" style="font-size:36px;font-weight:700;">${h.steps.toLocaleString('de-DE')}</div><div style="font-size:12px;color:var(--text-2);">von ${h.goal.toLocaleString('de-DE')}</div></div>
+      </div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px;">
+        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">KALORIEN</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.calories}</div></div>
+        <div class="glass" style="border-radius:18px;padding:14px;"><div style="font-size:12px;color:var(--text-2);">DISTANZ</div><div style="font-size:22px;font-weight:600;margin-top:4px;">${h.distance} km</div></div>
+      </div>
+    </div>`;
+  }
+  function renderCurrency(){
+    const rates = {EUR:1, USD:1.08, GBP:0.86, JPY:161.5, CHF:0.96};
+    return `<div style="padding:18px;">
+      <div class="glass" style="border-radius:20px;padding:20px;">
+        <div style="font-size:12px;color:var(--text-2);">BETRAG</div>
+        <input id="cur-amount" type="number" value="100" oninput="AgenOS.updateCurrency()" style="width:100%;background:none;border:none;outline:none;color:var(--text-1);font-size:34px;font-weight:600;margin-top:6px;font-family:'Space Grotesk',sans-serif;">
+        <div style="display:flex;gap:8px;margin-top:14px;">
+          <select id="cur-from" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">${Object.keys(rates).map(k=>`<option value="${k}">${k}</option>`).join('')}</select>
+          <button onclick="AgenOS.swapCurrency()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:10px 16px;border-radius:12px;font-size:18px;">⇄</button>
+          <select id="cur-to" onchange="AgenOS.updateCurrency()" style="flex:1;background:rgba(128,128,128,.15);color:var(--text-1);border:1px solid var(--glass-border);border-radius:12px;padding:10px;">${Object.keys(rates).map(k=>`<option value="${k}" ${k==='USD'?'selected':''}>${k}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="glass" style="border-radius:20px;padding:20px;margin-top:16px;text-align:center;">
+        <div style="font-size:12px;color:var(--text-2);">ERGEBNIS</div>
+        <div id="cur-result" class="font-display" style="font-size:42px;font-weight:700;margin-top:6px;">108,00</div>
+        <div id="cur-rate" style="font-size:12px;color:var(--text-2);margin-top:4px;">1 EUR = 1,08 USD</div>
+      </div>
+    </div>`;
+  }
+  function updateCurrency(){
+    const rates = {EUR:1, USD:1.08, GBP:0.86, JPY:161.5, CHF:0.96};
+    const amt = parseFloat(document.getElementById('cur-amount').value)||0;
+    const from = document.getElementById('cur-from').value; const to = document.getElementById('cur-to').value;
+    const eur = amt / rates[from]; const result = eur * rates[to];
+    const resEl = document.getElementById('cur-result'); const rateEl = document.getElementById('cur-rate');
+    if(resEl) resEl.textContent = result.toLocaleString('de-DE',{minimumFractionDigits:2, maximumFractionDigits:2});
+    if(rateEl) rateEl.textContent = `1 ${from} = ${(rates[to]/rates[from]).toFixed(4)} ${to}`;
+  }
+  function swapCurrency(){
+    const from = document.getElementById('cur-from'), to = document.getElementById('cur-to');
+    const tmp = from.value; from.value = to.value; to.value = tmp; updateCurrency();
+  }
+  function renderTranslate(){
+    return `<div style="padding:18px;">
+      <div class="glass" style="border-radius:20px;padding:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:12px;color:var(--text-2);">DEUTSCH</span><span style="font-size:12px;color:var(--accent-1);">⇄</span><span style="font-size:12px;color:var(--text-2);">ENGLISCH</span></div>
+        <textarea id="trans-input" class="kb-input" placeholder="Text eingeben…" style="width:100%;min-height:100px;background:rgba(128,128,128,.1);border:none;outline:none;border-radius:14px;padding:14px;color:var(--text-1);font-size:16px;resize:none;"></textarea>
+      </div>
+      <button onclick="AgenOS.translateText()" class="press-scale" style="width:100%;margin-top:14px;background:var(--accent-1);border:none;color:#fff;padding:14px;border-radius:14px;font-weight:600;">Übersetzen</button>
+      <div class="glass" style="border-radius:20px;padding:16px;margin-top:16px;"><div style="font-size:12px;color:var(--text-2);margin-bottom:8px;">ÜBERSETZUNG</div><div id="trans-output" style="font-size:16px;line-height:1.5;color:var(--text-1);">—</div></div>
+    </div>`;
+  }
+  function translateText(){
+    const dict = { 'hallo':'hello','welt':'world','guten morgen':'good morning','danke':'thank you','wie geht es dir':'how are you','ich liebe dich':'i love you','agen':'agen' };
+    const inp = document.getElementById('trans-input'), out = document.getElementById('trans-output');
+    if(!inp || !out) return;
+    const text = inp.value.toLowerCase().trim();
+    let result = dict[text] || text.split(' ').map(w=>dict[w]||w).join(' ');
+    out.textContent = result.charAt(0).toUpperCase()+result.slice(1);
+  }
+  function renderCompass(){
+    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
+      <div style="position:relative;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,var(--bg-elevated),var(--bg-deep));box-shadow:0 0 0 2px var(--separator) inset;">
+        ${['N','O','S','W'].map((d,i)=>{const a=i*90;const x=130+Math.sin(a*Math.PI/180)*110;const y=130-Math.cos(a*Math.PI/180)*110;return `<div style="position:absolute;left:${x-8}px;top:${y-10}px;font-weight:700;font-size:16px;color:${i===0?'#ef4444':'var(--text-1)'};">${d}</div>`;}).join('')}
+        <div id="compass-needle" style="position:absolute;left:50%;top:50%;width:4px;height:100px;background:linear-gradient(180deg,#ef4444 50%,var(--text-1) 50%);border-radius:2px;transform-origin:center bottom;transform:translate(-50%,-100%) rotate(0deg);transition:transform .2s;"></div>
+        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;background:var(--text-1);border-radius:50%;transform:translate(-50%,-50%);"></div>
+      </div>
+      <div class="font-display" style="font-size:36px;font-weight:700;margin-top:30px;"><span id="compass-heading">0</span>°</div>
+    </div>`;
+  }
+  function startCompass(){
+    if(window.DeviceOrientationEvent){
+      window.addEventListener('deviceorientationabsolute', handleCompass, true);
+      window.addEventListener('deviceorientation', handleCompass, true);
+    }
+  }
+  function handleCompass(e){
+    let heading = e.webkitCompassHeading || (e.alpha ? 360 - e.alpha : null);
+    if(heading==null) return;
+    const dial = document.getElementById('compass-needle'); const headEl = document.getElementById('compass-heading');
+    if(dial) dial.style.transform = `translate(-50%,-100%) rotate(${-heading}deg)`;
+    if(headEl) headEl.textContent = Math.round(heading);
+  }
+  function renderTimerApp(){
+    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
+      <div class="font-display" id="timer-display" style="font-size:72px;font-weight:300;letter-spacing:-2px;">00:00</div>
+      <div style="display:flex;gap:8px;margin-top:24px;flex-wrap:wrap;justify-content:center;">${[1,3,5,10,15,30].map(m=>`<button onclick="AgenOS.setTimer(${m})" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:10px 16px;border-radius:12px;font-size:14px;">${m}m</button>`).join('')}</div>
+      <div style="display:flex;gap:12px;margin-top:30px;">
+        <button onclick="AgenOS.toggleTimer()" class="press-scale" style="background:var(--accent-1);border:none;color:#fff;padding:14px 40px;border-radius:14px;font-weight:600;">${state.timer.running?'Pause':'Start'}</button>
+        <button onclick="AgenOS.resetTimer()" class="press-scale" style="background:rgba(128,128,128,.15);border:none;color:var(--text-1);padding:14px 30px;border-radius:14px;font-weight:600;">Reset</button>
+      </div>
+    </div>`;
+  }
+  function setTimer(m){ state.timer.remaining = m*60; updateTimerDisplay(); }
+  function toggleTimer(){
+    if(state.timer.running){ clearInterval(state.timer.interval); state.timer.running = false; }
+    else { if(state.timer.remaining<=0) return; state.timer.running = true;
+      state.timer.interval = setInterval(()=>{ state.timer.remaining--; updateTimerDisplay(); if(state.timer.remaining<=0){ clearInterval(state.timer.interval); state.timer.running=false; if(navigator.vibrate) navigator.vibrate([200,100,200]); } },1000);
+    }
+    renderApp('timer');
+  }
+  function resetTimer(){ clearInterval(state.timer.interval); state.timer.running=false; state.timer.remaining=0; updateTimerDisplay(); renderApp('timer'); }
+  function updateTimerDisplay(){ const el = document.getElementById('timer-display'); if(!el) return; const m = Math.floor(state.timer.remaining/60); const s = state.timer.remaining%60; el.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
+  function renderVoice(){
+    return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;">
+      <div style="font-size:60px;">🎙️</div>
+      <div style="font-size:18px;font-weight:700;margin-top:20px;">Sprachmemo</div>
+      <button onclick="AgenOS.recordVoice()" class="press-scale" style="margin-top:30px;background:#ef4444;border:none;color:#fff;width:80px;height:80px;border-radius:50%;font-size:30px;">●</button>
+      <div id="voice-status" style="color:var(--text-2);margin-top:16px;font-size:13px;">Bereit</div>
+    </div>`;
+  }
+  let mediaRecorder = null, recordedChunks = [];
+  async function recordVoice(){
+    const status = document.getElementById('voice-status');
+    if(mediaRecorder && mediaRecorder.state==='recording'){ mediaRecorder.stop(); if(status) status.textContent = 'Aufnahme beendet'; return; }
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      mediaRecorder = new MediaRecorder(stream); recordedChunks = [];
+      mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+      mediaRecorder.onstop = ()=>{ const blob = new Blob(recordedChunks, {type:'audio/webm'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'agen-voice-memo.webm'; a.click(); stream.getTracks().forEach(t=>t.stop()); if(status) status.textContent = 'Gespeichert ✓'; };
+      mediaRecorder.start(); if(status) status.textContent = '● Aufnahme läuft…';
+    }catch(e){ if(status) status.textContent = 'Mikrofon nicht verfügbar'; }
+  }
 
-  /* =========================================================
-     KEYBOARD
-     ========================================================= */
+  /* Keyboard */
   let activeInput = null, kbShift = false, kbNumbers = false;
   const KB_LAYOUT = {
     letters: [['q','w','e','r','t','z','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['y','x','c','v','b','n','m']],
@@ -2072,9 +2225,7 @@ const AgenOS = (function(){
   const observer = new MutationObserver(()=>{ document.querySelectorAll('.kb-input').forEach(inp=>{ if(!inp.dataset.kbSetup){ inp.dataset.kbSetup = '1'; setupKeyboardInput(inp); } }); });
   observer.observe(document.body, {childList:true, subtree:true});
 
-  /* =========================================================
-     BOOT / LOCK / GESTURES
-     ========================================================= */
+  /* Boot / Lock / Gestures */
   function boot(){
     const fill = document.getElementById('boot-fill');
     setTimeout(()=> fill.style.width='100%', 150);
@@ -2144,9 +2295,7 @@ const AgenOS = (function(){
     });
   }
 
-  /* =========================================================
-     INIT
-     ========================================================= */
+  /* Init */
   function init(){
     buildHomePages();
     renderDock();
@@ -2160,12 +2309,9 @@ const AgenOS = (function(){
     applyTheme(); applyIconStyle();
     renderNotifications(); updateCCTiles();
     setBrightness(state.brightness);
-    initBattery();
-    initNetwork();
+    initBattery(); initNetwork();
     boot();
-    setupLockGesture();
-    setupHomeSwipe();
-    setupControlCenterGesture();
+    setupLockGesture(); setupHomeSwipe(); setupControlCenterGesture();
     const kb = document.getElementById('keyboard');
     const bottomRow = kb.children[4];
     if(bottomRow) bottomRow.appendChild(backspaceBtn);
@@ -2177,17 +2323,19 @@ const AgenOS = (function(){
   document.addEventListener('DOMContentLoaded', init);
 
   return {
-    openApp, closeApp, goHome, renderApp, lockScreen,
+    openApp, closeApp, goHome, renderApp, lockScreen, showLockScreen,
     settingsNav, toggleSetting, toggleLockOption, setClockSize,
     setAccent, setWallpaper, setIconStyle, setIconTint,
     setDarkMode, setBrightness, setVolume, downloadUpdate, installUpdate,
     newNote, openNote, deleteNote, deleteApp,
     calcPress, musicToggle, musicNext, musicPrev, playTrack,
     takePhoto, flipCamera, retryCamera, allowPermission, denyPermission,
-    dial, call, openThread, sendMsg, browserGo, browserGoTo, installApp,
+    dial, call, openThread, sendMsg, browserGo, browserGoTo,
     updateCurrency, swapCurrency, translateText, toggleFlashlight,
     setTimer, toggleTimer, resetTimer, recordVoice,
     ccToggle, ccToggleDarkMode, ccOpenCamera,
+    // Store
+    storeInstall, storeSearch, storeCategory, openStoreDetail,
   };
 })();
 </script>
