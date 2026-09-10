@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AgenOS — AgenPhone 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>AgenOS — Fullscreen</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,8 +11,6 @@
   :root{
     --accent-1:#8b5cf6;
     --accent-2:#3b6bf6;
-    --accent-1-rgb:139,92,246;
-    --accent-2-rgb:59,107,246;
     --bg-deep:#050509;
     --bg-surface:#0d0d17;
     --glass:rgba(255,255,255,0.055);
@@ -21,77 +19,49 @@
     --text-1:#f4f4f9;
     --text-2:#9696ab;
     --text-3:#5e5e72;
+    --icon-tint: 0; /* 0 = full color, 1 = tinted */
+    --icon-dark: 0;  /* 0 = light, 1 = dark */
+    --icon-clear: 0; /* 0 = solid, 1 = clear/glassy */
+    --icon-tint-color: #8b5cf6;
+    --kb-height: 280px;
   }
-  *{box-sizing:border-box;}
-  html,body{height:100%;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;margin:0;padding:0;overflow:hidden;}
   body{
-    margin:0;
     background:
       radial-gradient(ellipse 90% 60% at 50% -10%, #14122b 0%, transparent 60%),
       radial-gradient(ellipse 80% 60% at 100% 100%, #0c1230 0%, transparent 55%),
       var(--bg-deep);
     font-family:'Inter',sans-serif;
     color:var(--text-1);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    -webkit-tap-highlight-color:transparent;
     user-select:none;
+    overscroll-behavior:none;
   }
   .font-display{font-family:'Space Grotesk',sans-serif;}
   ::-webkit-scrollbar{display:none;}
   *{scrollbar-width:none;}
 
-  /* ---------- Phone frame ---------- */
-  #device{
-    position:relative;
-    width:min(392px,93vw);
-    height:min(848px,93vh);
-    aspect-ratio:392/848;
-    padding:14px;
-    border-radius:56px;
-    background:linear-gradient(155deg,#232330 0%, #131319 45%, #0a0a0e 100%);
-    box-shadow:
-      0 0 0 1.5px rgba(255,255,255,0.06) inset,
-      0 30px 80px -20px rgba(0,0,0,0.8),
-      0 0 120px -40px rgba(139,92,246,0.35);
-  }
-  #device::before{ /* faux titanium edge highlight */
-    content:'';
-    position:absolute;inset:0;
-    border-radius:56px;
-    padding:1px;
-    background:linear-gradient(155deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.15));
-    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;mask-composite:exclude;
-    pointer-events:none;
-  }
-  .side-btn{position:absolute;background:#1b1b22;box-shadow:0 0 0 1px rgba(255,255,255,0.05) inset;}
-  #btn-power{right:-2.5px;top:150px;width:3px;height:70px;border-radius:2px 0 0 2px;}
-  #btn-vol-up{left:-2.5px;top:130px;width:3px;height:40px;border-radius:0 2px 2px 0;}
-  #btn-vol-down{left:-2.5px;top:180px;width:3px;height:40px;border-radius:0 2px 2px 0;}
-
+  /* ---------- Fullscreen Screen ---------- */
   #screen{
-    position:relative;
-    width:100%;height:100%;
-    border-radius:42px;
+    position:fixed;inset:0;
+    width:100vw;height:100vh;
+    height:100dvh;
     overflow:hidden;
     background:#000;
-    box-shadow:0 0 0 1px rgba(0,0,0,0.4);
+    display:flex;flex-direction:column;
   }
   #dynamic-island{
-    position:absolute;top:10px;left:50%;transform:translateX(-50%);
-    width:96px;height:28px;background:#000;border-radius:20px;z-index:100;
-    box-shadow:0 0 0 1px rgba(255,255,255,0.04);
+    position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    width:96px;height:28px;background:#000;border-radius:20px;z-index:1000;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.06);
+    pointer-events:none;
   }
   .home-indicator{
-    position:absolute;bottom:7px;left:50%;transform:translateX(-50%);
-    width:130px;height:4px;border-radius:3px;background:rgba(255,255,255,0.75);
-    z-index:200;cursor:pointer;
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    width:130px;height:4px;border-radius:3px;background:rgba(255,255,255,0.8);
+    z-index:2000;cursor:pointer;
   }
 
-  /* ---------- Screens ---------- */
   .screen-layer{
     position:absolute;inset:0;
     display:flex;flex-direction:column;
@@ -101,34 +71,52 @@
     background: var(--wp, radial-gradient(ellipse 120% 70% at 30% 0%, #4b3bd4 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 85% 15%, #8b5cf6 0%, transparent 50%), radial-gradient(ellipse 120% 80% at 50% 100%, #131335 0%, transparent 60%), linear-gradient(180deg,#0a0a18 0%,#050508 100%));
   }
 
-  /* status bar */
-  .statusbar{display:flex;align-items:center;justify-content:space-between;padding:14px 26px 4px;font-size:15px;font-weight:600;letter-spacing:.2px;flex-shrink:0;}
+  .statusbar{display:flex;align-items:center;justify-content:space-between;padding:14px 26px 4px;font-size:15px;font-weight:600;letter-spacing:.2px;flex-shrink:0;padding-top:max(14px, env(safe-area-inset-top));}
 
-  /* glass */
   .glass{background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
   .glass-strong{background:var(--glass-strong);border:1px solid var(--glass-border);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);}
 
   .accent-grad{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));}
   .accent-text{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
 
-  /* app icon */
+  /* App icon with iOS 26 style options */
   .app-icon{
     width:58px;height:58px;border-radius:16px;
     display:flex;align-items:center;justify-content:center;
     position:relative;flex-shrink:0;
     box-shadow:0 6px 14px -6px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07) inset;
-    transition:transform .15s ease;
+    transition:transform .15s ease, background .3s ease, backdrop-filter .3s ease;
+    overflow:hidden;
   }
+  .app-icon svg{width:60%;height:60%;}
+  /* Tinted mode */
+  .icon-tinted .app-icon{
+    background: color-mix(in srgb, var(--icon-tint-color) 55%, transparent) !important;
+    backdrop-filter: blur(6px);
+  }
+  .icon-tinted .app-icon svg *{fill: var(--icon-tint-color) !important; stroke: var(--icon-tint-color) !important;}
+  /* Dark mode */
+  .icon-dark .app-icon{
+    background: rgba(20,20,28,0.85) !important;
+    backdrop-filter: blur(8px);
+  }
+  .icon-dark .app-icon svg *{fill: #fff !important; stroke: #fff !important;}
+  /* Clear/Glass mode */
+  .icon-clear .app-icon{
+    background: rgba(255,255,255,0.12) !important;
+    backdrop-filter: blur(12px);
+    border:1px solid rgba(255,255,255,0.25);
+  }
+  .icon-clear .app-icon svg *{fill: #fff !important; stroke: #fff !important;}
+
   .app-btn:active .app-icon{transform:scale(0.88);}
   .app-btn{display:flex;flex-direction:column;align-items:center;gap:6px;}
   .app-label{font-size:11px;color:rgba(255,255,255,0.88);font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,0.5);}
 
-  /* app window */
   .app-window{
     position:absolute;inset:0;
     transform:translateY(100%);
-    opacity:0;
-    pointer-events:none;
+    opacity:0;pointer-events:none;
     transition:transform .42s cubic-bezier(.32,.72,0,1), opacity .3s ease;
     display:flex;flex-direction:column;
     background:var(--bg-surface);
@@ -137,20 +125,18 @@
   .app-window.open{transform:translateY(0);opacity:1;pointer-events:auto;}
   #home-layer.dimmed{transform:scale(0.92);opacity:0;}
 
-  .app-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0;}
-  .app-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .app-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;flex-shrink:0;padding-top:max(16px, env(safe-area-inset-top));}
+  .app-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:40px;}
 
   .row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;}
   .divider{height:1px;background:rgba(255,255,255,0.07);margin:0 16px;}
 
-  /* toggle switch */
   .toggle{width:46px;height:27px;border-radius:14px;background:rgba(255,255,255,0.14);position:relative;transition:background .25s;flex-shrink:0;}
   .toggle.on{background:var(--accent-1);}
   .toggle::after{content:'';position:absolute;top:2.5px;left:2.5px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.3,1.3,.5,1);box-shadow:0 1px 3px rgba(0,0,0,0.4);}
   .toggle.on::after{transform:translateX(19px);}
 
-  /* boot */
-  #boot-screen{background:#050508;align-items:center;justify-content:center;}
+  #boot-screen{background:#050508;align-items:center;justify-content:center;z-index:3000;}
   .boot-logo{font-size:52px;font-weight:700;letter-spacing:1px;opacity:0;animation:bootIn 1.1s ease forwards .15s;}
   @keyframes bootIn{0%{opacity:0;transform:scale(.82);filter:blur(6px);}60%{opacity:1;filter:blur(0);}100%{opacity:1;transform:scale(1);}}
   .boot-bar-track{width:120px;height:3px;border-radius:2px;background:rgba(255,255,255,0.1);overflow:hidden;margin-top:26px;opacity:0;animation:fadeIn .6s ease forwards 1s;}
@@ -159,8 +145,7 @@
   .pulse-ring{position:absolute;width:140px;height:140px;border-radius:50%;border:1px solid rgba(139,92,246,0.35);animation:ring 2.4s ease-out infinite;}
   @keyframes ring{0%{transform:scale(.4);opacity:0;}30%{opacity:.6;}100%{transform:scale(1.6);opacity:0;}}
 
-  /* lock screen */
-  #lock-screen{align-items:center;padding-top:90px;touch-action:none;}
+  #lock-screen{align-items:center;padding-top:90px;touch-action:none;z-index:2500;}
   .lock-time{font-size:78px;font-weight:600;font-family:'Space Grotesk',sans-serif;line-height:1;letter-spacing:-2px;}
   .lock-date{font-size:16px;color:var(--text-2);margin-top:8px;font-weight:500;}
   .swipe-hint{position:absolute;bottom:46px;left:0;right:0;text-align:center;font-size:13px;color:rgba(255,255,255,0.65);font-weight:500;}
@@ -180,10 +165,61 @@
   .wp-swatch{width:100%;aspect-ratio:9/16;border-radius:12px;cursor:pointer;position:relative;box-shadow:0 4px 10px -4px rgba(0,0,0,.5);}
   .wp-swatch.selected::after{content:'';position:absolute;inset:0;border-radius:12px;border:2.5px solid var(--accent-1);}
 
-  .noise-canvas{position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;pointer-events:none;}
-
   input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+
+  /* ---------- Custom Keyboard ---------- */
+  #keyboard{
+    position:absolute;bottom:0;left:0;right:0;
+    height:var(--kb-height);
+    background:rgba(28,28,36,0.96);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border-top:1px solid rgba(255,255,255,0.1);
+    transform:translateY(100%);
+    transition:transform .3s cubic-bezier(.32,.72,0,1);
+    z-index:5000;
+    padding:8px 4px max(8px, env(safe-area-inset-bottom));
+    display:flex;flex-direction:column;gap:8px;
+  }
+  #keyboard.show{transform:translateY(0);}
+  .kb-row{display:flex;justify-content:center;gap:6px;flex:1;}
+  .kb-key{
+    flex:1;max-width:44px;
+    background:rgba(255,255,255,0.12);
+    border:none;border-radius:6px;color:#fff;
+    font-size:20px;font-weight:400;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 1px 0 rgba(0,0,0,0.4);
+    transition:background .1s;
+    cursor:pointer;
+  }
+  .kb-key:active{background:rgba(255,255,255,0.3);}
+  .kb-key.special{background:rgba(255,255,255,0.08);font-size:14px;max-width:60px;}
+  .kb-key.wide{max-width:90px;}
+  .kb-key.space{max-width:200px;flex:3;}
+  .kb-key.accent{background:var(--accent-1);}
+  .kb-suggestions{
+    display:flex;gap:8px;padding:0 8px;height:38px;align-items:center;
+  }
+  .kb-suggestion{
+    flex:1;text-align:center;padding:6px 4px;
+    background:rgba(255,255,255,0.08);border-radius:6px;
+    font-size:14px;color:#fff;cursor:pointer;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .kb-suggestion:active{background:rgba(255,255,255,0.2);}
+
+  /* App Store */
+  .store-card{
+    border-radius:20px;padding:16px;
+    background:var(--glass);border:1px solid var(--glass-border);
+    display:flex;gap:14px;align-items:center;
+    margin-bottom:12px;
+  }
+  .store-icon{width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;}
+
+  /* Camera */
+  #camera-video{width:100%;height:100%;object-fit:cover;background:#000;}
 
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
@@ -192,73 +228,86 @@
 </head>
 <body>
 
-<div id="device">
-  <div class="side-btn" id="btn-power"></div>
-  <div class="side-btn" id="btn-vol-up"></div>
-  <div class="side-btn" id="btn-vol-down"></div>
+<div id="screen">
+  <div id="dynamic-island"></div>
 
-  <div id="screen">
-    <div id="dynamic-island"></div>
+  <!-- BOOT -->
+  <div id="boot-screen" class="screen-layer">
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring" style="animation-delay:.6s;"></div>
+    <div class="boot-logo font-display accent-text">Agen</div>
+    <div class="boot-bar-track"><div class="boot-bar-fill" id="boot-fill"></div></div>
+  </div>
 
-    <!-- ============ BOOT ============ -->
-    <div id="boot-screen" class="screen-layer" style="z-index:300;">
-      <div class="pulse-ring"></div>
-      <div class="pulse-ring" style="animation-delay:.6s;"></div>
-      <div class="boot-logo font-display accent-text">Agen</div>
-      <div class="boot-bar-track"><div class="boot-bar-fill" id="boot-fill"></div></div>
+  <!-- LOCK -->
+  <div id="lock-screen" class="screen-layer wallpaper" style="opacity:0;">
+    <div class="statusbar" style="position:absolute;top:0;left:0;right:0;" id="statusbar-lock"></div>
+    <div class="lock-time" id="lock-time">9:41</div>
+    <div class="lock-date" id="lock-date">Donnerstag, 10. September</div>
+    <div style="flex:1;"></div>
+    <div class="swipe-hint">
+      <div class="chevrons" style="margin-bottom:6px;"><span>⌃</span><span>⌃</span></div>
+      nach oben wischen zum Entsperren
     </div>
+    <div class="home-indicator" id="lock-drag"></div>
+  </div>
 
-    <!-- ============ LOCK ============ -->
-    <div id="lock-screen" class="screen-layer wallpaper" style="z-index:250;opacity:0;">
-      <div class="statusbar" style="position:absolute;top:0;left:0;right:0;" id="statusbar-lock"></div>
-      <div class="lock-time" id="lock-time">9:41</div>
-      <div class="lock-date" id="lock-date">Thursday, September 10</div>
-      <div style="flex:1;"></div>
-      <div class="swipe-hint">
-        <div class="chevrons" style="margin-bottom:6px;"><span>⌃</span><span>⌃</span></div>
-        swipe up to unlock
-      </div>
-      <div class="home-indicator" id="lock-drag"></div>
-    </div>
+  <!-- HOME -->
+  <div id="home-layer" class="screen-layer wallpaper">
+    <div class="statusbar statusbar-slot"></div>
 
-    <!-- ============ HOME ============ -->
-    <div id="home-layer" class="screen-layer wallpaper" style="z-index:10;">
-      <div class="statusbar statusbar-slot"></div>
-
-      <!-- widget -->
-      <div style="padding:14px 18px 4px;">
-        <div class="glass fade-in" style="border-radius:26px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="AgenOS.openApp('weather')">
-          <div>
-            <div style="font-size:13px;color:var(--text-2);font-weight:600;">Agen City</div>
-            <div class="font-display" style="font-size:40px;font-weight:600;line-height:1.1;" id="widget-temp">21°</div>
-            <div style="font-size:13px;color:var(--text-2);" id="widget-cond">Partly Cloudy</div>
-          </div>
-          <svg id="widget-icon" width="54" height="54" viewBox="0 0 24 24" fill="none"></svg>
+    <div style="padding:14px 18px 4px;">
+      <div class="glass fade-in" style="border-radius:26px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="AgenOS.openApp('weather')">
+        <div>
+          <div style="font-size:13px;color:var(--text-2);font-weight:600;">Agen City</div>
+          <div class="font-display" style="font-size:40px;font-weight:600;line-height:1.1;" id="widget-temp">21°</div>
+          <div style="font-size:13px;color:var(--text-2);" id="widget-cond">Teilweise bewölkt</div>
         </div>
+        <svg id="widget-icon" width="54" height="54" viewBox="0 0 24 24" fill="none"></svg>
       </div>
-
-      <!-- app grid -->
-      <div class="app-scroll" style="padding:20px 18px 6px;">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);row-gap:20px;justify-items:center;" id="app-grid"></div>
-      </div>
-
-      <div style="flex:1;"></div>
-
-      <!-- dock -->
-      <div style="padding:10px 16px 30px;">
-        <div class="glass-strong" style="border-radius:28px;padding:12px 14px;display:flex;justify-content:space-between;" id="dock"></div>
-      </div>
-      <div class="home-indicator" onclick="AgenOS.goHome()"></div>
     </div>
 
-    <!-- ============ APPS ============ -->
-    <div id="app-container"></div>
+    <div class="app-scroll" style="padding:20px 18px 6px;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);row-gap:22px;justify-items:center;" id="app-grid"></div>
+    </div>
+
+    <div style="flex:1;"></div>
+
+    <div style="padding:10px 16px 34px;">
+      <div class="glass-strong" style="border-radius:28px;padding:12px 14px;display:flex;justify-content:space-between;" id="dock"></div>
+    </div>
+    <div class="home-indicator" onclick="AgenOS.goHome()"></div>
+  </div>
+
+  <!-- APP CONTAINER -->
+  <div id="app-container"></div>
+</div>
+
+<!-- CUSTOM KEYBOARD -->
+<div id="keyboard">
+  <div class="kb-suggestions" id="kb-suggestions">
+    <div class="kb-suggestion">Ich</div>
+    <div class="kb-suggestion">Agen</div>
+    <div class="kb-suggestion">Hallo</div>
+  </div>
+  <div class="kb-row" id="kb-row-1"></div>
+  <div class="kb-row" id="kb-row-2"></div>
+  <div class="kb-row" id="kb-row-3"></div>
+  <div class="kb-row">
+    <button class="kb-key special wide" data-action="shift">⇧</button>
+    <button class="kb-key special" data-action="key" data-key=",">,</button>
+    <button class="kb-key space" data-action="space">Leerzeichen</button>
+    <button class="kb-key special" data-action="key" data-key=".">.</button>
+    <button class="kb-key special wide accent" data-action="enter">↵</button>
+  </div>
+  <div class="kb-row" style="flex:0;height:auto;margin-top:4px;">
+    <button class="kb-key special" data-action="key" data-key="123" style="max-width:70px;margin:0 auto;">123</button>
   </div>
 </div>
 
 <script>
 /* =========================================================================
-   AgenOS — single-file mobile OS simulation
+   AgenOS 2.0 — Fullscreen Edition
    ========================================================================= */
 const AgenOS = (function(){
 
@@ -267,11 +316,17 @@ const AgenOS = (function(){
     activeApp:null,
     accent:{a1:'#8b5cf6', a2:'#3b6bf6'},
     wallpaper:'default',
-    settings:{wifi:true,bluetooth:true,airplane:false,dnd:false,saver:false,location:true},
+    settings:{
+      wifi:true,bluetooth:true,airplane:false,dnd:false,saver:false,location:true,
+      faceId:true, trueTone:true, nightShift:false, autoBrightness:true,
+      keyboardHaptics:true, keyboardClick:true, predictive:true,
+      iconStyle:'color', // 'color' | 'tinted' | 'dark' | 'clear'
+      iconTintColor:'#8b5cf6'
+    },
     battery:87,
     notes:[
-      {id:1,title:'Launch checklist',body:'Finish AgenOS 1.0 build.\nPolish boot animation.\nShip AgenPhone 1 pre-orders.'},
-      {id:2,title:'Ideas',body:'Matte Black finish for the second colorway.\nAgen Cloud sync for Notes.'}
+      {id:1,title:'Launch checklist',body:'AgenOS 2.0 Build abschließen.\nBoot-Animation polieren.\nAgenPhone 1 Vorbestellungen versenden.'},
+      {id:2,title:'Ideen',body:'Matte Black Finish für die zweite Farbvariante.\nAgen Cloud Sync für Notes.'}
     ],
     photos:[],
     calc:{display:'0', stored:null, op:null, fresh:true},
@@ -283,11 +338,15 @@ const AgenOS = (function(){
     trackIndex:0,
     playing:false,
     threads:{
-      'Mira': [{me:false,text:'Hey — did the AgenPhone 1 units ship yet?'},{me:true,text:'Yep, out for delivery today 🚀'}],
-      'Agen Support': [{me:false,text:'Your AgenPhone 1 is now active on AgenOS 1.0.'}],
-      'Theo': [{me:false,text:'That Matte Black finish is unreal.'}]
+      'Mira': [{me:false,text:'Hey — sind die AgenPhone 1 Einheiten schon versendet?'},{me:true,text:'Ja, sind heute raus 🚀'}],
+      'Agen Support': [{me:false,text:'Dein AgenPhone 1 ist jetzt auf AgenOS 2.0 aktiv.'}],
+      'Theo': [{me:false,text:'Das Matte Black Finish ist unglaublich.'}]
     },
-    activeThread:null
+    activeThread:null,
+    installedApps: ['weather','notes','gallery','calculator','music','settings','phone','messages','browser','camera'],
+    cameraStream:null,
+    cameraFacing:'environment',
+    iconStyle:'color'
   };
 
   const wallpapers = {
@@ -295,10 +354,11 @@ const AgenOS = (function(){
     dusk:'radial-gradient(ellipse 110% 70% at 20% 0%, #ff6b9d33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 10%, #6b3bf6 0%, transparent 50%), linear-gradient(180deg,#12081e 0%,#050508 100%)',
     aurora:'radial-gradient(ellipse 120% 70% at 50% -10%, #22d3ee33 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 80% 20%, #8b5cf6 0%, transparent 50%), linear-gradient(180deg,#060814 0%,#050508 100%)',
     void:'radial-gradient(ellipse 90% 60% at 50% 0%, #1e1e2e 0%, transparent 60%), linear-gradient(180deg,#0a0a0d 0%,#020203 100%)',
-    ember:'radial-gradient(ellipse 110% 70% at 15% 0%, #f9731633 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #8b5cf6 0%, transparent 50%), linear-gradient(180deg,#160a08 0%,#050508 100%)'
+    ember:'radial-gradient(ellipse 110% 70% at 15% 0%, #f9731633 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #8b5cf6 0%, transparent 50%), linear-gradient(180deg,#160a08 0%,#050508 100%)',
+    ocean:'radial-gradient(ellipse 110% 70% at 20% 0%, #0ea5e933 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #3b82f6 0%, transparent 50%), linear-gradient(180deg,#04121f 0%,#050508 100%)',
+    forest:'radial-gradient(ellipse 110% 70% at 20% 0%, #22c55e33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #059669 0%, transparent 50%), linear-gradient(180deg,#04140a 0%,#050508 100%)'
   };
 
-  /* ---------------- icon svgs ---------------- */
   const ICONS = {
     weather:`<svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="10" r="5" fill="#ffd166"/><path d="M8 17a5 5 0 0 1 0-10 6 6 0 0 1 11.8 1.6A4 4 0 0 1 18.5 17H8Z" fill="#fff" opacity=".92"/></svg>`,
     browser:`<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#fff" stroke-width="1.6"/><path d="M3 12h18M12 3c2.6 2.6 4 5.7 4 9s-1.4 6.4-4 9c-2.6-2.6-4-5.7-4-9s1.4-6.4 4-9Z" stroke="#fff" stroke-width="1.4"/></svg>`,
@@ -309,25 +369,41 @@ const AgenOS = (function(){
     settings:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="#fff"/><path d="M19.4 13a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V19a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.1-1.55 1.7 1.7 0 0 0-1.88.34l-.05.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .33-1.87 1.7 1.7 0 0 0-1.54-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9.1a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z" stroke="#fff" stroke-width="1.1"/></svg>`,
     phone:`<svg viewBox="0 0 24 24" fill="none"><path d="M6.5 3.5c1 0 2.6 2.1 2.6 3.2 0 1-1.6 1.9-1.6 2.7 0 1.7 3.1 4.8 4.8 4.8.8 0 1.7-1.6 2.7-1.6 1.1 0 3.2 1.6 3.2 2.6 0 1.5-1.9 3.3-3.4 3.3-3 0-9.8-6.8-9.8-9.8 0-1.5 1.8-3.4 3.3-3.4 0-.1 0-.1.2-1.8Z" fill="#fff"/></svg>`,
     messages:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-4 3.4V17H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" fill="#fff"/></svg>`,
-    camera:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="3" fill="#fff"/><path d="M8.5 7 10 4.5h4L15.5 7" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#111"/></svg>`
+    camera:`<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="18" height="13" rx="3" fill="#fff"/><path d="M8.5 7 10 4.5h4L15.5 7" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#111"/></svg>`,
+    store:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 7Z" fill="#fff"/><path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="13" r="2" fill="#3b82f6"/></svg>`
   };
 
   const APPS = [
     {id:'weather', name:'Weather', bg:'linear-gradient(160deg,#3b82f6,#1d4ed8)'},
-    {id:'notes', name:'Notes', bg:'linear-gradient(160deg,#3a3a44,#18181d)'},
-    {id:'gallery', name:'Gallery', bg:'linear-gradient(160deg,#f472b6,#a855f7)'},
-    {id:'calculator', name:'Calculator', bg:'linear-gradient(160deg,#3a3a44,#111114)'},
-    {id:'music', name:'Music', bg:'linear-gradient(160deg,#fb7185,#8b5cf6)'},
-    {id:'settings', name:'Settings', bg:'linear-gradient(160deg,#6b7280,#374151)'},
+    {id:'notes', name:'Notizen', bg:'linear-gradient(160deg,#3a3a44,#18181d)'},
+    {id:'gallery', name:'Galerie', bg:'linear-gradient(160deg,#f472b6,#a855f7)'},
+    {id:'calculator', name:'Rechner', bg:'linear-gradient(160deg,#3a3a44,#111114)'},
+    {id:'store', name:'App Store', bg:'linear-gradient(160deg,#0ea5e9,#2563eb)'},
+    {id:'music', name:'Musik', bg:'linear-gradient(160deg,#fb7185,#8b5cf6)'},
+    {id:'settings', name:'Einstellungen', bg:'linear-gradient(160deg,#6b7280,#374151)'},
   ];
   const DOCK = [
-    {id:'phone', name:'Phone', bg:'linear-gradient(160deg,#34d399,#059669)'},
-    {id:'messages', name:'Messages', bg:'linear-gradient(160deg,#34d399,#22c55e)'},
+    {id:'phone', name:'Telefon', bg:'linear-gradient(160deg,#34d399,#059669)'},
+    {id:'messages', name:'Nachrichten', bg:'linear-gradient(160deg,#34d399,#22c55e)'},
     {id:'browser', name:'Browser', bg:'linear-gradient(160deg,#60a5fa,#8b5cf6)'},
-    {id:'camera', name:'Camera', bg:'radial-gradient(circle at 35% 30%, #4b5563, #111114)'},
+    {id:'camera', name:'Kamera', bg:'radial-gradient(circle at 35% 30%, #4b5563, #111114)'},
   ];
 
-  /* ---------------- clock / status bar ---------------- */
+  const APP_DEFS = {
+    weather:{title:'Weather', render:()=>renderWeather()},
+    notes:{title:'Notizen', render:()=>renderNotesList()},
+    gallery:{title:'Galerie', render:()=>renderGallery()},
+    calculator:{title:'Rechner', render:()=>renderCalculator()},
+    music:{title:'Musik', render:()=>renderMusic()},
+    settings:{title:'Einstellungen', render:()=>renderSettingsHome()},
+    phone:{title:'Telefon', render:()=>renderPhone()},
+    messages:{title:'Nachrichten', render:()=>renderMessagesList()},
+    browser:{title:'Browser', render:()=>renderBrowserHome()},
+    camera:{title:'Kamera', render:()=>renderCamera(), noStatusBar:true},
+    store:{title:'App Store', render:()=>renderStore()},
+  };
+
+  /* ---------- Clock / Status ---------- */
   function fmtTime(d){
     let h=d.getHours(), m=d.getMinutes();
     const ap = h>=12?'PM':'AM'; h = h%12; if(h===0)h=12;
@@ -347,10 +423,10 @@ const AgenOS = (function(){
     if(sbLock) sbLock.innerHTML = statusBarHTML();
     const d = new Date();
     const lt = document.getElementById('lock-time'); if(lt) lt.textContent = fmtTime(d);
-    const ld = document.getElementById('lock-date'); if(ld) ld.textContent = d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+    const ld = document.getElementById('lock-date'); if(ld) ld.textContent = d.toLocaleDateString('de-DE',{weekday:'long',month:'long',day:'numeric'});
   }
 
-  /* ---------------- weather (simulated live) ---------------- */
+  /* ---------- Weather ---------- */
   let weatherBase = 21;
   function weatherIconSVG(cond){
     if(cond==='Clear') return `<circle cx="12" cy="12" r="6" fill="#ffd166"/>`;
@@ -359,16 +435,26 @@ const AgenOS = (function(){
   }
   function refreshWidget(){
     const t = Math.round(weatherBase + (Math.random()*1.4-0.7));
-    document.getElementById('widget-temp').textContent = t+'°';
-    document.getElementById('widget-icon').innerHTML = weatherIconSVG('Partly');
+    const el = document.getElementById('widget-temp'); if(el) el.textContent = t+'°';
+    const ic = document.getElementById('widget-icon'); if(ic) ic.innerHTML = weatherIconSVG('Partly');
   }
 
-  /* ---------------- render grid / dock ---------------- */
+  /* ---------- Icon style ---------- */
+  function applyIconStyle(){
+    const root = document.documentElement;
+    root.classList.remove('icon-tinted','icon-dark','icon-clear');
+    if(state.settings.iconStyle==='tinted') root.classList.add('icon-tinted');
+    if(state.settings.iconStyle==='dark') root.classList.add('icon-dark');
+    if(state.settings.iconStyle==='clear') root.classList.add('icon-clear');
+    root.style.setProperty('--icon-tint-color', state.settings.iconTintColor);
+  }
+
+  /* ---------- Render grid / dock ---------- */
   function iconEl(app, size){
     const div = document.createElement('div');
     div.className='app-btn press-scale';
     div.onclick=()=>openApp(app.id);
-    div.innerHTML = `<div class="app-icon" style="background:${app.bg};width:${size}px;height:${size}px;">${ICONS[app.id]}</div>${app.dock?'':`<div class="app-label">${app.name}</div>`}`;
+    div.innerHTML = `<div class="app-icon" style="background:${app.bg};width:${size}px;height:${size}px;">${ICONS[app.id]||''}</div>${app.dock?'':`<div class="app-label">${app.name}</div>`}`;
     return div;
   }
   function renderGrid(){
@@ -386,7 +472,7 @@ const AgenOS = (function(){
     });
   }
 
-  /* ---------------- app window scaffold ---------------- */
+  /* ---------- App shell ---------- */
   function buildAppShell(id, title, contentHTML, opts={}){
     const win = document.createElement('div');
     win.className='app-window';
@@ -404,9 +490,9 @@ const AgenOS = (function(){
     return win;
   }
 
-  /* ---------------- individual apps ---------------- */
+  /* ---------- Weather App ---------- */
   function renderWeather(){
-    const days=['Today','Fri','Sat','Sun','Mon','Tue'];
+    const days=['Heute','Fr','Sa','So','Mo','Di'];
     const conds=['☀️','⛅','⛅','🌧️','☀️','⛅'];
     const temps=[21,23,19,17,22,24];
     const hours=Array.from({length:8},(_,i)=>{
@@ -417,7 +503,7 @@ const AgenOS = (function(){
       <div style="padding:10px 22px 30px;text-align:center;">
         <div style="font-size:15px;color:var(--text-2);font-weight:600;letter-spacing:.5px;margin-top:4px;">AGEN CITY</div>
         <div class="font-display" style="font-size:88px;font-weight:600;line-height:1;margin:6px 0;">${weatherBase}°</div>
-        <div style="color:var(--text-2);font-size:16px;">Partly Cloudy · H:24° L:16°</div>
+        <div style="color:var(--text-2);font-size:16px;">Teilweise bewölkt · H:24° L:16°</div>
 
         <div class="glass" style="margin-top:26px;border-radius:20px;padding:16px 4px;display:flex;overflow-x:auto;gap:22px;text-align:center;">
           ${hours.map(h=>`<div style="flex-shrink:0;min-width:40px;">
@@ -440,7 +526,7 @@ const AgenOS = (function(){
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
           <div class="glass" style="border-radius:18px;padding:14px;text-align:left;">
-            <div style="font-size:12px;color:var(--text-2);">HUMIDITY</div>
+            <div style="font-size:12px;color:var(--text-2);">LUFTFEUCHTIGKEIT</div>
             <div style="font-size:24px;font-weight:600;margin-top:4px;">58%</div>
           </div>
           <div class="glass" style="border-radius:18px;padding:14px;text-align:left;">
@@ -448,17 +534,27 @@ const AgenOS = (function(){
             <div style="font-size:24px;font-weight:600;margin-top:4px;">11 km/h</div>
           </div>
           <div class="glass" style="border-radius:18px;padding:14px;text-align:left;">
-            <div style="font-size:12px;color:var(--text-2);">UV INDEX</div>
-            <div style="font-size:24px;font-weight:600;margin-top:4px;">4 · Moderate</div>
+            <div style="font-size:12px;color:var(--text-2);">UV-INDEX</div>
+            <div style="font-size:24px;font-weight:600;margin-top:4px;">4 · Mittel</div>
           </div>
           <div class="glass" style="border-radius:18px;padding:14px;text-align:left;">
-            <div style="font-size:12px;color:var(--text-2);">VISIBILITY</div>
+            <div style="font-size:12px;color:var(--text-2);">SICHT</div>
             <div style="font-size:24px;font-weight:600;margin-top:4px;">14 km</div>
           </div>
         </div>
       </div>`;
   }
 
+  /* ---------- Settings ---------- */
+  function settingsToggleRow(key,label,sub){
+    return `<div class="row press-scale" onclick="AgenOS.toggleSetting('${key}')" style="cursor:pointer;">
+      <div><div>${label}</div>${sub?`<div style="font-size:12px;color:var(--text-2);margin-top:2px;">${sub}</div>`:''}</div>
+      <div class="toggle ${state.settings[key]?'on':''}" id="tgl-${key}"></div>
+    </div>`;
+  }
+  function settingsBack(){
+    return `<div onclick="AgenOS.settingsNav('home')" style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Einstellungen</div>`;
+  }
   function renderSettingsHome(){
     return `
       <div style="padding:4px 18px 24px;">
@@ -466,88 +562,131 @@ const AgenOS = (function(){
           <div style="width:52px;height:52px;border-radius:50%;" class="accent-grad"></div>
           <div>
             <div style="font-weight:700;font-size:17px;">Agen ID</div>
-            <div style="color:var(--text-2);font-size:13px;">iCloud-style sync, backup & devices</div>
+            <div style="color:var(--text-2);font-size:13px;">Sync, Backup & Geräte</div>
           </div>
         </div>
 
         <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
-          ${settingsToggleRow('wifi','Wi-Fi','Agen_Home_5G')}
+          ${settingsToggleRow('wifi','WLAN','Agen_Home_5G')}
           <div class="divider"></div>
-          ${settingsToggleRow('bluetooth','Bluetooth','On')}
+          ${settingsToggleRow('bluetooth','Bluetooth','Ein')}
           <div class="divider"></div>
-          ${settingsToggleRow('airplane','Airplane Mode','')}
+          ${settingsToggleRow('airplane','Flugmodus','')}
         </div>
 
         <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
           <div class="row press-scale" onclick="AgenOS.settingsNav('display')" style="cursor:pointer;">
-            <span>Display &amp; Brightness</span><span style="color:var(--text-3);">›</span>
+            <span>Anzeige & Helligkeit</span><span style="color:var(--text-3);">›</span>
+          </div>
+          <div class="divider"></div>
+          <div class="row press-scale" onclick="AgenOS.settingsNav('iconStyle')" style="cursor:pointer;">
+            <span>App-Icon-Stil</span><span style="color:var(--text-3);">›</span>
           </div>
           <div class="divider"></div>
           <div class="row press-scale" onclick="AgenOS.settingsNav('sound')" style="cursor:pointer;">
-            <span>Sounds &amp; Haptics</span><span style="color:var(--text-3);">›</span>
+            <span>Töne & Haptik</span><span style="color:var(--text-3);">›</span>
           </div>
           <div class="divider"></div>
           <div class="row press-scale" onclick="AgenOS.settingsNav('battery')" style="cursor:pointer;">
-            <span>Battery</span><span style="color:var(--text-3);">${state.battery}%</span>
+            <span>Batterie</span><span style="color:var(--text-3);">${state.battery}%</span>
           </div>
           <div class="divider"></div>
-          ${settingsToggleRow('dnd','Do Not Disturb','')}
+          <div class="row press-scale" onclick="AgenOS.settingsNav('keyboard')" style="cursor:pointer;">
+            <span>Tastatur</span><span style="color:var(--text-3);">›</span>
+          </div>
           <div class="divider"></div>
-          ${settingsToggleRow('location','Location Services','')}
+          <div class="row press-scale" onclick="AgenOS.settingsNav('privacy')" style="cursor:pointer;">
+            <span>Datenschutz & Sicherheit</span><span style="color:var(--text-3);">›</span>
+          </div>
+          <div class="divider"></div>
+          ${settingsToggleRow('dnd','Nicht stören','')}
+          <div class="divider"></div>
+          ${settingsToggleRow('location','Standortdienste','')}
         </div>
 
         <div class="glass" style="border-radius:20px;overflow:hidden;">
           <div class="row press-scale" onclick="AgenOS.settingsNav('about')" style="cursor:pointer;">
-            <span>About Phone</span><span style="color:var(--text-3);">›</span>
+            <span>Über das Gerät</span><span style="color:var(--text-3);">›</span>
           </div>
         </div>
       </div>`;
   }
-  function settingsToggleRow(key,label,sub){
-    return `<div class="row press-scale" onclick="AgenOS.toggleSetting('${key}')" style="cursor:pointer;">
-      <div><div>${label}</div>${sub?`<div style="font-size:12px;color:var(--text-2);margin-top:2px;">${sub}</div>`:''}</div>
-      <div class="toggle ${state.settings[key]?'on':''}" id="tgl-${key}"></div>
-    </div>`;
-  }
   function renderSettingsDisplay(){
     const wpKeys = Object.keys(wallpapers);
     const accents = [
-      {n:'Violet',a1:'#8b5cf6',a2:'#3b6bf6'},
+      {n:'Violett',a1:'#8b5cf6',a2:'#3b6bf6'},
       {n:'Aqua',a1:'#22d3ee',a2:'#3b82f6'},
       {n:'Rose',a1:'#fb7185',a2:'#a855f7'},
       {n:'Amber',a1:'#f59e0b',a2:'#ef4444'},
       {n:'Mint',a1:'#34d399',a2:'#059669'},
+      {n:'Ozean',a1:'#0ea5e9',a2:'#2563eb'},
     ];
     return `
       <div style="padding:4px 18px 24px;">
         ${settingsBack()}
-        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">BRIGHTNESS</div>
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">HELLIGKEIT</div>
         <div class="glass" style="border-radius:18px;padding:16px;">
           <input type="range" min="10" max="100" value="80" style="width:100%;" oninput="this.style.setProperty('--v',this.value)">
         </div>
 
-        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">ACCENT COLOR</div>
-        <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;">
-          ${accents.map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(255,255,255,.15);"></div>`).join('')}
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">AKZENTFARBE</div>
+        <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">
+          ${accents.map(c=>`<div onclick="AgenOS.setAccent('${c.a1}','${c.a2}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:linear-gradient(135deg,${c.a1},${c.a2});box-shadow:0 0 0 2px rgba(255,255,255,.15);" title="${c.n}"></div>`).join('')}
         </div>
 
-        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">WALLPAPER</div>
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">HINTERGRUNDBILD</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
           ${wpKeys.map(k=>`<div class="wp-swatch ${state.wallpaper===k?'selected':''}" style="background:${wallpapers[k]};" onclick="AgenOS.setWallpaper('${k}')"></div>`).join('')}
+        </div>
+      </div>`;
+  }
+  function renderSettingsIconStyle(){
+    const styles = [
+      {id:'color', name:'Farbig', desc:'Original App-Farben'},
+      {id:'tinted', name:'Getönt', desc:'Einfarbig mit Akzentfarbe'},
+      {id:'dark', name:'Dunkel', desc:'Dunkler Hintergrund, weiße Symbole'},
+      {id:'clear', name:'Klar', desc:'Transparent mit Glaseffekt'},
+    ];
+    const tintColors = ['#8b5cf6','#3b82f6','#22d3ee','#34d399','#f59e0b','#ef4444','#ec4899','#a855f7'];
+    return `
+      <div style="padding:4px 18px 24px;">
+        ${settingsBack()}
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">ICON-STIL (iOS 26)</div>
+        <div class="glass" style="border-radius:18px;overflow:hidden;">
+          ${styles.map((s,i)=>`
+            <div class="row press-scale" onclick="AgenOS.setIconStyle('${s.id}')" style="cursor:pointer;${i<styles.length-1?'border-bottom:1px solid rgba(255,255,255,.06);':''}">
+              <div><div style="font-weight:600;">${s.name}</div><div style="font-size:12px;color:var(--text-2);">${s.desc}</div></div>
+              <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${state.settings.iconStyle===s.id?'var(--accent-1)':'rgba(255,255,255,.2)'};display:flex;align-items:center;justify-content:center;">
+                ${state.settings.iconStyle===s.id?'<div style="width:10px;height:10px;border-radius:50%;background:var(--accent-1);"></div>':''}
+              </div>
+            </div>`).join('')}
+        </div>
+
+        ${state.settings.iconStyle==='tinted'?`
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TÖNUNGSFARBE</div>
+        <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;flex-wrap:wrap;">
+          ${tintColors.map(c=>`<div onclick="AgenOS.setIconTint('${c}')" style="width:34px;height:34px;border-radius:50%;cursor:pointer;background:${c};box-shadow:0 0 0 2px ${state.settings.iconTintColor===c?'#fff':'rgba(255,255,255,.15)'};"></div>`).join('')}
+        </div>`:''}
+
+        <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">VORSCHAU</div>
+        <div class="glass" style="border-radius:18px;padding:16px;display:flex;gap:14px;justify-content:center;">
+          ${APPS.slice(0,4).map(a=>`<div class="app-icon" style="background:${a.bg};width:54px;height:54px;${state.settings.iconStyle==='tinted'?`background:color-mix(in srgb,${state.settings.iconTintColor} 55%, transparent);`:''}${state.settings.iconStyle==='dark'?'background:rgba(20,20,28,0.85);':''}${state.settings.iconStyle==='clear'?'background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);':''}">${ICONS[a.id]}</div>`).join('')}
         </div>
       </div>`;
   }
   function renderSettingsSound(){
     return `<div style="padding:4px 18px 24px;">
       ${settingsBack()}
-      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">RINGER VOLUME</div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">KLINGELTON-LAUTSTÄRKE</div>
       <div class="glass" style="border-radius:18px;padding:16px;">
         <input type="range" min="0" max="100" value="65" style="width:100%;">
       </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:20px;">
-        ${settingsToggleRow('dnd','Silent Mode','')}
+        ${settingsToggleRow('dnd','Stiller Modus','')}
         <div class="divider"></div>
-        <div class="row"><span>Haptics</span><div class="toggle on"></div></div>
+        <div class="row"><span>Haptik</span><div class="toggle on"></div></div>
+        <div class="divider"></div>
+        <div class="row"><span>Tastatur-Klicks</span><div class="toggle on"></div></div>
       </div>
     </div>`;
   }
@@ -555,11 +694,47 @@ const AgenOS = (function(){
     return `<div style="padding:4px 18px 24px;">
       ${settingsBack()}
       <div style="text-align:center;margin:26px 0;">
-        <div class="font-display" style="font-size:56px;font-weight:700;" class="accent-text">${state.battery}%</div>
-        <div style="color:var(--text-2);margin-top:4px;">Battery Health: 100% · New</div>
+        <div class="font-display accent-text" style="font-size:56px;font-weight:700;">${state.battery}%</div>
+        <div style="color:var(--text-2);margin-top:4px;">Batteriezustand: 100% · Neu</div>
       </div>
       <div class="glass" style="border-radius:20px;overflow:hidden;">
-        ${settingsToggleRow('saver','Low Power Mode','')}
+        ${settingsToggleRow('saver','Energiesparmodus','')}
+      </div>
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:16px;">
+        <div class="row"><span>Bildschirmzeit</span><span style="color:var(--text-2);">4h 32m</span></div>
+        <div class="divider"></div>
+        <div class="row"><span>Letzte volle Ladung</span><span style="color:var(--text-2);">Gestern 18:42</span></div>
+      </div>
+    </div>`;
+  }
+  function renderSettingsKeyboard(){
+    return `<div style="padding:4px 18px 24px;">
+      ${settingsBack()}
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:18px 0 10px;">TASTATUR</div>
+      <div class="glass" style="border-radius:20px;overflow:hidden;">
+        ${settingsToggleRow('keyboardHaptics','Haptik','')}
+        <div class="divider"></div>
+        ${settingsToggleRow('keyboardClick','Klickgeräusch','')}
+        <div class="divider"></div>
+        ${settingsToggleRow('predictive','Prädiktiver Text','')}
+      </div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin:22px 0 10px;">TASTATUR-TEST</div>
+      <div class="glass" style="border-radius:18px;padding:16px;">
+        <input id="kb-test-input" placeholder="Tippe hier…" style="width:100%;background:rgba(255,255,255,.08);border:none;outline:none;border-radius:12px;padding:12px 16px;color:#fff;font-size:16px;">
+      </div>
+    </div>`;
+  }
+  function renderSettingsPrivacy(){
+    return `<div style="padding:4px 18px 24px;">
+      ${settingsBack()}
+      <div class="glass" style="border-radius:20px;overflow:hidden;margin-top:18px;">
+        ${settingsToggleRow('faceId','Face ID','')}
+        <div class="divider"></div>
+        <div class="row"><span>Passcode ändern</span><span style="color:var(--text-3);">›</span></div>
+        <div class="divider"></div>
+        <div class="row"><span>Notfall-SOS</span><span style="color:var(--text-3);">›</span></div>
+        <div class="divider"></div>
+        <div class="row"><span>Ortungsdienste</span><span style="color:var(--text-3);">›</span></div>
       </div>
     </div>`;
   }
@@ -567,14 +742,14 @@ const AgenOS = (function(){
     const rows = [
       ['Name','AgenPhone 1'],
       ['Edition','Matte Black'],
-      ['OS Version','AgenOS 1.0.4'],
+      ['OS Version','AgenOS 2.0'],
       ['Chip','Agen A1 Neural Engine'],
-      ['Storage','512 GB (471.2 GB available)'],
-      ['Model Number','AGN-PH1-BLK-512'],
-      ['Serial Number','AGN‑8841‑KX02'],
-      ['Display','6.4" LTPO OLED, 120Hz Agen Flow'],
-      ['Camera System','Dual: 50MP Wide + 12MP Ultra Wide'],
-      ['Battery Capacity','4,650 mAh'],
+      ['Speicher','512 GB (471,2 GB verfügbar)'],
+      ['Modellnummer','AGN-PH1-BLK-512'],
+      ['Seriennummer','AGN-8841-KX02'],
+      ['Display','6,4" LTPO OLED, 120Hz Agen Flow'],
+      ['Kamera','Dual: 50MP Weitwinkel + 12MP Ultraweitwinkel'],
+      ['Batteriekapazität','4.650 mAh'],
     ];
     return `<div style="padding:4px 18px 30px;">
       ${settingsBack()}
@@ -593,10 +768,8 @@ const AgenOS = (function(){
       <div style="text-align:center;color:var(--text-3);font-size:12px;margin-top:18px;">Designed by Agen. Assembled with intent.</div>
     </div>`;
   }
-  function settingsBack(){
-    return `<div onclick="AgenOS.settingsNav('home')" style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Settings</div>`;
-  }
 
+  /* ---------- Notes ---------- */
   function renderNotesList(){
     return `<div style="padding:6px 16px 24px;">
       <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
@@ -604,32 +777,26 @@ const AgenOS = (function(){
       </div>
       ${state.notes.slice().reverse().map(n=>`
         <div class="press-scale" style="padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;" onclick="AgenOS.openNote(${n.id})">
-          <div style="font-weight:700;font-size:16px;">${n.title||'New Note'}</div>
-          <div style="color:var(--text-2);font-size:13px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${(n.body||'').split('\\n')[0]||'No additional text'}</div>
-        </div>`).join('') || `<div style="text-align:center;color:var(--text-3);margin-top:60px;">No notes yet. Tap ＋ to add one.</div>`}
+          <div style="font-weight:700;font-size:16px;">${n.title||'Neue Notiz'}</div>
+          <div style="color:var(--text-2);font-size:13px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${(n.body||'').split('\\n')[0]||'Kein weiterer Text'}</div>
+        </div>`).join('') || `<div style="text-align:center;color:var(--text-3);margin-top:60px;">Noch keine Notizen. Tippe ＋ zum Hinzufügen.</div>`}
     </div>`;
   }
   function renderNoteEditor(id){
     const n = state.notes.find(x=>x.id===id);
     return `<div style="padding:8px 18px 24px;display:flex;flex-direction:column;height:100%;">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-        <span onclick="AgenOS.renderApp('notes')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Notes</span>
+        <span onclick="AgenOS.renderApp('notes')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Notizen</span>
         <span onclick="AgenOS.deleteNote(${n.id})" style="color:#f87171;cursor:pointer;">🗑</span>
       </div>
-      <textarea id="note-input" style="flex:1;background:transparent;border:none;outline:none;color:var(--text-1);font-size:16px;resize:none;line-height:1.6;" placeholder="Note">${n.body||''}</textarea>
+      <textarea id="note-input" class="kb-input" style="flex:1;min-height:200px;background:transparent;border:none;outline:none;color:var(--text-1);font-size:16px;resize:none;line-height:1.6;" placeholder="Notiz">${n.body||''}</textarea>
     </div>`;
   }
 
-  function photoGradients(){
-    const grads = ['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d'];
-    return grads[state.photos.length % grads.length];
-  }
+  /* ---------- Gallery ---------- */
+  function photoGradients(){ return ['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d'][state.photos.length % 8]; }
   function renderGallery(){
-    const shots = state.photos.length ? state.photos : Array.from({length:9},(_,i)=>({g:photoGradientsAt(i)}));
-    function photoGradientsAt(i){
-      const grads = ['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d','#818cf8,#312e81'];
-      return grads[i%grads.length];
-    }
+    const shots = state.photos.length ? state.photos : Array.from({length:9},(_,i)=>({g:['#f472b6,#8b5cf6','#60a5fa,#3b82f6','#34d399,#059669','#fb923c,#ef4444','#a78bfa,#4c1d95','#22d3ee,#0e7490','#f59e0b,#b45309','#f87171,#7f1d1d','#818cf8,#312e81'][i%9]}));
     return `<div style="padding:6px 12px 24px;">
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;">
         ${shots.map(s=>`<div class="press-scale" style="aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,${s.g});cursor:pointer;"></div>`).join('')}
@@ -637,10 +804,11 @@ const AgenOS = (function(){
     </div>`;
   }
 
+  /* ---------- Calculator ---------- */
   function renderCalculator(){
     const c = state.calc;
     const keys = ['C','±','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','0','.','='];
-    return `<div style="padding:10px 16px 20px;display:flex;flex-direction:column;height:100%;">
+    return `<div style="padding:10px 16px 20px;display:flex;flex-direction:column;height:100%;min-height:70vh;">
       <div style="flex:1;display:flex;align-items:flex-end;justify-content:flex-end;padding:20px 10px;">
         <div class="font-display" id="calc-display" style="font-size:56px;font-weight:500;word-break:break-all;text-align:right;">${c.display}</div>
       </div>
@@ -656,11 +824,12 @@ const AgenOS = (function(){
     </div>`;
   }
 
+  /* ---------- Music ---------- */
   function renderMusic(){
     const t = state.tracks[state.trackIndex];
     return `<div style="padding:20px 26px 30px;display:flex;flex-direction:column;align-items:center;height:100%;">
-      <div id="album-art" style="width:100%;max-width:270px;aspect-ratio:1;border-radius:20px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 20px 40px -16px rgba(0,0,0,.6);margin-top:10px;${state.playing?'animation:albumSpin 12s linear infinite;':''}"></div>
-      <style>@keyframes albumSpin{from{filter:brightness(1);}50%{filter:brightness(1.15);}to{filter:brightness(1);}}</style>
+      <div id="album-art" style="width:100%;max-width:270px;aspect-ratio:1;border-radius:20px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));box-shadow:0 20px 40px -16px rgba(0,0,0,.6);margin-top:10px;${state.playing?'animation:albumPulse 12s linear infinite;':''}"></div>
+      <style>@keyframes albumPulse{0%,100%{filter:brightness(1);}50%{filter:brightness(1.2);}}</style>
       <div style="margin-top:30px;text-align:center;">
         <div style="font-size:20px;font-weight:700;">${t.title}</div>
         <div style="color:var(--text-2);margin-top:4px;">${t.artist}</div>
@@ -681,28 +850,90 @@ const AgenOS = (function(){
     </div>`;
   }
 
+  /* ---------- Camera (real) ---------- */
   function renderCamera(){
     return `<div style="height:100%;display:flex;flex-direction:column;background:#000;">
       <div style="display:flex;justify-content:center;padding:14px 0 6px;">
-        <div class="glass" style="border-radius:14px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:.4px;color:#fff;">DUAL 50MP + 12MP · AGEN LENS SYSTEM</div>
+        <div class="glass" style="border-radius:14px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:.4px;color:#fff;">AGEN LENS · 50MP</div>
       </div>
-      <div id="viewfinder" style="flex:1;margin:6px 18px;border-radius:22px;overflow:hidden;position:relative;background:
-          radial-gradient(circle at 30% 20%, #2a2a3a 0%, #0a0a0f 70%);">
-        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);background-size:33.3% 33.3%;"></div>
-        <div id="flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;"></div>
-        <div style="position:absolute;top:14px;left:14px;color:#fbbf24;font-size:11px;font-weight:700;">● REC OFF</div>
+      <div id="viewfinder" style="flex:1;margin:6px 18px;border-radius:22px;overflow:hidden;position:relative;background:#111;">
+        <video id="camera-video" autoplay playsinline muted></video>
+        <div id="flash" style="position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:10;"></div>
+        <div style="position:absolute;top:14px;left:14px;color:#fbbf24;font-size:11px;font-weight:700;z-index:5;">● LIVE</div>
+        <div id="camera-error" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;color:#fff;background:#111;z-index:6;padding:20px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:12px;">📷</div>
+          <div style="font-weight:600;margin-bottom:6px;">Kamera nicht verfügbar</div>
+          <div style="font-size:13px;color:var(--text-2);">Bitte erlaube den Kamerazugriff in deinem Browser.</div>
+          <button onclick="AgenOS.retryCamera()" class="press-scale" style="margin-top:16px;padding:10px 20px;border-radius:12px;background:var(--accent-1);border:none;color:#fff;font-weight:600;">Erneut versuchen</button>
+        </div>
       </div>
       <div style="display:flex;justify-content:center;gap:22px;padding:14px 0 6px;font-size:13px;color:var(--text-2);">
-        <span>VIDEO</span><span style="color:#fff;font-weight:700;">PHOTO</span><span>PORTRAIT</span>
+        <span onclick="AgenOS.cameraMode('video')" style="cursor:pointer;">VIDEO</span>
+        <span style="color:#fff;font-weight:700;">FOTO</span>
+        <span onclick="AgenOS.cameraMode('portrait')" style="cursor:pointer;">PORTRAIT</span>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 40px 26px;">
-        <div class="press-scale" style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,${photoGradients()});" onclick="AgenOS.openApp('gallery')"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 40px 34px;">
+        <div class="press-scale" style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,${photoGradients()});overflow:hidden;" onclick="AgenOS.openApp('gallery')">
+          ${state.photos[0]?`<div style="width:100%;height:100%;background:linear-gradient(135deg,${state.photos[0].g});"></div>`:''}
+        </div>
         <button onclick="AgenOS.takePhoto()" class="press-scale" style="width:72px;height:72px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.25);border:none;"></button>
-        <button class="press-scale" style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;">⟳</button>
+        <button onclick="AgenOS.flipCamera()" class="press-scale" style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:18px;">⟳</button>
       </div>
     </div>`;
   }
+  async function startCamera(){
+    const video = document.getElementById('camera-video');
+    const err = document.getElementById('camera-error');
+    if(!video) return;
+    try{
+      if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: state.cameraFacing, width:{ideal:1280}, height:{ideal:720} },
+        audio: false
+      });
+      state.cameraStream = stream;
+      video.srcObject = stream;
+      video.style.display = 'block';
+      if(err) err.style.display = 'none';
+    }catch(e){
+      console.warn('Camera error:', e);
+      if(err) err.style.display = 'flex';
+      video.style.display = 'none';
+    }
+  }
+  function stopCamera(){
+    if(state.cameraStream){ state.cameraStream.getTracks().forEach(t=>t.stop()); state.cameraStream=null; }
+    const video = document.getElementById('camera-video'); if(video) video.srcObject=null;
+  }
+  function takePhoto(){
+    const video = document.getElementById('camera-video');
+    const flash = document.getElementById('flash');
+    // Flash effect
+    if(flash){ flash.style.transition='none'; flash.style.opacity='1'; requestAnimationFrame(()=>{ flash.style.transition='opacity .35s ease'; flash.style.opacity='0'; }); }
+    // Capture frame
+    if(video && video.videoWidth){
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if(state.cameraFacing==='user'){ ctx.translate(canvas.width,0); ctx.scale(-1,1); }
+      ctx.drawImage(video,0,0);
+      try{
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        state.photos.unshift({g: photoGradients(), data: dataUrl});
+      }catch(e){ state.photos.unshift({g: photoGradients()}); }
+    } else {
+      state.photos.unshift({g: photoGradients()});
+    }
+  }
+  function flipCamera(){
+    state.cameraFacing = state.cameraFacing==='environment'?'user':'environment';
+    startCamera();
+  }
+  function retryCamera(){ startCamera(); }
+  function cameraMode(m){ /* placeholder */ }
 
+  /* ---------- Phone ---------- */
   function renderPhone(){
     return `<div style="padding:10px 20px 20px;display:flex;flex-direction:column;height:100%;">
       <div style="text-align:center;font-size:34px;font-weight:300;letter-spacing:2px;min-height:44px;" id="dial-display" class="font-display">&nbsp;</div>
@@ -720,11 +951,12 @@ const AgenOS = (function(){
     return `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(180deg,#1a1a2e,#050508);">
       <div style="width:96px;height:96px;border-radius:50%;" class="accent-grad"></div>
       <div style="font-size:22px;font-weight:700;margin-top:20px;">${number||'Agen Support'}</div>
-      <div style="color:var(--text-2);margin-top:6px;">calling…</div>
+      <div style="color:var(--text-2);margin-top:6px;">ruft an…</div>
       <button onclick="AgenOS.closeApp()" class="press-scale" style="margin-top:50px;width:60px;height:60px;border-radius:50%;background:#ef4444;border:none;font-size:24px;">📞</button>
     </div>`;
   }
 
+  /* ---------- Messages ---------- */
   function renderMessagesList(){
     return `<div style="padding:6px 4px 24px;">
       ${Object.keys(state.threads).map(name=>{
@@ -747,18 +979,19 @@ const AgenOS = (function(){
     const msgs = state.threads[name];
     return `<div style="display:flex;flex-direction:column;height:100%;">
       <div style="padding:8px 16px;">
-        <span onclick="AgenOS.renderApp('messages')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Messages</span>
+        <span onclick="AgenOS.renderApp('messages')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Nachrichten</span>
       </div>
       <div class="app-scroll" style="padding:6px 16px;display:flex;flex-direction:column;gap:8px;" id="thread-scroll">
         ${msgs.map(m=>`<div style="align-self:${m.me?'flex-end':'flex-start'};max-width:75%;padding:10px 14px;border-radius:16px;background:${m.me?'var(--accent-1)':'rgba(255,255,255,.08)'};font-size:15px;">${m.text}</div>`).join('')}
       </div>
       <div style="display:flex;gap:10px;padding:10px 16px 20px;">
-        <input id="thread-input" placeholder="Message" style="flex:1;background:rgba(255,255,255,.08);border:none;outline:none;border-radius:20px;padding:10px 16px;color:#fff;">
+        <input id="thread-input" class="kb-input" placeholder="Nachricht" style="flex:1;background:rgba(255,255,255,.08);border:none;outline:none;border-radius:20px;padding:10px 16px;color:#fff;">
         <button onclick="AgenOS.sendMsg('${name}')" class="press-scale" style="background:var(--accent-1);border:none;width:40px;height:40px;border-radius:50%;color:#fff;">➤</button>
       </div>
     </div>`;
   }
 
+  /* ---------- Browser ---------- */
   function renderBrowserHome(){
     const shortcuts = [
       {n:'Agen News', c:'#3b82f6'},{n:'Agen Store', c:'#8b5cf6'},
@@ -768,7 +1001,7 @@ const AgenOS = (function(){
       <div style="text-align:center;font-size:30px;font-weight:700;margin:20px 0 26px;" class="font-display accent-text">agen.com</div>
       <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;">
         <span>🔍</span>
-        <input id="browser-url" placeholder="Search or enter address" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;" onkeydown="if(event.key==='Enter')AgenOS.browserGo()">
+        <input id="browser-url" class="kb-input" placeholder="Suchen oder Adresse eingeben" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;" onkeydown="if(event.key==='Enter')AgenOS.browserGo()">
       </div>
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:24px;">
         ${shortcuts.map(s=>`<div class="glass press-scale" style="border-radius:16px;padding:18px;cursor:pointer;" onclick="AgenOS.browserGoTo('${s.n}')">
@@ -782,37 +1015,59 @@ const AgenOS = (function(){
     return `<div style="padding:0;">
       <div style="padding:12px 16px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);">
         <span onclick="AgenOS.renderApp('browser')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹</span>
-        <div class="glass" style="flex:1;border-radius:10px;padding:6px 12px;font-size:13px;color:var(--text-2);">agen.com/search?q=${encodeURIComponent(q)}</div>
+        <div class="glass" style="flex:1;border-radius:10px;padding:6px 12px;font-size:13px;color:var(--text-2);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">agen.com/search?q=${encodeURIComponent(q)}</div>
       </div>
       <div style="padding:26px 22px;">
-        <div style="font-size:22px;font-weight:700;margin-bottom:14px;" class="font-display">Results for “${q}”</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:14px;" class="font-display">Ergebnisse für „${q}“</div>
         ${[1,2,3].map(i=>`<div style="margin-bottom:18px;">
           <div style="color:#7dd3fc;font-size:14px;">agen.com/${q.toLowerCase().replace(/\\s+/g,'-')}-${i}</div>
-          <div style="font-weight:600;margin:2px 0;">${q} — Agen Knowledge Base #${i}</div>
-          <div style="color:var(--text-2);font-size:13px;">Everything about ${q} on AgenOS, curated for AgenPhone 1 owners.</div>
+          <div style="font-weight:600;margin:2px 0;">${q} — Agen Wissensdatenbank #${i}</div>
+          <div style="color:var(--text-2);font-size:13px;">Alles über ${q} auf AgenOS, kuratiert für AgenPhone 1 Besitzer.</div>
         </div>`).join('')}
       </div>
     </div>`;
   }
 
-  /* ---------------- app registry ---------------- */
-  const APP_DEFS = {
-    weather:{title:'Weather', render:()=>renderWeather()},
-    notes:{title:'Notes', render:()=>renderNotesList(), noStatusBar:false},
-    gallery:{title:'Gallery', render:()=>renderGallery()},
-    calculator:{title:'Calculator', render:()=>renderCalculator()},
-    music:{title:'Music', render:()=>renderMusic()},
-    settings:{title:'Settings', render:()=>renderSettingsHome()},
-    phone:{title:'Phone', render:()=>renderPhone()},
-    messages:{title:'Messages', render:()=>renderMessagesList()},
-    browser:{title:'Browser', render:()=>renderBrowserHome()},
-    camera:{title:'Camera', render:()=>renderCamera(), noStatusBar:true},
-  };
+  /* ---------- App Store ---------- */
+  function renderStore(){
+    const apps = [
+      {name:'Agen Chat', icon:'💬', desc:'KI-gestützter Messenger', size:'42 MB', cat:'Soziales'},
+      {name:'Agen Maps', icon:'🗺️', desc:'Karten & Navigation', size:'86 MB', cat:'Reisen'},
+      {name:'Agen Pay', icon:'💳', desc:'Sichere Zahlungen', size:'34 MB', cat:'Finanzen'},
+      {name:'Agen Health', icon:'❤️', desc:'Gesundheit & Fitness', size:'58 MB', cat:'Gesundheit'},
+      {name:'Agen Photos', icon:'🖼️', desc:'KI-Fotobearbeitung', size:'120 MB', cat:'Foto & Video'},
+      {name:'Agen News', icon:'📰', desc:'Kuratierte Nachrichten', size:'28 MB', cat:'Nachrichten'},
+      {name:'Agen Games', icon:'🎮', desc:'Spiele-Plattform', size:'210 MB', cat:'Spiele'},
+      {name:'Agen Wallet', icon:'👛', desc:'Karten & Tickets', size:'44 MB', cat:'Finanzen'},
+    ];
+    return `<div style="padding:6px 16px 24px;">
+      <div class="glass" style="border-radius:16px;display:flex;align-items:center;gap:10px;padding:12px 16px;margin-bottom:18px;">
+        <span>🔍</span>
+        <input placeholder="Apps durchsuchen" style="flex:1;background:none;border:none;outline:none;color:#fff;font-size:15px;">
+      </div>
+      <div style="font-weight:700;font-size:13px;color:var(--text-2);margin-bottom:12px;">EMPFOHLEN</div>
+      ${apps.map(a=>`
+        <div class="store-card">
+          <div class="store-icon" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">${a.icon}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:15px;">${a.name}</div>
+            <div style="color:var(--text-2);font-size:12px;">${a.desc}</div>
+            <div style="color:var(--text-3);font-size:11px;margin-top:2px;">${a.cat} · ${a.size}</div>
+          </div>
+          <button class="press-scale" onclick="AgenOS.installApp('${a.name}')" style="background:var(--accent-1);border:none;color:#fff;font-weight:600;font-size:13px;padding:7px 16px;border-radius:20px;cursor:pointer;">Laden</button>
+        </div>`).join('')}
+    </div>`;
+  }
+  function installApp(name){
+    alert(`${name} wird installiert… (Demo)`);
+  }
 
+  /* ---------- App open/close ---------- */
   function openApp(id){
     if(state.activeApp===id) return;
     let win = document.getElementById('win-'+id);
     const def = APP_DEFS[id];
+    if(!def) return;
     if(!win){
       win = buildAppShell(id, def.title, def.render(), {noStatusBar:def.noStatusBar});
       document.getElementById('app-container').appendChild(win);
@@ -825,24 +1080,45 @@ const AgenOS = (function(){
     tickClock();
     if(id==='weather') refreshWidget();
     if(id==='music') syncMusicUI();
+    if(id==='camera') setTimeout(startCamera, 300);
   }
   function renderApp(id){
     const def = APP_DEFS[id];
+    if(!def) return;
     document.getElementById('content-'+id).innerHTML = def.render();
+    if(id==='camera') setTimeout(startCamera, 200);
   }
   function closeApp(){
     if(!state.activeApp) return;
-    const win = document.getElementById('win-'+state.activeApp);
+    const id = state.activeApp;
+    if(id==='camera') stopCamera();
+    const win = document.getElementById('win-'+id);
     if(win) win.classList.remove('open');
     document.getElementById('home-layer').classList.remove('dimmed');
     state.activeApp = null;
+    hideKeyboard();
   }
   function goHome(){ closeApp(); }
 
-  /* ---------------- settings actions ---------------- */
+  /* ---------- Settings actions ---------- */
   function settingsNav(section){
-    const map = {home:renderSettingsHome, display:renderSettingsDisplay, sound:renderSettingsSound, battery:renderSettingsBattery, about:renderSettingsAbout};
+    const map = {
+      home:renderSettingsHome,
+      display:renderSettingsDisplay,
+      iconStyle:renderSettingsIconStyle,
+      sound:renderSettingsSound,
+      battery:renderSettingsBattery,
+      keyboard:renderSettingsKeyboard,
+      privacy:renderSettingsPrivacy,
+      about:renderSettingsAbout
+    };
     document.getElementById('content-settings').innerHTML = (map[section]||renderSettingsHome)();
+    if(section==='keyboard'){
+      setTimeout(()=>{
+        const inp = document.getElementById('kb-test-input');
+        if(inp){ setupKeyboardInput(inp); }
+      }, 100);
+    }
   }
   function toggleSetting(key){
     state.settings[key] = !state.settings[key];
@@ -858,40 +1134,50 @@ const AgenOS = (function(){
     document.documentElement.style.setProperty('--wp', wallpapers[key]);
     settingsNav('display');
   }
+  function setIconStyle(style){
+    state.settings.iconStyle = style;
+    applyIconStyle();
+    settingsNav('iconStyle');
+  }
+  function setIconTint(color){
+    state.settings.iconTintColor = color;
+    applyIconStyle();
+    settingsNav('iconStyle');
+  }
 
-  /* ---------------- notes actions ---------------- */
-  let editingNote = null;
+  /* ---------- Notes actions ---------- */
   function newNote(){
-    const n = {id:Date.now(), title:'New Note', body:''};
+    const n = {id:Date.now(), title:'Neue Notiz', body:''};
     state.notes.push(n);
     openNote(n.id);
   }
   function openNote(id){
-    editingNote = id;
     document.getElementById('content-notes').innerHTML = renderNoteEditor(id);
     const ta = document.getElementById('note-input');
-    ta.addEventListener('input', ()=>{
-      const n = state.notes.find(x=>x.id===id);
-      const lines = ta.value.split('\n');
-      n.title = lines[0] || 'New Note';
-      n.body = ta.value;
-    });
-    ta.focus();
+    if(ta){
+      setupKeyboardInput(ta);
+      ta.addEventListener('input', ()=>{
+        const n = state.notes.find(x=>x.id===id);
+        const lines = ta.value.split('\n');
+        n.title = lines[0] || 'Neue Notiz';
+        n.body = ta.value;
+      });
+      ta.focus();
+    }
   }
   function deleteNote(id){
     state.notes = state.notes.filter(n=>n.id!==id);
     renderApp('notes');
   }
 
-  /* ---------------- calculator actions ---------------- */
+  /* ---------- Calculator actions ---------- */
   function calcPress(k){
     const c = state.calc;
     if(k==='C'){ c.display='0'; c.stored=null; c.op=null; c.fresh=true; }
     else if(k==='±'){ c.display = (parseFloat(c.display)*-1).toString(); }
     else if(k==='%'){ c.display = (parseFloat(c.display)/100).toString(); }
-    else if(['/','*','-','+'].includes(k)){
-      c.stored = parseFloat(c.display); c.op = k; c.fresh = true;
-    } else if(k==='='){
+    else if(['/','*','-','+'].includes(k)){ c.stored = parseFloat(c.display); c.op = k; c.fresh = true; }
+    else if(k==='='){
       if(c.op!=null){
         const a=c.stored, b=parseFloat(c.display);
         let r = a;
@@ -902,14 +1188,14 @@ const AgenOS = (function(){
     } else if(k==='.'){
       if(c.fresh){ c.display='0.'; c.fresh=false; }
       else if(!c.display.includes('.')) c.display+='.';
-    } else { // digit
+    } else {
       if(c.fresh || c.display==='0'){ c.display = k; c.fresh=false; }
       else c.display += k;
     }
-    document.getElementById('calc-display').textContent = c.display;
+    const el = document.getElementById('calc-display'); if(el) el.textContent = c.display;
   }
 
-  /* ---------------- music actions ---------------- */
+  /* ---------- Music actions ---------- */
   let musicTimer=null, elapsed=0;
   function syncMusicUI(){
     const btn = document.getElementById('music-toggle-btn');
@@ -918,8 +1204,6 @@ const AgenOS = (function(){
   function musicToggle(){
     state.playing = !state.playing;
     syncMusicUI();
-    const art = document.getElementById('album-art');
-    if(art) art.style.animation = state.playing? 'albumSpin 12s linear infinite':'none';
     if(state.playing){
       musicTimer = setInterval(()=>{
         elapsed++;
@@ -933,15 +1217,7 @@ const AgenOS = (function(){
   function musicNext(){ state.trackIndex=(state.trackIndex+1)%state.tracks.length; elapsed=0; renderApp('music'); if(state.playing){syncMusicUI(); musicToggle(); musicToggle();} }
   function musicPrev(){ state.trackIndex=(state.trackIndex-1+state.tracks.length)%state.tracks.length; elapsed=0; renderApp('music'); }
 
-  /* ---------------- camera actions ---------------- */
-  function takePhoto(){
-    const flash = document.getElementById('flash');
-    flash.style.transition='none'; flash.style.opacity='1';
-    requestAnimationFrame(()=>{ flash.style.transition='opacity .35s ease'; flash.style.opacity='0'; });
-    state.photos.unshift({g: photoGradients()});
-  }
-
-  /* ---------------- phone dialer ---------------- */
+  /* ---------- Phone actions ---------- */
   let dialBuffer='';
   function dial(k){
     dialBuffer += k;
@@ -953,10 +1229,12 @@ const AgenOS = (function(){
     dialBuffer='';
   }
 
-  /* ---------------- messages actions ---------------- */
+  /* ---------- Messages actions ---------- */
   function openThread(name){
     state.activeThread = name;
     document.getElementById('content-messages').innerHTML = renderThread(name);
+    const inp = document.getElementById('thread-input');
+    if(inp) setupKeyboardInput(inp);
     const scroll = document.getElementById('thread-scroll'); if(scroll) scroll.scrollTop = scroll.scrollHeight;
   }
   function sendMsg(name){
@@ -965,13 +1243,17 @@ const AgenOS = (function(){
     state.threads[name].push({me:true,text:input.value.trim()});
     input.value='';
     document.getElementById('content-messages').innerHTML = renderThread(name);
+    const inp2 = document.getElementById('thread-input'); if(inp2) setupKeyboardInput(inp2);
     setTimeout(()=>{
-      state.threads[name].push({me:false,text:'👍 got it — on AgenOS everything just syncs.'});
-      if(state.activeThread===name) document.getElementById('content-messages').innerHTML = renderThread(name);
+      state.threads[name].push({me:false,text:'👍 verstanden — auf AgenOS synchronisiert sich alles.'});
+      if(state.activeThread===name){
+        document.getElementById('content-messages').innerHTML = renderThread(name);
+        const inp3 = document.getElementById('thread-input'); if(inp3) setupKeyboardInput(inp3);
+      }
     },1100);
   }
 
-  /* ---------------- browser actions ---------------- */
+  /* ---------- Browser actions ---------- */
   function browserGo(){
     const v = document.getElementById('browser-url').value.trim();
     if(!v) return;
@@ -981,7 +1263,142 @@ const AgenOS = (function(){
     document.getElementById('content-browser').innerHTML = renderBrowserPage(name);
   }
 
-  /* ---------------- boot / lock ---------------- */
+  /* =====================================================================
+     CUSTOM KEYBOARD
+     ===================================================================== */
+  let activeInput = null;
+  let kbShift = false;
+  let kbNumbers = false;
+
+  const KB_LAYOUT = {
+    letters: [
+      ['q','w','e','r','t','z','u','i','o','p'],
+      ['a','s','d','f','g','h','j','k','l'],
+      ['y','x','c','v','b','n','m']
+    ],
+    numbers: [
+      ['1','2','3','4','5','6','7','8','9','0'],
+      ['-','/',':',';','(',')','€','&','@','"'],
+      ['.',',','?','!','\'','#','%','+','=','*']
+    ]
+  };
+
+  function buildKeyboard(){
+    const row1 = document.getElementById('kb-row-1');
+    const row2 = document.getElementById('kb-row-2');
+    const row3 = document.getElementById('kb-row-3');
+    if(!row1) return;
+    const layout = kbNumbers? KB_LAYOUT.numbers : KB_LAYOUT.letters;
+    const fill = (el, keys, prefix='') => {
+      el.innerHTML = '';
+      keys.forEach(k=>{
+        const btn = document.createElement('button');
+        btn.className = 'kb-key';
+        btn.textContent = kbShift && !kbNumbers ? k.toUpperCase() : k;
+        btn.dataset.action = 'key';
+        btn.dataset.key = k;
+        el.appendChild(btn);
+      });
+    };
+    fill(row1, layout[0]);
+    fill(row2, layout[1]);
+    fill(row3, layout[2]);
+  }
+
+  function showKeyboard(){
+    const kb = document.getElementById('keyboard');
+    if(kb) kb.classList.add('show');
+  }
+  function hideKeyboard(){
+    const kb = document.getElementById('keyboard');
+    if(kb) kb.classList.remove('show');
+    activeInput = null;
+  }
+
+  function setupKeyboardInput(input){
+    if(!input) return;
+    input.setAttribute('readonly','readonly'); // prevent native keyboard
+    input.addEventListener('focus', ()=>{
+      activeInput = input;
+      buildKeyboard();
+      showKeyboard();
+    });
+    input.addEventListener('click', ()=>{
+      activeInput = input;
+      buildKeyboard();
+      showKeyboard();
+    });
+  }
+
+  function kbInsert(text){
+    if(!activeInput) return;
+    const start = activeInput.selectionStart ?? activeInput.value.length;
+    const end = activeInput.selectionEnd ?? activeInput.value.length;
+    const val = activeInput.value;
+    activeInput.value = val.slice(0,start) + text + val.slice(end);
+    const newPos = start + text.length;
+    activeInput.selectionStart = activeInput.selectionEnd = newPos;
+    activeInput.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+  function kbBackspace(){
+    if(!activeInput) return;
+    const start = activeInput.selectionStart ?? 0;
+    const end = activeInput.selectionEnd ?? 0;
+    const val = activeInput.value;
+    if(start===end && start>0){
+      activeInput.value = val.slice(0,start-1) + val.slice(start);
+      activeInput.selectionStart = activeInput.selectionEnd = start-1;
+    } else if(start!==end){
+      activeInput.value = val.slice(0,start) + val.slice(end);
+      activeInput.selectionStart = activeInput.selectionEnd = start;
+    }
+    activeInput.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+
+  document.getElementById('keyboard').addEventListener('click', (e)=>{
+    const btn = e.target.closest('.kb-key');
+    if(!btn) return;
+    const action = btn.dataset.action;
+    if(action==='key'){
+      const k = btn.dataset.key;
+      if(k==='123'){ kbNumbers = !kbNumbers; buildKeyboard(); return; }
+      kbInsert(kbShift && !kbNumbers ? k.toUpperCase() : k);
+      if(kbShift){ kbShift=false; buildKeyboard(); }
+    } else if(action==='shift'){
+      kbShift = !kbShift;
+      buildKeyboard();
+    } else if(action==='space'){
+      kbInsert(' ');
+    } else if(action==='enter'){
+      kbInsert('\n');
+      if(activeInput && activeInput.id==='thread-input'){ /* handled by send button */ }
+    }
+  });
+  // Backspace via long-press? Add a backspace key
+  // Add backspace button after row3
+  const backspaceBtn = document.createElement('button');
+  backspaceBtn.className = 'kb-key special';
+  backspaceBtn.textContent = '⌫';
+  backspaceBtn.style.maxWidth = '60px';
+  backspaceBtn.addEventListener('click', (e)=>{ e.stopPropagation(); kbBackspace(); });
+
+  // Suggestions
+  document.querySelectorAll('.kb-suggestion').forEach(s=>{
+    s.addEventListener('click', ()=> kbInsert(s.textContent));
+  });
+
+  // Attach to dynamically created inputs via MutationObserver
+  const observer = new MutationObserver(()=>{
+    document.querySelectorAll('.kb-input').forEach(inp=>{
+      if(!inp.dataset.kbSetup){
+        inp.dataset.kbSetup = '1';
+        setupKeyboardInput(inp);
+      }
+    });
+  });
+  observer.observe(document.body, {childList:true, subtree:true});
+
+  /* ---------- Boot / Lock ---------- */
   function boot(){
     const fill = document.getElementById('boot-fill');
     setTimeout(()=> fill.style.width='100%', 150);
@@ -992,12 +1409,10 @@ const AgenOS = (function(){
       setTimeout(()=> document.getElementById('boot-screen').style.display='none', 520);
     }, 2200);
   }
-
   function setupLockGesture(){
     const drag = document.getElementById('lock-drag');
     const lock = document.getElementById('lock-screen');
     let startY=0, dy=0, dragging=false;
-
     function unlock(){
       lock.style.transform = 'translateY(-100%)';
       lock.style.opacity='0';
@@ -1030,26 +1445,49 @@ const AgenOS = (function(){
     lock.addEventListener('click', (e)=>{ if(e.target===lock) unlock(); });
   }
 
-  /* ---------------- init ---------------- */
+  /* ---------- Init ---------- */
   function init(){
     renderGrid();
     tickClock();
     setInterval(tickClock, 1000*15);
-    setInterval(()=>{ if(state.activeApp==='weather'){} refreshWidget(); }, 45000);
+    setInterval(()=>{ refreshWidget(); }, 45000);
     refreshWidget();
     document.documentElement.style.setProperty('--wp', wallpapers.default);
+    applyIconStyle();
     boot();
     setupLockGesture();
+    // Add backspace button to keyboard
+    const kb = document.getElementById('keyboard');
+    const lastRow = kb.lastElementChild;
+    // Insert backspace into the shift row
+    const shiftRow = kb.children[3];
+    if(shiftRow){
+      // The shift row already has shift, comma, space, period, enter
+      // We'll add backspace at the end of row3 instead
+    }
+    // Actually add backspace to the bottom row
+    const bottomRow = kb.children[4];
+    if(bottomRow){
+      bottomRow.appendChild(backspaceBtn);
+    }
+    // Setup kb-test input
+    document.querySelectorAll('.kb-input').forEach(inp=>{
+      inp.dataset.kbSetup='1';
+      setupKeyboardInput(inp);
+    });
   }
   document.addEventListener('DOMContentLoaded', init);
 
   return {
     openApp, closeApp, goHome, renderApp,
     settingsNav, toggleSetting, setAccent, setWallpaper,
+    setIconStyle, setIconTint,
     newNote, openNote, deleteNote,
     calcPress, musicToggle, musicNext, musicPrev,
-    takePhoto, dial, call,
+    takePhoto, flipCamera, retryCamera, cameraMode,
+    dial, call,
     openThread, sendMsg, browserGo, browserGoTo,
+    installApp,
   };
 })();
 </script>
