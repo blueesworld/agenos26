@@ -481,6 +481,272 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.16);}
 .statusbar{font-size:15px;font-weight:600;letter-spacing:-.01em;padding:14px 30px 4px;}
 
 </style>
+<style>
+/* ===== AgenOS v2 — Fixes, Widgets, Sheets, Keyboard, Messages ===== */
+
+/* ---------- Nav bar (kein Home-Button) ---------- */
+.nav-slot-left,.nav-slot-right{min-width:60px;display:flex;align-items:center;}
+.nav-title{font-size:17px;font-weight:700;letter-spacing:-.022em;}
+.app-header{justify-content:center;position:relative;}
+.app-header .nav-title{position:absolute;left:50%;transform:translateX(-50%);}
+.app-home-indicator{cursor:pointer;}
+
+/* installiertes App-Icon "landet" */
+@keyframes justInstalled{
+  0%{transform:scale(.2) rotate(-12deg);opacity:0;filter:blur(8px);}
+  55%{transform:scale(1.16) rotate(3deg);opacity:1;filter:blur(0);}
+  75%{transform:scale(.95);}100%{transform:scale(1) rotate(0);}
+}
+.app-btn.just-installed{animation:justInstalled .85s cubic-bezier(.34,1.4,.5,1) both;}
+.app-btn.just-installed .app-icon{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-1) 55%,transparent),0 14px 30px -12px rgba(0,0,0,.8);}
+
+/* ---------- HOME WIDGETS ---------- */
+#home-widgets{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  padding:12px 20px 6px;
+}
+.hw{
+  background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.06));
+  backdrop-filter:saturate(180%) blur(30px);-webkit-backdrop-filter:saturate(180%) blur(30px);
+  border:.5px solid rgba(255,255,255,.18);
+  border-radius:24px;padding:14px 16px;min-height:96px;
+  display:flex;flex-direction:column;justify-content:center;gap:2px;cursor:pointer;
+  box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 16px 32px -22px rgba(0,0,0,.95);
+  transition:transform .38s cubic-bezier(.34,1.4,.5,1);
+  animation:iconPop .6s cubic-bezier(.34,1.4,.5,1) both;
+}
+.hw:active{transform:scale(.96);}
+.hw-2{grid-column:span 2;}
+.hw-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.16);margin-top:8px;overflow:hidden;}
+.hw-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#30d158,#a3e635);}
+.rings{display:flex;gap:6px;margin-top:8px;}
+.rings span{width:26px;height:26px;border-radius:50%;border:4px solid;}
+.rings .r1{border-color:#ff375f #ff375f rgba(255,55,95,.2) rgba(255,55,95,.2);transform:rotate(45deg);}
+.rings .r2{border-color:#a3e635 #a3e635 #a3e635 rgba(163,230,53,.2);}
+.rings .r3{border-color:#22d3ee rgba(34,211,238,.2) rgba(34,211,238,.2) rgba(34,211,238,.2);}
+
+/* ---------- LONG PRESS MENU (iOS 26) ---------- */
+#home-menu{position:fixed;inset:0;z-index:30000;}
+.hm-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.28);backdrop-filter:blur(14px) saturate(140%);
+  opacity:0;transition:opacity .3s ease;}
+#home-menu.show .hm-backdrop{opacity:1;}
+.hm-card{
+  position:absolute;width:228px;border-radius:20px;overflow:hidden;
+  background:rgba(44,44,50,.72);backdrop-filter:saturate(200%) blur(40px);-webkit-backdrop-filter:saturate(200%) blur(40px);
+  border:.5px solid rgba(255,255,255,.16);
+  box-shadow:0 30px 60px -20px rgba(0,0,0,1);
+  transform:scale(.7);opacity:0;transform-origin:top left;
+  transition:transform .42s cubic-bezier(.34,1.4,.5,1),opacity .22s ease;
+}
+body.light-mode .hm-card{background:rgba(250,250,252,.82);}
+#home-menu.show .hm-card{transform:scale(1);opacity:1;}
+.hm-item{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 17px;font-size:16px;font-weight:500;letter-spacing:-.01em;color:var(--text-1);cursor:pointer;
+  flex-direction:row-reverse;transition:background .15s;}
+.hm-item:active{background:rgba(255,255,255,.12);}
+.hm-ic{font-size:17px;opacity:.9;}
+.hm-sep{height:.5px;background:rgba(255,255,255,.14);}
+
+/* ---------- SHEETS ---------- */
+#ios-sheet{position:fixed;inset:0;z-index:31000;}
+.sheet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .34s ease;}
+#ios-sheet.show .sheet-backdrop{opacity:1;}
+.sheet-card{
+  position:absolute;left:0;right:0;bottom:0;max-height:82%;
+  background:rgba(28,28,34,.86);backdrop-filter:saturate(190%) blur(46px);-webkit-backdrop-filter:saturate(190%) blur(46px);
+  border-top:.5px solid rgba(255,255,255,.16);
+  border-radius:26px 26px 0 0;padding:8px 20px max(26px,env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .5s cubic-bezier(.32,.72,0,1);
+  overflow-y:auto;box-shadow:0 -20px 60px -20px rgba(0,0,0,1);
+}
+body.light-mode .sheet-card{background:rgba(248,248,250,.92);}
+#ios-sheet.show .sheet-card{transform:translateY(0);}
+.sheet-grabber{width:38px;height:5px;border-radius:3px;background:rgba(255,255,255,.28);margin:4px auto 12px;}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sheet-title{font-size:21px;font-weight:800;letter-spacing:-.028em;}
+.sheet-done{background:none;border:none;color:var(--accent-1);font-size:16px;font-weight:600;cursor:pointer;}
+.sheet-sub{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-3);margin:0 4px 8px;}
+.sheet-body{padding-bottom:10px;}
+.widget-ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;
+  background:rgba(255,255,255,.1);border:.5px solid rgba(255,255,255,.14);}
+.add-pill{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;
+  justify-content:center;font-size:17px;font-weight:600;transition:all .3s cubic-bezier(.34,1.4,.5,1);}
+.add-pill.added{background:#30d158;color:#fff;transform:scale(1.05);}
+.chip-row{display:flex;gap:9px;flex-wrap:wrap;}
+.chip{padding:9px 16px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;
+  background:rgba(255,255,255,.09);border:.5px solid rgba(255,255,255,.14);
+  transition:all .3s cubic-bezier(.34,1.4,.5,1);}
+.chip.on{background:var(--accent-1);border-color:transparent;box-shadow:0 8px 20px -10px var(--accent-1);}
+.chip:active{transform:scale(.94);}
+.tint-row{display:flex;gap:12px;flex-wrap:wrap;}
+.tint-dot{width:34px;height:34px;border-radius:50%;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.4,.5,1);
+  box-shadow:0 0 0 .5px rgba(255,255,255,.2) inset;}
+.tint-dot.on{transform:scale(1.18);box-shadow:0 0 0 3px rgba(255,255,255,.85),0 6px 14px -6px rgba(0,0,0,.7);}
+.wp-grid-sheet{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.wp-grid-sheet .wp-swatch{aspect-ratio:9/17;border-radius:14px;}
+.wp-swatch{transition:transform .3s cubic-bezier(.34,1.4,.5,1);}
+.wp-swatch:active{transform:scale(.93);}
+.wp-swatch.selected::after{border-width:3px;border-radius:inherit;}
+
+/* ---------- iOS grouped lists ---------- */
+.ios-group{
+  border-radius:20px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));
+  border:.5px solid rgba(255,255,255,.13);
+  backdrop-filter:saturate(180%) blur(28px);-webkit-backdrop-filter:saturate(180%) blur(28px);
+}
+body.light-mode .ios-group{background:rgba(255,255,255,.85);border-color:rgba(0,0,0,.06);}
+.ios-search{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:12px;
+  background:rgba(120,120,128,.22);font-size:16px;}
+.ios-hero{border-radius:26px;padding:26px 20px;text-align:center;color:#fff;position:relative;overflow:hidden;
+  box-shadow:0 24px 50px -26px rgba(0,0,0,.9);}
+.ios-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 60%);}
+.ios-hero-icon{width:76px !important;height:76px !important;margin:0 auto;position:relative;z-index:2;}
+
+/* ---------- KEYBOARD v2 ---------- */
+:root{--kb-height:306px;}
+#keyboard{height:var(--kb-height);gap:6px;padding:6px 3px max(6px,env(safe-area-inset-bottom));}
+.kb-row{gap:5px;}
+.kb-key{max-width:none;flex:1;font-size:22px;font-weight:400;border-radius:6px;user-select:none;}
+.kb-key.special{flex:1.45;font-size:15px;}
+.kb-key.wide{flex:1.5;}
+.kb-key.space{flex:5;font-size:14px;}
+.kb-key.pressed{background:rgba(200,200,210,.75);color:#111;transform:scale(1.04);}
+.kb-key.active,.kb-key.caps{background:rgba(240,240,245,.92);color:#111;}
+.kb-toolbar{display:flex;justify-content:flex-end;padding:0 6px;height:26px;align-items:center;}
+#kb-row-3{gap:5px;}
+/* Eingabe sichtbar: App-Fenster anheben */
+.app-window.kb-lift{padding-bottom:var(--kb-height);}
+.app-window.kb-lift .app-scroll{padding-bottom:12px;}
+.kb-input.kb-focused{
+  box-shadow:0 0 0 2.5px color-mix(in srgb,var(--accent-1) 65%,transparent) !important;
+  caret-color:var(--accent-1);
+}
+.kb-input.kb-focused::after{content:'';}
+body.kb-open .home-indicator{opacity:0;pointer-events:none;}
+
+/* ---------- MESSAGES REDESIGN ---------- */
+.thread-wrap{display:flex;flex-direction:column;height:100%;}
+.thread-topbar{display:flex;align-items:center;gap:10px;padding:6px 16px 10px;border-bottom:.5px solid var(--separator);}
+.thread-back{color:var(--accent-1);font-weight:600;cursor:pointer;font-size:16px;flex-shrink:0;}
+.thread-peer{display:flex;align-items:center;gap:8px;margin:0 auto;font-weight:600;font-size:15px;}
+.thread-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(140deg,var(--accent-1),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.thread-scroll{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:3px;}
+.thread-daystamp{text-align:center;font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:10px;letter-spacing:.02em;}
+.bubble{
+  max-width:74%;padding:9px 15px;border-radius:20px;font-size:16px;line-height:1.35;letter-spacing:-.01em;
+  position:relative;word-wrap:break-word;
+  animation:bubbleIn .48s cubic-bezier(.34,1.4,.5,1) both;
+}
+@keyframes bubbleIn{from{opacity:0;transform:translateY(12px) scale(.82);}to{opacity:1;transform:none;}}
+.bubble.me{align-self:flex-end;background:linear-gradient(170deg,#3b9bff,#0a7cff);color:#fff;
+  box-shadow:0 6px 16px -10px rgba(10,124,255,.9);}
+.bubble.them{align-self:flex-start;background:rgba(120,120,128,.26);color:var(--text-1);}
+body.light-mode .bubble.them{background:#e9e9eb;}
+.bubble.me.tail{border-bottom-right-radius:7px;}
+.bubble.them.tail{border-bottom-left-radius:7px;}
+.bubble.sent{animation:bubblePop .5s cubic-bezier(.34,1.5,.5,1) both;}
+@keyframes bubblePop{0%{opacity:0;transform:translateY(16px) scale(.6);}60%{transform:translateY(0) scale(1.04);opacity:1;}100%{transform:scale(1);}}
+.bubble.typing{display:flex;gap:4px;padding:13px 16px;align-self:flex-start;}
+.bubble.typing span{width:8px;height:8px;border-radius:50%;background:var(--text-3);animation:typingDot 1.2s ease-in-out infinite;}
+.bubble.typing span:nth-child(2){animation-delay:.18s;}
+.bubble.typing span:nth-child(3){animation-delay:.36s;}
+@keyframes typingDot{0%,60%,100%{opacity:.3;transform:translateY(0) scale(.85);}30%{opacity:1;transform:translateY(-4px) scale(1);}}
+.kb-spacer{height:8px;flex-shrink:0;}
+.thread-bar{display:flex;align-items:center;gap:9px;padding:9px 14px max(14px,env(safe-area-inset-bottom));
+  border-top:.5px solid var(--separator);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent);
+  backdrop-filter:saturate(180%) blur(24px);}
+.thread-plus{width:34px;height:34px;border-radius:50%;flex-shrink:0;border:none;font-size:22px;font-weight:300;
+  background:rgba(120,120,128,.26);color:var(--text-1);cursor:pointer;line-height:1;}
+.thread-field{flex:1;background:rgba(120,120,128,.18);border:.5px solid rgba(255,255,255,.14);
+  border-radius:19px;padding:2px 4px;transition:box-shadow .25s;}
+.thread-field:focus-within{box-shadow:0 0 0 2px color-mix(in srgb,var(--accent-1) 55%,transparent);}
+#thread-input{width:100%;background:none;border:none;outline:none;color:var(--text-1);font-size:16px;padding:8px 13px;}
+.thread-send{width:34px;height:34px;border-radius:50%;flex-shrink:0;border:none;color:#fff;font-size:18px;font-weight:700;
+  background:linear-gradient(170deg,#3b9bff,#0a7cff);cursor:pointer;box-shadow:0 6px 14px -8px #0a7cff;}
+.msg-row{display:flex;align-items:center;gap:13px;padding:11px 15px;cursor:pointer;transition:background .18s;}
+.msg-row:active{background:rgba(128,128,128,.14);}
+.msg-avatar{width:48px;height:48px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(140deg,var(--accent-1),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:19px;
+  box-shadow:0 6px 14px -8px rgba(0,0,0,.7);}
+
+/* ---------- Settings & general app polish ---------- */
+.app-scroll{padding-bottom:60px;}
+.row{padding:13px 16px;font-size:16px;letter-spacing:-.01em;}
+
+</style>
+<style>
+/* ===== v3: App-Redesigns ===== */
+
+/* Große iOS Titel */
+.ios-largetitle{font-size:34px;font-weight:800;letter-spacing:-.035em;padding:6px 20px 14px;}
+.ios-section{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--text-3);
+  text-transform:uppercase;margin:22px 6px 8px;}
+
+/* Settings icon badges (SF Symbols Look) */
+.set-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;color:#fff;flex-shrink:0;
+  box-shadow:0 2px 5px -2px rgba(0,0,0,.6),0 0 0 .5px rgba(255,255,255,.16) inset;}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;cursor:pointer;
+  transition:background .16s;}
+.set-row:active{background:rgba(128,128,128,.15);}
+.set-left{display:flex;align-items:center;gap:13px;font-size:16px;letter-spacing:-.012em;}
+.set-val{display:flex;align-items:center;gap:6px;color:var(--text-3);font-size:15px;}
+.set-chev{color:var(--text-3);font-size:17px;opacity:.6;}
+.ios-group .divider{margin-left:58px;}
+.ios-group.nolist .divider{margin-left:16px;}
+
+/* Profile card */
+.id-card{display:flex;align-items:center;gap:15px;padding:16px;border-radius:20px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+  border:.5px solid rgba(255,255,255,.14);backdrop-filter:blur(28px) saturate(180%);
+  transition:transform .3s cubic-bezier(.34,1.4,.5,1);}
+.id-card:active{transform:scale(.98);}
+.id-avatar{width:58px;height:58px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;
+  background:linear-gradient(140deg,var(--accent-1),var(--accent-2));
+  box-shadow:0 8px 20px -10px var(--accent-1);}
+
+/* Weather redesign */
+.wx-hero{text-align:center;padding:22px 0 10px;}
+.wx-temp{font-size:88px;font-weight:200;letter-spacing:-5px;line-height:1;}
+.wx-hi{font-size:19px;font-weight:600;opacity:.85;margin-top:2px;}
+.wx-hourly{display:flex;gap:20px;overflow-x:auto;padding:16px 18px;}
+.wx-hour{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:14px;flex-shrink:0;font-weight:600;}
+.wx-day{display:flex;align-items:center;gap:14px;padding:9px 16px;font-size:16px;}
+.wx-bar{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.16);position:relative;overflow:hidden;}
+.wx-bar i{position:absolute;height:100%;border-radius:3px;background:linear-gradient(90deg,#4fc3f7,#ffd166,#ff8a65);}
+
+/* Music redesign */
+.mu-art{width:100%;max-width:280px;aspect-ratio:1;border-radius:14px;margin:6px auto;
+  box-shadow:0 34px 60px -26px rgba(0,0,0,.95);transition:transform .55s cubic-bezier(.32,.72,0,1),box-shadow .5s;}
+.mu-art.playing{transform:scale(1.06);box-shadow:0 44px 76px -26px rgba(0,0,0,1);}
+.mu-scrub{height:6px;border-radius:3px;background:rgba(255,255,255,.16);overflow:hidden;}
+.mu-scrub i{display:block;height:100%;background:rgba(255,255,255,.85);border-radius:3px;transition:width .4s linear;}
+.mu-btn{background:none;border:none;color:var(--text-1);font-size:30px;cursor:pointer;
+  transition:transform .28s cubic-bezier(.34,1.5,.5,1),opacity .2s;}
+.mu-btn:active{transform:scale(.82);opacity:.6;}
+.mu-play{width:64px;height:64px;border-radius:50%;background:var(--text-1);color:var(--bg-surface);font-size:24px;}
+
+/* Calculator redesign */
+.calc-key{font-size:30px;font-weight:400;}
+.calc-key.op{font-size:32px;font-weight:500;}
+
+/* Store polish */
+.store-hero{border-radius:26px;}
+
+/* Scroll bounce feel */
+.app-scroll{scroll-behavior:smooth;overscroll-behavior:contain;}
+
+</style>
+<style>@keyframes navPush{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:none;}}
+@keyframes navPop{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}}
+.nav-push{animation:navPush .38s cubic-bezier(.32,.72,0,1) both;}
+.nav-pop{animation:navPop .38s cubic-bezier(.32,.72,0,1) both;}
+</style>
 </head>
 <body>
 
@@ -513,22 +779,13 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.16);}
 
   <div id="home-layer" class="screen-layer wallpaper">
     <div class="statusbar statusbar-slot"></div>
-    <div style="padding:14px 18px 4px;">
-      <div class="glass fade-in" style="border-radius:26px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="AgenOS.openApp('weather')">
-        <div>
-          <div style="font-size:13px;color:var(--text-2);font-weight:600;">Agen City</div>
-          <div class="font-display" style="font-size:40px;font-weight:600;line-height:1.1;" id="widget-temp">21°</div>
-          <div style="font-size:13px;color:var(--text-2);" id="widget-cond">Teilweise bewölkt</div>
-        </div>
-        <svg id="widget-icon" width="54" height="54" viewBox="0 0 24 24" fill="none"></svg>
-      </div>
-    </div>
+    <div id="home-widgets"></div>
     <div id="home-scroll"><div id="home-pages"></div></div>
     <div id="page-dots"></div>
     <div style="padding:6px 16px 30px;">
       <div class="glass-strong" style="border-radius:28px;padding:12px 14px;display:flex;justify-content:space-between;" id="dock"></div>
     </div>
-    <div class="home-indicator" onclick="AgenOS.goHome()"></div>
+    <div class="home-indicator"></div>
   </div>
 
   <div id="app-container"></div>
@@ -581,13 +838,8 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.16);}
   <div class="kb-row" id="kb-row-1"></div>
   <div class="kb-row" id="kb-row-2"></div>
   <div class="kb-row" id="kb-row-3"></div>
-  <div class="kb-row">
-    <button class="kb-key special wide" data-action="shift">⇧</button>
-    <button class="kb-key special" data-action="key" data-key=",">,</button>
-    <button class="kb-key space" data-action="space">Leerzeichen</button>
-    <button class="kb-key special" data-action="key" data-key=".">.</button>
-    <button class="kb-key special wide accent" data-action="enter">↵</button>
-  </div>
+  <div class="kb-row" id="kb-row-4"></div>
+  <div class="kb-toolbar"><button class="kb-key special" data-action="hide" style="max-width:70px;">⌄ Fertig</button></div>
   <div class="kb-row" style="flex:0;height:auto;margin-top:4px;">
     <button class="kb-key special" data-action="key" data-key="123" style="max-width:70px;margin:0 auto;">123</button>
   </div>
@@ -621,6 +873,7 @@ const AgenOS = (function(){
     battery:{ level:87, charging:false, chargingTime:0, dischargingTime:0, supported:false },
     network:{ effectiveType:'4g', downlink:0, rtt:0, type:'wifi', carrier:'Agen Mobile' },
     // FIX: Settings + Store sind jetzt standardmäßig installiert!
+    homeWidgets:['weather'],
     installedApps:[
       'weather','notes','gallery','calculator','music','clock','calendar',
       'maps','health','compass','store','settings','currency','translate',
@@ -671,6 +924,17 @@ const AgenOS = (function(){
     ocean:'radial-gradient(ellipse 110% 70% at 20% 0%, #0ea5e933 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #3b82f6 0%, transparent 50%), linear-gradient(180deg,#04121f 0%,#050508 100%)',
     forest:'radial-gradient(ellipse 110% 70% at 20% 0%, #22c55e33 0%, transparent 55%), radial-gradient(ellipse 100% 60% at 90% 15%, #059669 0%, transparent 50%), linear-gradient(180deg,#04140a 0%,#050508 100%)',
     sunset:'radial-gradient(ellipse 120% 70% at 50% 0%, #ff9a56 0%, transparent 60%), radial-gradient(ellipse 100% 60% at 20% 30%, #ff6b9d 0%, transparent 50%), linear-gradient(180deg,#2a0f1e 0%,#050508 100%)',
+    graphite:'radial-gradient(ellipse 120% 80% at 50% -10%, #3a3a44 0%, transparent 55%), radial-gradient(ellipse 90% 60% at 80% 100%, #23232b 0%, transparent 60%), linear-gradient(180deg,#141418 0%,#050506 100%)',
+    sierra:'radial-gradient(ellipse 130% 70% at 25% 0%, #f472b6 0%, transparent 50%), radial-gradient(ellipse 110% 70% at 85% 20%, #a78bfa 0%, transparent 52%), radial-gradient(ellipse 100% 60% at 50% 100%, #4c1d95 0%, transparent 60%), linear-gradient(180deg,#1a0b2e 0%,#06040c 100%)',
+    mint:'radial-gradient(ellipse 120% 70% at 30% 0%, #34d399 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 85% 25%, #06b6d4 0%, transparent 52%), linear-gradient(180deg,#04201c 0%,#04060a 100%)',
+    solar:'radial-gradient(ellipse 120% 70% at 50% -5%, #fbbf24 0%, transparent 52%), radial-gradient(ellipse 100% 60% at 15% 35%, #f97316 0%, transparent 50%), radial-gradient(ellipse 110% 70% at 90% 90%, #7c2d12 0%, transparent 60%), linear-gradient(180deg,#1c0f04 0%,#060302 100%)',
+    nebula:'radial-gradient(ellipse 100% 60% at 20% 10%, #ec4899 0%, transparent 45%), radial-gradient(ellipse 110% 70% at 80% 0%, #6366f1 0%, transparent 50%), radial-gradient(ellipse 120% 80% at 50% 95%, #0ea5e9 0%, transparent 55%), linear-gradient(180deg,#0b0620 0%,#040308 100%)',
+    sand:'radial-gradient(ellipse 120% 70% at 40% 0%, #fcd34d 0%, transparent 48%), radial-gradient(ellipse 100% 60% at 90% 30%, #fb923c 0%, transparent 50%), linear-gradient(180deg,#1f1509 0%,#080503 100%)',
+    arctic:'radial-gradient(ellipse 120% 70% at 50% -10%, #bae6fd 0%, transparent 48%), radial-gradient(ellipse 100% 60% at 20% 30%, #60a5fa 0%, transparent 50%), linear-gradient(180deg,#0a182b 0%,#04060c 100%)',
+    rose:'radial-gradient(ellipse 120% 70% at 30% 0%, #fb7185 0%, transparent 50%), radial-gradient(ellipse 100% 65% at 85% 20%, #e879f9 0%, transparent 50%), linear-gradient(180deg,#26091a 0%,#08040a 100%)',
+    carbon:'repeating-linear-gradient(45deg, rgba(255,255,255,.018) 0 2px, transparent 2px 6px), radial-gradient(ellipse 110% 70% at 50% 0%, #1f2937 0%, transparent 60%), linear-gradient(180deg,#0d1117 0%,#020305 100%)',
+    lagoon:'radial-gradient(ellipse 120% 70% at 25% 5%, #14b8a6 0%, transparent 50%), radial-gradient(ellipse 110% 60% at 90% 15%, #3b82f6 0%, transparent 50%), radial-gradient(ellipse 120% 80% at 50% 100%, #0f766e 0%, transparent 55%), linear-gradient(180deg,#04161c 0%,#03070a 100%)',
+    plum:'radial-gradient(ellipse 120% 70% at 50% 0%, #a21caf 0%, transparent 52%), radial-gradient(ellipse 100% 60% at 15% 40%, #7c3aed 0%, transparent 50%), linear-gradient(180deg,#1a0620 0%,#060309 100%)',
   };
 
   const ICONS = {
@@ -882,11 +1146,9 @@ const AgenOS = (function(){
     return `<circle cx="9" cy="10" r="5" fill="#ffd166"/><path d="M8 17a5 5 0 0 1 0-10 6 6 0 0 1 11.8 1.6A4 4 0 0 1 18.5 17H8Z" fill="#fff" opacity=".92"/>`;
   }
   function refreshWidget(){
-    const t = Math.round(weatherBase + (Math.random()*1.4-0.7));
-    const el = document.getElementById('widget-temp'); if(el) el.textContent = t+'°';
-    const ic = document.getElementById('widget-icon'); if(ic) ic.innerHTML = weatherIconSVG('Partly');
-    const lw = document.getElementById('lock-widget-weather-temp'); if(lw) lw.textContent = t+'°';
+    renderHomeWidgets();
   }
+
 
   async function initBattery(){
     if(!('getBattery' in navigator)) return;
@@ -939,7 +1201,13 @@ const AgenOS = (function(){
   }
 
   function getInstalledApps(){
-    return PREINSTALLED.filter(a => state.installedApps.includes(a.id));
+    const seen=new Set(), out=[];
+    state.installedApps.forEach(id=>{
+      if(seen.has(id)) return;
+      const a = ALL_APPS.find(x=>x.id===id);
+      if(a && !DOCK.some(d=>d.id===id)){ seen.add(id); out.push(a); }
+    });
+    return out;
   }
   function isAppInstalled(id){
     return state.installedApps.includes(id);
@@ -1106,18 +1374,39 @@ const AgenOS = (function(){
     }
   }
 
+
+  function renderGenericApp(meta){
+    return `<div style="padding:8px 20px 40px;">
+      <div class="ios-hero" style="background:${meta.bg};">
+        <div class="app-icon ios-hero-icon" style="background:${meta.bg};">${ICONS[meta.icon||meta.id]||''}</div>
+        <div style="font-size:24px;font-weight:800;letter-spacing:-.03em;margin-top:14px;">${meta.name}</div>
+        <div style="opacity:.75;font-size:13px;margin-top:4px;">${meta.dev||'Agen Labs'} · ${meta.version||'1.0'}</div>
+      </div>
+      <div class="ios-group" style="margin-top:20px;">
+        <div class="row"><span>Status</span><span style="color:#30d158;font-weight:600;">Aktiv</span></div><div class="divider"></div>
+        <div class="row"><span>Version</span><span style="color:var(--text-3);">${meta.version||'1.0.0'}</span></div><div class="divider"></div>
+        <div class="row"><span>Größe</span><span style="color:var(--text-3);">${meta.size||'—'}</span></div><div class="divider"></div>
+        <div class="row"><span>Kategorie</span><span style="color:var(--text-3);">${meta.cat||'App'}</span></div>
+      </div>
+      <div class="ios-group" style="margin-top:18px;padding:16px 18px;">
+        <div style="font-size:13px;color:var(--text-2);line-height:1.6;">${meta.desc||''}</div>
+      </div>
+      <div style="text-align:center;color:var(--text-3);font-size:12px;margin-top:26px;">Diese App ist eine Demo-Oberfläche.</div>
+    </div>`;
+  }
+
   function buildAppShell(id, title, contentHTML, opts={}){
     const win = document.createElement('div');
     win.className='app-window'; win.id='win-'+id;
     win.innerHTML = `
       ${opts.noStatusBar? '' : '<div class="statusbar statusbar-slot"></div>'}
       <div class="app-header">
-        <button onclick="AgenOS.closeApp()" style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;font-size:15px;background:none;border:none;">‹ Home</button>
-        <div style="font-weight:700;font-size:15px;" class="font-display">${title}</div>
-        <div style="width:56px;"></div>
+        <div class="nav-slot-left" id="navleft-${id}"></div>
+        <div class="nav-title font-display">${title}</div>
+        <div class="nav-slot-right"></div>
       </div>
       <div class="app-scroll" id="content-${id}">${contentHTML}</div>
-      <div class="home-indicator" onclick="AgenOS.goHome()"></div>
+      <div class="home-indicator app-home-indicator"></div>
     `;
     return win;
   }
@@ -1451,8 +1740,15 @@ const AgenOS = (function(){
     if(navigator.vibrate) navigator.vibrate(10);
     setTimeout(()=>{
       state._installingApp = null;
-      state.installedApps.push(id);
+      if(!state.installedApps.includes(id)) state.installedApps.push(id);
       buildHomePages();
+      const total=state.installedApps.length;
+      state.currentPage = Math.floor((total-1)/16);
+      updateHomePageTransform(); updatePageDots();
+      setTimeout(()=>{
+        const el=document.querySelector(`.app-btn[data-app-id="${id}"]`);
+        if(el){ el.classList.add('just-installed'); setTimeout(()=>el.classList.remove('just-installed'),1400); }
+      },60);
       refreshStoreUI();
       if(navigator.vibrate) navigator.vibrate([10,50,10]);
       addNotification({icon:'✅', color:'#34d399', title:'Installiert', body:`${app.name} wurde installiert`, time:'jetzt'});
@@ -1760,59 +2056,75 @@ const AgenOS = (function(){
   function settingsBack(){ return `<div onclick="AgenOS.settingsNav('home')" style="display:flex;align-items:center;gap:4px;color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Einstellungen</div>`; }
 
   function renderSettingsHome(){
-    return `<div style="padding:4px 18px 24px;">
-      <div class="glass" style="border-radius:20px;padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:18px;cursor:pointer;" onclick="AgenOS.settingsNav('id')">
-        <div style="width:52px;height:52px;border-radius:50%;" class="accent-grad"></div>
-        <div><div style="font-weight:700;font-size:17px;">Agen ID</div><div style="color:var(--text-2);font-size:13px;">Sync, Backup & Geräte</div></div>
+    const R=(ic,bg,label,val,nav)=>`<div class="set-row" onclick="AgenOS.settingsNav('${nav}')">
+      <div class="set-left"><div class="set-ic" style="background:${bg};">${ic}</div><span>${label}</span></div>
+      <div class="set-val">${val?`<span>${val}</span>`:''}<span class="set-chev">›</span></div></div>`;
+    const T=(key,ic,bg,label,sub)=>`<div class="set-row" onclick="event.stopPropagation();AgenOS.toggleSetting('${key}')">
+      <div class="set-left"><div class="set-ic" style="background:${bg};">${ic}</div><span>${label}</span></div>
+      <div class="set-val">${sub?`<span>${sub}</span>`:''}<div class="toggle ${state.settings[key]?'on':''}"></div></div></div>`;
+    const D='<div class="divider"></div>';
+    return `<div style="padding:0 18px 30px;">
+      <div class="ios-largetitle" style="padding-left:2px;">Einstellungen</div>
+      <div class="ios-search" style="margin-bottom:18px;"><span>🔍</span><span style="color:var(--text-3);">Suchen</span></div>
+
+      <div class="id-card" onclick="AgenOS.settingsNav('id')">
+        <div class="id-avatar">A</div>
+        <div><div style="font-weight:700;font-size:19px;letter-spacing:-.02em;">Agen ID</div>
+        <div style="color:var(--text-2);font-size:13px;margin-top:2px;">Sync, iCloud, Medien &amp; Käufe</div></div>
+        <div style="margin-left:auto;color:var(--text-3);font-size:18px;">›</div>
       </div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
-        ${settingsToggleRow('wifi','WLAN', state.settings.wifi?'Agen_Home_5G':'Aus')}
-        <div class="divider"></div>
-        ${settingsToggleRow('bluetooth','Bluetooth', state.settings.bluetooth?'Ein':'Aus')}
-        <div class="divider"></div>
-        ${settingsToggleRow('cellular','Mobile Daten', state.settings.cellular?(state.network.effectiveType.toUpperCase()):'Aus')}
-        <div class="divider"></div>
-        ${settingsToggleRow('airplane','Flugmodus','')}
+
+      <div class="ios-section">Verbindungen</div>
+      <div class="ios-group">
+        ${T('wifi','􀙇','#0a84ff','WLAN', state.settings.wifi?'Agen_Home_5G':'')}${D}
+        ${T('bluetooth','􀫥','#0a84ff','Bluetooth', state.settings.bluetooth?'Ein':'Aus')}${D}
+        ${T('cellular','􀉦','#30d158','Mobile Daten', state.settings.cellular?state.network.effectiveType.toUpperCase():'')}${D}
+        ${T('airplane','✈','#ff9f0a','Flugmodus','')}
       </div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
-        <div class="row press-scale" onclick="AgenOS.settingsNav('lockScreen')" style="cursor:pointer;"><span>🔒 Sperrbildschirm</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('display')" style="cursor:pointer;"><span>Anzeige & Helligkeit</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('appearance')" style="cursor:pointer;"><span>Erscheinungsbild</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('iconStyle')" style="cursor:pointer;"><span>App-Icon-Stil</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('sound')" style="cursor:pointer;"><span>Töne & Haptik</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('battery')" style="cursor:pointer;"><span>Batterie</span><span style="color:var(--text-3);">${state.battery.level}%</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('storage')" style="cursor:pointer;"><span>Speicher</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('network')" style="cursor:pointer;"><span>Netzwerk & Mobilfunk</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('keyboard')" style="cursor:pointer;"><span>Tastatur</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('privacy')" style="cursor:pointer;"><span>Datenschutz & Sicherheit</span><span style="color:var(--text-3);">›</span></div>
-        <div class="divider"></div>
-        ${settingsToggleRow('dnd','Nicht stören','')}
-        <div class="divider"></div>
-        ${settingsToggleRow('location','Standortdienste','')}
+
+      <div class="ios-section">Darstellung</div>
+      <div class="ios-group">
+        ${R('🔒','#8e8e93','Sperrbildschirm','','lockScreen')}${D}
+        ${R('☀','#0a84ff','Anzeige &amp; Helligkeit','','display')}${D}
+        ${R('🎨','#5e5ce6','Erscheinungsbild','','appearance')}${D}
+        ${R('✦','#bf5af2','App-Icon-Stil','','iconStyle')}${D}
+        <div class="set-row" onclick="AgenOS.openWidgetSheet()">
+          <div class="set-left"><div class="set-ic" style="background:#ff375f;">▦</div><span>Widgets</span></div>
+          <div class="set-val"><span>${state.homeWidgets.length}</span><span class="set-chev">›</span></div></div>${D}
+        <div class="set-row" onclick="AgenOS.openCustomizeSheet()">
+          <div class="set-left"><div class="set-ic" style="background:#32ade6;">🖼</div><span>Hintergrund</span></div>
+          <div class="set-val"><span style="text-transform:capitalize;">${state.wallpaper}</span><span class="set-chev">›</span></div></div>
       </div>
-      <div class="glass" style="border-radius:20px;overflow:hidden;margin-bottom:18px;">
-        <div class="row press-scale" onclick="AgenOS.settingsNav('softwareupdate')" style="cursor:pointer;">
-          <span>Softwareupdate</span>
-          <span style="color:${state.settings.softwareUpdate==='pending'?'#ef4444':'var(--text-3)'};">${state.settings.softwareUpdate==='pending'?'1 verfügbar':'Aktuell'}</span>
-        </div>
-        <div class="divider"></div>
-        <div class="row press-scale" onclick="AgenOS.settingsNav('about')" style="cursor:pointer;"><span>Über das Gerät</span><span style="color:var(--text-3);">›</span></div>
+
+      <div class="ios-section">System</div>
+      <div class="ios-group">
+        ${R('🔊','#ff375f','Töne &amp; Haptik','','sound')}${D}
+        ${R('🔋','#30d158','Batterie', state.battery.level+'%','battery')}${D}
+        ${R('💾','#8e8e93','Speicher','','storage')}${D}
+        ${R('📡','#30d158','Netzwerk &amp; Mobilfunk','','network')}${D}
+        ${R('⌨','#8e8e93','Tastatur','','keyboard')}${D}
+        ${R('🔐','#0a84ff','Datenschutz &amp; Sicherheit','','privacy')}
+      </div>
+
+      <div class="ios-section">Fokus</div>
+      <div class="ios-group">
+        ${T('dnd','🌙','#5e5ce6','Nicht stören','')}${D}
+        ${T('location','📍','#0a84ff','Standortdienste','')}
+      </div>
+
+      <div class="ios-section">Allgemein</div>
+      <div class="ios-group">
+        ${R('⚙','#8e8e93','Allgemein','','about')}${D}
+        ${R('⬆','#0a84ff','Softwareupdate','AgenOS 6.0','update')}${D}
+        ${R('🛍','#0a84ff','App Store','','apps')}
+      </div>
+
+      <div style="text-align:center;color:var(--text-3);font-size:12px;margin-top:26px;line-height:1.6;">
+        AgenOS 6.0 (Build 23A-742)<br>© 2026 Agen Labs
       </div>
     </div>`;
   }
 
-  // ============================================================
-  // FIX: Lock Screen Customization (iOS-Style) — komplett neu
-  // ============================================================
   function renderSettingsLockScreen(){
     const clockSizes = [
       {id:'large', name:'Groß', desc:'96px'},
@@ -2050,15 +2362,24 @@ const AgenOS = (function(){
       privacy:renderSettingsPrivacy, softwareupdate:renderSettingsSoftwareUpdate, about:renderSettingsAbout,
       lockScreen: renderSettingsLockScreen
     };
+    map.update = map.softwareupdate; map.apps = renderSettingsAbout; map.id = renderSettingsAbout;
     const el = document.getElementById('content-settings');
-    if(el) el.innerHTML = (map[section]||renderSettingsHome)();
+    if(el){
+      el.innerHTML = (map[section]||renderSettingsHome)();
+      el.classList.remove('nav-push','nav-pop');
+      void el.offsetWidth;
+      el.classList.add(section==='home'?'nav-pop':'nav-push');
+      el.scrollTop = 0;
+    }
     if(section==='lockScreen') renderLockWidgets();
+    haptic(5);
   }
   function toggleSetting(key){
     state.settings[key] = !state.settings[key];
     const el = document.getElementById('tgl-'+key);
     if(el) el.classList.toggle('on');
-    updateCCTiles(); tickClock();
+    document.querySelectorAll(`[onclick*="toggleSetting('${key}')"] .toggle`).forEach(t=>t.classList.toggle('on', !!state.settings[key]));
+    updateCCTiles(); tickClock(); haptic(8);
   }
   function toggleLockOption(key){ 
     state.lockScreen[key] = !state.lockScreen[key]; 
@@ -2167,21 +2488,37 @@ const AgenOS = (function(){
 
   /* ===== Apple-grade interaction helpers ===== */
   function haptic(p){ try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} }
-  let islandTimer=null;
+  let islandTimer=null, islandBusy=false;
   function islandShow(label){
     const di=document.getElementById('dynamic-island'); if(!di) return;
-    const l=document.getElementById('di-label'); if(l) l.textContent=label||'AgenOS';
-    di.classList.add('expanded');
-    clearTimeout(islandTimer); islandTimer=setTimeout(()=>di.classList.remove('expanded'),2400);
+    clearTimeout(islandTimer);
+    if(islandBusy){
+      di.classList.remove('expanded');
+      islandBusy=false;
+      islandTimer=setTimeout(()=>islandShow(label), 420);
+      return;
+    }
+    const l=document.getElementById('di-label');
+    if(l) l.textContent=(label||'AgenOS').slice(0,22);
+    islandBusy=true;
+    requestAnimationFrame(()=>di.classList.add('expanded'));
+    islandTimer=setTimeout(()=>{ di.classList.remove('expanded'); islandBusy=false; },2200);
   }
-  function islandHide(){ const di=document.getElementById('dynamic-island'); if(di){ clearTimeout(islandTimer); di.classList.remove('expanded'); } }
+  function islandHide(){
+    const di=document.getElementById('dynamic-island'); if(!di) return;
+    clearTimeout(islandTimer); di.classList.remove('expanded'); islandBusy=false;
+  }
 
   function openApp(id){
     if(dragState.isEditing){ exitEditMode(); return; }
     if(state.activeApp===id) return;
     let win = document.getElementById('win-'+id);
-    const def = APP_DEFS[id];
-    if(!def) return;
+    let def = APP_DEFS[id];
+    if(!def){
+      const meta = ALL_APPS.find(a=>a.id===id);
+      if(!meta) return;
+      def = APP_DEFS[id] = {title:meta.name, render:()=>renderGenericApp(meta)};
+    }
     if(!win){
       win = buildAppShell(id, def.title, def.render(), {noStatusBar:def.noStatusBar});
       document.getElementById('app-container').appendChild(win);
@@ -2341,23 +2678,48 @@ const AgenOS = (function(){
     </div>`;
   }
   function renderMessagesList(){
-    return `<div style="padding:6px 4px 24px;">
-      ${Object.keys(state.threads).map(name=>{
+    return `<div style="padding:2px 16px 24px;">
+      <div class="ios-search"><span>🔍</span><span style="color:var(--text-3);">Suchen</span></div>
+      <div class="ios-group" style="margin-top:14px;">
+      ${Object.keys(state.threads).map((name,i)=>{
         const msgs = state.threads[name]; const last = msgs[msgs.length-1];
-        return `<div class="row press-scale" style="cursor:pointer;border-bottom:1px solid var(--separator);" onclick="AgenOS.openThread('${name}')"><div style="display:flex;align-items:center;gap:12px;"><div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;">${name[0]}</div><div><div style="font-weight:600;">${name}</div><div style="color:var(--text-2);font-size:13px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${last.text}</div></div></div><span style="color:var(--text-3);">›</span></div>`;
+        return `<div class="msg-row" onclick="AgenOS.openThread('${name}')">
+          <div class="msg-avatar">${name[0]}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span style="font-weight:600;font-size:16px;letter-spacing:-.01em;">${name}</span>
+              <span style="font-size:12px;color:var(--text-3);">${['9:41','Gestern','Mo'][i%3]}</span>
+            </div>
+            <div style="color:var(--text-2);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">${last.text}</div>
+          </div>
+          <span style="color:var(--text-3);font-size:18px;">›</span>
+        </div>${i<Object.keys(state.threads).length-1?'<div class="divider" style="margin-left:74px;"></div>':''}`;
       }).join('')}
+      </div>
     </div>`;
   }
   function renderThread(name){
     const msgs = state.threads[name];
-    return `<div style="display:flex;flex-direction:column;height:100%;">
-      <div style="padding:8px 16px;"><span onclick="AgenOS.renderApp('messages')" style="color:var(--accent-1);font-weight:600;cursor:pointer;">‹ Nachrichten</span></div>
-      <div class="app-scroll" style="padding:6px 16px;display:flex;flex-direction:column;gap:8px;" id="thread-scroll">
-        ${msgs.map(m=>`<div style="align-self:${m.me?'flex-end':'flex-start'};max-width:75%;padding:10px 14px;border-radius:16px;background:${m.me?'var(--accent-1)':'rgba(128,128,128,.2)'};color:${m.me?'#fff':'var(--text-1)'};font-size:15px;">${m.text}</div>`).join('')}
+    return `<div class="thread-wrap">
+      <div class="thread-topbar">
+        <span class="thread-back" onclick="AgenOS.renderApp('messages')">‹ Nachrichten</span>
+        <div class="thread-peer"><div class="thread-avatar">${name[0]}</div><span>${name}</span></div>
       </div>
-      <div style="display:flex;gap:10px;padding:10px 16px 20px;">
-        <input id="thread-input" class="kb-input" placeholder="Nachricht" style="flex:1;background:rgba(128,128,128,.15);border:none;outline:none;border-radius:20px;padding:10px 16px;color:var(--text-1);">
-        <button onclick="AgenOS.sendMsg('${name}')" class="press-scale" style="background:var(--accent-1);border:none;width:40px;height:40px;border-radius:50%;color:#fff;">➤</button>
+      <div class="thread-scroll" id="thread-scroll">
+        <div class="thread-daystamp">Heute</div>
+        ${msgs.map((m,i)=>{
+          const prev=msgs[i-1], next=msgs[i+1];
+          const tail = !next || next.me!==m.me;
+          return `<div class="bubble ${m.me?'me':'them'} ${tail?'tail':''}" style="animation-delay:${Math.min(i*40,320)}ms">${m.text}</div>`;
+        }).join('')}
+        <div class="kb-spacer"></div>
+      </div>
+      <div class="thread-bar">
+        <button class="thread-plus press-scale">+</button>
+        <div class="thread-field">
+          <input id="thread-input" class="kb-input" placeholder="iMessage" autocomplete="off">
+        </div>
+        <button onclick="AgenOS.sendMsg('${name}')" class="thread-send press-scale">↑</button>
       </div>
     </div>`;
   }
@@ -2368,13 +2730,29 @@ const AgenOS = (function(){
     const scroll = document.getElementById('thread-scroll'); if(scroll) scroll.scrollTop = scroll.scrollHeight;
   }
   function sendMsg(name){
-    const input = document.getElementById('thread-input'); if(!input.value.trim()) return;
-    state.threads[name].push({me:true,text:input.value.trim()}); input.value='';
-    document.getElementById('content-messages').innerHTML = renderThread(name);
-    const inp2 = document.getElementById('thread-input'); if(inp2) setupKeyboardInput(inp2);
-    setTimeout(()=>{ state.threads[name].push({me:false,text:'👍 verstanden!'});
-      if(state.activeThread===name){ document.getElementById('content-messages').innerHTML = renderThread(name); const inp3 = document.getElementById('thread-input'); if(inp3) setupKeyboardInput(inp3); }
-    },1100);
+    const input = document.getElementById('thread-input');
+    if(!input || !input.value.trim()) return;
+    const txt = input.value.trim();
+    state.threads[name].push({me:true,text:txt});
+    input.value=''; input.dispatchEvent(new Event('input',{bubbles:true}));
+    const sc = document.getElementById('thread-scroll');
+    const spacer = sc.querySelector('.kb-spacer');
+    const b = document.createElement('div');
+    b.className='bubble me tail sent'; b.textContent=txt;
+    sc.insertBefore(b, spacer);
+    sc.scrollTop = sc.scrollHeight;
+    haptic(8);
+    const typing=document.createElement('div');
+    typing.className='bubble them typing'; typing.innerHTML='<span></span><span></span><span></span>';
+    sc.insertBefore(typing, spacer); sc.scrollTop = sc.scrollHeight;
+    setTimeout(()=>{
+      typing.remove();
+      if(state.activeThread!==name) return;
+      const reply='👍 verstanden!';
+      state.threads[name].push({me:false,text:reply});
+      const r=document.createElement('div'); r.className='bubble them tail sent'; r.textContent=reply;
+      sc.insertBefore(r, spacer); sc.scrollTop = sc.scrollHeight; haptic(5);
+    },1300);
   }
   function renderBrowserHome(){
     const shortcuts = [{n:'Agen News', c:'#3b82f6'},{n:'Agen Store', c:'#8b5cf6'},{n:'Agen Cloud', c:'#22d3ee'},{n:'Agen Support', c:'#f59e0b'}];
@@ -2569,7 +2947,7 @@ const AgenOS = (function(){
     }catch(e){ if(status) status.textContent = 'Mikrofon nicht verfügbar'; }
   }
 
-  let activeInput = null, kbShift = false, kbNumbers = false;
+  let activeInput = null, kbShift = false, kbNumbers = false, kbCaps = false, lastShiftTap = 0;
   const KB_LAYOUT = {
     letters: [['q','w','e','r','t','z','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['y','x','c','v','b','n','m']],
     numbers: [['1','2','3','4','5','6','7','8','9','0'],['-','/',':',';','(',')','€','&','@','"'],['.',',','?','!','\'','#','%','+','=','*']]
@@ -2579,15 +2957,65 @@ const AgenOS = (function(){
     if(!row1) return;
     const layout = kbNumbers? KB_LAYOUT.numbers : KB_LAYOUT.letters;
     const fill = (el, keys) => { el.innerHTML = ''; keys.forEach(k=>{ const btn = document.createElement('button'); btn.className = 'kb-key'; btn.textContent = kbShift && !kbNumbers ? k.toUpperCase() : k; btn.dataset.action = 'key'; btn.dataset.key = k; el.appendChild(btn); }); };
-    fill(row1, layout[0]); fill(row2, layout[1]); fill(row3, layout[2]);
+    fill(row1, layout[0]); fill(row2, layout[1]);
+    row3.innerHTML='';
+    const shift=document.createElement('button');
+    shift.className='kb-key special wide'+(kbShift?' active':'')+(kbCaps?' caps':'');
+    shift.textContent = kbCaps?'⇪':'⇧'; shift.dataset.action='shift'; row3.appendChild(shift);
+    fill(document.createElement('div'),[]);
+    layout[2].forEach(k=>{ const b=document.createElement('button'); b.className='kb-key'; b.textContent=kbShift&&!kbNumbers?k.toUpperCase():k; b.dataset.action='key'; b.dataset.key=k; row3.appendChild(b); });
+    const bs=document.createElement('button'); bs.className='kb-key special wide'; bs.textContent='⌫'; bs.dataset.action='backspace'; row3.appendChild(bs);
+    const bottom=document.getElementById('kb-row-4');
+    if(bottom){
+      bottom.innerHTML='';
+      const mk=(cls,txt,act,key)=>{const b=document.createElement('button');b.className='kb-key '+cls;b.textContent=txt;b.dataset.action=act;if(key)b.dataset.key=key;return b;};
+      bottom.appendChild(mk('special wide', kbNumbers?'ABC':'123','numbers'));
+      bottom.appendChild(mk('special','😊','key','😊'));
+      bottom.appendChild(mk('space','Leerzeichen','space'));
+      bottom.appendChild(mk('special','.','key','.'));
+      bottom.appendChild(mk('special wide accent','return','enter'));
+    }
   }
-  function showKeyboard(){ const kb = document.getElementById('keyboard'); if(kb) kb.classList.add('show'); }
-  function hideKeyboard(){ const kb = document.getElementById('keyboard'); if(kb) kb.classList.remove('show'); activeInput = null; }
+  function showKeyboard(){
+    const kb = document.getElementById('keyboard'); if(!kb) return;
+    kb.classList.add('show');
+    document.body.classList.add('kb-open');
+    // aktives Fenster hochschieben, damit Eingabe sichtbar bleibt
+    const win = state.activeApp ? document.getElementById('win-'+state.activeApp) : null;
+    if(win) win.classList.add('kb-lift');
+    ensureInputVisible();
+  }
+  function ensureInputVisible(){
+    requestAnimationFrame(()=>{
+      const sc = document.getElementById('thread-scroll');
+      if(sc) sc.scrollTop = sc.scrollHeight;
+      if(activeInput && activeInput.scrollIntoView){
+        try{ activeInput.scrollIntoView({block:'center', behavior:'smooth'}); }catch(e){}
+      }
+      updateCaret();
+    });
+  }
+  function hideKeyboard(){
+    const kb = document.getElementById('keyboard'); if(kb) kb.classList.remove('show');
+    document.body.classList.remove('kb-open');
+    document.querySelectorAll('.app-window.kb-lift').forEach(w=>w.classList.remove('kb-lift'));
+    if(activeInput) activeInput.classList.remove('kb-focused');
+    activeInput = null;
+  }
+  function updateCaret(){
+    document.querySelectorAll('.kb-input').forEach(i=>i.classList.remove('kb-focused'));
+    if(activeInput) activeInput.classList.add('kb-focused');
+  }
+  function focusInput(input){
+    activeInput = input; kbShift = input.dataset.kbCaps!=='off';
+    buildKeyboard(); showKeyboard(); updateCaret(); haptic(4);
+  }
   function setupKeyboardInput(input){
     if(!input) return;
     input.setAttribute('readonly','readonly');
-    input.addEventListener('focus', ()=>{ activeInput = input; buildKeyboard(); showKeyboard(); });
-    input.addEventListener('click', ()=>{ activeInput = input; buildKeyboard(); showKeyboard(); });
+    input.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); focusInput(input); });
+    input.addEventListener('focus', ()=> focusInput(input));
+    input.addEventListener('click', (e)=>{ e.stopPropagation(); focusInput(input); });
   }
   function kbInsert(text){
     if(!activeInput) return;
@@ -2598,6 +3026,7 @@ const AgenOS = (function(){
     const newPos = start + text.length;
     activeInput.selectionStart = activeInput.selectionEnd = newPos;
     activeInput.dispatchEvent(new Event('input', {bubbles:true}));
+    ensureInputVisible();
   }
   function kbBackspace(){
     if(!activeInput) return;
@@ -2606,18 +3035,36 @@ const AgenOS = (function(){
     else if(start!==end){ activeInput.value = val.slice(0,start) + val.slice(end); activeInput.selectionStart = activeInput.selectionEnd = start; }
     activeInput.dispatchEvent(new Event('input', {bubbles:true}));
   }
-  document.getElementById('keyboard').addEventListener('click', (e)=>{
+  document.getElementById('keyboard').addEventListener('pointerdown', (e)=>{
     const btn = e.target.closest('.kb-key'); if(!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    haptic(3);
+    btn.classList.add('pressed'); setTimeout(()=>btn.classList.remove('pressed'),110);
     const action = btn.dataset.action;
-    if(action==='key'){ const k = btn.dataset.key; if(k==='123'){ kbNumbers = !kbNumbers; buildKeyboard(); return; } kbInsert(kbShift && !kbNumbers ? k.toUpperCase() : k); if(kbShift){ kbShift=false; buildKeyboard(); } }
-    else if(action==='shift'){ kbShift = !kbShift; buildKeyboard(); }
+    if(action==='key'){
+      const k = btn.dataset.key;
+      kbInsert(kbShift && !kbNumbers ? k.toUpperCase() : k);
+      if(kbShift && !kbCaps){ kbShift=false; buildKeyboard(); }
+    }
+    else if(action==='shift'){
+      const now=Date.now();
+      if(now - lastShiftTap < 320){ kbCaps=!kbCaps; kbShift=kbCaps; } else { kbShift=!kbShift; kbCaps=false; }
+      lastShiftTap=now; buildKeyboard();
+    }
+    else if(action==='numbers'){ kbNumbers=!kbNumbers; kbShift=false; buildKeyboard(); }
     else if(action==='space'){ kbInsert(' '); }
-    else if(action==='enter'){ kbInsert('\n'); }
-  });
-  const backspaceBtn = document.createElement('button');
-  backspaceBtn.className = 'kb-key special'; backspaceBtn.textContent = '⌫'; backspaceBtn.style.maxWidth = '60px';
-  backspaceBtn.addEventListener('click', (e)=>{ e.stopPropagation(); kbBackspace(); });
-  document.querySelectorAll('.kb-suggestion').forEach(s=>{ s.addEventListener('click', ()=> kbInsert(s.textContent)); });
+    else if(action==='backspace'){ kbBackspace(); }
+    else if(action==='hide'){ hideKeyboard(); }
+    else if(action==='enter'){
+      if(activeInput && activeInput.id==='thread-input' && state.activeThread){ sendMsg(state.activeThread); }
+      else if(activeInput && activeInput.id==='browser-url'){ browserGo(); }
+      else if(activeInput && activeInput.tagName==='TEXTAREA'){ kbInsert('\n'); }
+      else { hideKeyboard(); }
+    }
+  }, {passive:false});
+  document.getElementById('keyboard').addEventListener('click', e=>{ e.stopPropagation(); });
+
+  document.querySelectorAll('.kb-suggestion').forEach(s=>{ s.addEventListener('pointerdown', (e)=>{ e.preventDefault(); kbInsert(s.textContent+' '); haptic(4); }); });
   const observer = new MutationObserver(()=>{ document.querySelectorAll('.kb-input').forEach(inp=>{ if(!inp.dataset.kbSetup){ inp.dataset.kbSetup = '1'; setupKeyboardInput(inp); } }); });
   observer.observe(document.body, {childList:true, subtree:true});
 
@@ -2666,6 +3113,162 @@ const AgenOS = (function(){
     cc.addEventListener('click', (e)=>{ if(e.target===cc) closeControlCenter(); });
     nc.addEventListener('click', (e)=>{ if(e.target===nc) nc.classList.remove('show'); });
   }
+
+  /* ===== iOS Home-Gesture: von unten hochwischen ===== */
+  function setupHomeGesture(){
+    const screen=document.getElementById('screen');
+    let sy=0, sx=0, tracking=false, t0=0;
+    const EDGE=44;
+    screen.addEventListener('touchstart', e=>{
+      const t=e.touches[0];
+      if(t.clientY > window.innerHeight - EDGE){ tracking=true; sy=t.clientY; sx=t.clientX; t0=Date.now(); }
+    }, {passive:true});
+    screen.addEventListener('touchmove', e=>{
+      if(!tracking) return;
+      const dy = sy - e.touches[0].clientY;
+      if(dy>10){
+        const win = state.activeApp && document.getElementById('win-'+state.activeApp);
+        if(win){ const k=Math.min(dy/400,1); win.style.transform=`scale(${1-k*0.22}) translateY(${-k*30}px)`; win.style.borderRadius=(k*44)+'px'; }
+      }
+    }, {passive:true});
+    screen.addEventListener('touchend', e=>{
+      if(!tracking) return; tracking=false;
+      const t=e.changedTouches[0];
+      const dy = sy - t.clientY, dx = Math.abs(t.clientX - sx), dt = Date.now()-t0;
+      const win = state.activeApp && document.getElementById('win-'+state.activeApp);
+      if(win){ win.style.transform=''; win.style.borderRadius=''; }
+      if(dy > 70 && dy > dx && dt < 900){
+        if(document.getElementById('keyboard').classList.contains('show')) { hideKeyboard(); return; }
+        if(state.activeApp) closeApp();
+      }
+    });
+    // Maus-Fallback: Klick auf Home-Indicator
+    document.addEventListener('click', e=>{
+      const hi = e.target.closest('.app-home-indicator');
+      if(hi){ if(state.activeApp) closeApp(); }
+    });
+  }
+
+  /* ===== iOS 26 Long-Press Home-Menü ===== */
+  function setupHomeLongPress(){
+    const scroll=document.getElementById('home-scroll');
+    if(!scroll) return;
+    let timer=null, sx=0, sy=0;
+    const isBlank = (t)=> t.id==='home-scroll' || t.classList.contains('home-page') || t.classList.contains('page-grid');
+    const down=(e)=>{
+      const pt = e.touches? e.touches[0] : e;
+      if(!isBlank(e.target)) return;
+      if(dragState.isEditing) return;
+      sx=pt.clientX; sy=pt.clientY;
+      timer=setTimeout(()=>{ haptic([12]); showHomeMenu(sx, sy); }, 520);
+    };
+    const cancel=()=>{ clearTimeout(timer); };
+    scroll.addEventListener('pointerdown', down);
+    scroll.addEventListener('pointerup', cancel);
+    scroll.addEventListener('pointermove', (e)=>{ if(Math.hypot(e.clientX-sx,e.clientY-sy)>10) cancel(); });
+    scroll.addEventListener('pointercancel', cancel);
+  }
+  function showHomeMenu(x,y){
+    closeHomeMenu();
+    const m=document.createElement('div');
+    m.id='home-menu';
+    m.innerHTML=`
+      <div class="hm-backdrop"></div>
+      <div class="hm-card" style="left:${Math.max(20,Math.min(x-110,window.innerWidth-240))}px;top:${Math.max(90,Math.min(y-20,window.innerHeight-220))}px;">
+        <div class="hm-item" data-act="widgets"><span class="hm-ic">▦</span><span>Add Widgets</span></div>
+        <div class="hm-sep"></div>
+        <div class="hm-item" data-act="icons"><span class="hm-ic">✦</span><span>Customize Icons</span></div>
+      </div>`;
+    document.body.appendChild(m);
+    requestAnimationFrame(()=>m.classList.add('show'));
+    m.querySelector('.hm-backdrop').addEventListener('pointerdown', closeHomeMenu);
+    m.querySelectorAll('.hm-item').forEach(it=>{
+      it.addEventListener('pointerdown', (e)=>{
+        e.stopPropagation(); haptic(8);
+        const act=it.dataset.act; closeHomeMenu();
+        if(act==='widgets') openWidgetSheet(); else openCustomizeSheet();
+      });
+    });
+  }
+  function closeHomeMenu(){ const m=document.getElementById('home-menu'); if(m){ m.classList.remove('show'); setTimeout(()=>m.remove(),240); } }
+
+  const WIDGET_LIB=[
+    {id:'weather', name:'Wetter', sub:'Aktuelle Bedingungen', ic:'⛅'},
+    {id:'clock', name:'Uhr', sub:'Digitale Uhrzeit', ic:'🕘'},
+    {id:'battery', name:'Batterie', sub:'Ladestand', ic:'🔋'},
+    {id:'calendar', name:'Kalender', sub:'Heutiges Datum', ic:'📅'},
+    {id:'music', name:'Musik', sub:'Aktueller Titel', ic:'🎵'},
+    {id:'fitness', name:'Aktivität', sub:'Ringe & Schritte', ic:'🏃'},
+  ];
+  function openWidgetSheet(){
+    openSheet('Widgets hinzufügen', `
+      <div class="sheet-sub">Wähle Widgets für deinen Home-Bildschirm.</div>
+      <div class="ios-group">
+      ${WIDGET_LIB.map((w,i)=>`<div class="row widget-row" data-w="${w.id}">
+        <div style="display:flex;align-items:center;gap:13px;">
+          <div class="widget-ic">${w.ic}</div>
+          <div><div style="font-weight:600;font-size:15px;">${w.name}</div><div style="font-size:12px;color:var(--text-2);">${w.sub}</div></div>
+        </div>
+        <div class="add-pill ${state.homeWidgets.includes(w.id)?'added':''}">${state.homeWidgets.includes(w.id)?'✓':'+'}</div>
+      </div>${i<WIDGET_LIB.length-1?'<div class="divider"></div>':''}`).join('')}
+      </div>`);
+    document.querySelectorAll('.widget-row').forEach(r=>{
+      r.addEventListener('pointerdown', ()=>{
+        const id=r.dataset.w; haptic(8);
+        const pill=r.querySelector('.add-pill');
+        if(state.homeWidgets.includes(id)){ state.homeWidgets=state.homeWidgets.filter(x=>x!==id); pill.classList.remove('added'); pill.textContent='+'; }
+        else { state.homeWidgets.push(id); pill.classList.add('added'); pill.textContent='✓'; }
+        renderHomeWidgets();
+      });
+    });
+  }
+  function openCustomizeSheet(){
+    const styles=[{k:'default',n:'Standard'},{k:'dark',n:'Dunkel'},{k:'tinted',n:'Getönt'},{k:'clear',n:'Klar'}];
+    const tints=['#8b5cf6','#3b82f6','#ef4444','#f59e0b','#22c55e','#ec4899','#06b6d4','#f5f5f7'];
+    const wpKeys=Object.keys(wallpapers);
+    openSheet('Icons anpassen', `
+      <div class="sheet-sub">Icon-Stil</div>
+      <div class="chip-row">${styles.map(st=>`<div class="chip ${state.settings.iconStyle===st.k?'on':''}" data-style="${st.k}">${st.n}</div>`).join('')}</div>
+      <div class="sheet-sub" style="margin-top:20px;">Farbton</div>
+      <div class="tint-row">${tints.map(c=>`<div class="tint-dot ${state.settings.iconTintColor===c?'on':''}" data-tint="${c}" style="background:${c};"></div>`).join('')}</div>
+      <div class="sheet-sub" style="margin-top:20px;">Hintergrund</div>
+      <div class="wp-grid-sheet">${wpKeys.map(k=>`<div class="wp-swatch ${state.wallpaper===k?'selected':''}" data-wp="${k}" style="background:${wallpapers[k]};"></div>`).join('')}</div>
+    `);
+    document.querySelectorAll('[data-style]').forEach(el=>el.addEventListener('pointerdown',()=>{ setIconStyle(el.dataset.style); haptic(8); document.querySelectorAll('[data-style]').forEach(x=>x.classList.remove('on')); el.classList.add('on'); }));
+    document.querySelectorAll('[data-tint]').forEach(el=>el.addEventListener('pointerdown',()=>{ setIconTint(el.dataset.tint); haptic(8); document.querySelectorAll('[data-tint]').forEach(x=>x.classList.remove('on')); el.classList.add('on'); }));
+    document.querySelectorAll('[data-wp]').forEach(el=>el.addEventListener('pointerdown',()=>{ state.wallpaper=el.dataset.wp; document.documentElement.style.setProperty('--wp', wallpapers[el.dataset.wp]); haptic(8); document.querySelectorAll('[data-wp]').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); }));
+  }
+  function openSheet(title, bodyHTML){
+    closeSheet();
+    const sh=document.createElement('div'); sh.id='ios-sheet';
+    sh.innerHTML=`<div class="sheet-backdrop"></div>
+      <div class="sheet-card">
+        <div class="sheet-grabber"></div>
+        <div class="sheet-head"><div class="sheet-title">${title}</div><button class="sheet-done">Fertig</button></div>
+        <div class="sheet-body">${bodyHTML}</div>
+      </div>`;
+    document.body.appendChild(sh);
+    requestAnimationFrame(()=>sh.classList.add('show'));
+    sh.querySelector('.sheet-backdrop').addEventListener('pointerdown', closeSheet);
+    sh.querySelector('.sheet-done').addEventListener('pointerdown', closeSheet);
+  }
+  function closeSheet(){ const sh=document.getElementById('ios-sheet'); if(sh){ sh.classList.remove('show'); setTimeout(()=>sh.remove(),380); } }
+
+  function renderHomeWidgets(){
+    const host=document.getElementById('home-widgets'); if(!host) return;
+    const d=new Date();
+    const map={
+      weather:()=>`<div class="hw hw-2" onclick="AgenOS.openApp('weather')"><div style="font-size:12px;opacity:.7;font-weight:600;">Agen City</div><div class="font-display" style="font-size:36px;font-weight:600;line-height:1.1;">${Math.round(weatherBase)}°</div><div style="font-size:12px;opacity:.7;">Teilweise bewölkt</div></div>`,
+      clock:()=>`<div class="hw" onclick="AgenOS.openApp('clock')"><div style="font-size:12px;opacity:.7;font-weight:600;">Uhr</div><div class="font-display" style="font-size:30px;font-weight:600;">${fmtTime(d)}</div></div>`,
+      battery:()=>`<div class="hw"><div style="font-size:12px;opacity:.7;font-weight:600;">Batterie</div><div class="font-display" style="font-size:30px;font-weight:600;">${state.battery.level}%</div><div class="hw-bar"><i style="width:${state.battery.level}%"></i></div></div>`,
+      calendar:()=>`<div class="hw"><div style="font-size:12px;color:#ff453a;font-weight:700;text-transform:uppercase;">${['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]}</div><div class="font-display" style="font-size:34px;font-weight:600;line-height:1;">${d.getDate()}</div></div>`,
+      music:()=>`<div class="hw" onclick="AgenOS.openApp('music')"><div style="font-size:12px;opacity:.7;font-weight:600;">Musik</div><div style="font-weight:600;font-size:14px;margin-top:4px;">Neon Drive</div><div style="font-size:12px;opacity:.6;">Agen Waves</div></div>`,
+      fitness:()=>`<div class="hw"><div style="font-size:12px;opacity:.7;font-weight:600;">Aktivität</div><div class="rings"><span class="r1"></span><span class="r2"></span><span class="r3"></span></div></div>`,
+    };
+    host.innerHTML = state.homeWidgets.map(id=> (map[id]||(()=>''))()).join('');
+    host.style.display = state.homeWidgets.length? 'grid':'none';
+  }
+
   function setupHomeSwipe(){
     const scroll = document.getElementById('home-scroll');
     if(!scroll) return;
@@ -2692,6 +3295,9 @@ const AgenOS = (function(){
 
   function init(){
     buildHomePages();
+    renderHomeWidgets();
+    setupHomeGesture();
+    setupHomeLongPress();
     renderDock();
     renderLockWidgets();
     applyLockClockSize();
@@ -2707,9 +3313,7 @@ const AgenOS = (function(){
     initBattery(); initNetwork();
     boot();
     setupLockGesture(); setupHomeSwipe(); setupControlCenterGesture();
-    const kb = document.getElementById('keyboard');
-    const bottomRow = kb.children[4];
-    if(bottomRow) bottomRow.appendChild(backspaceBtn);
+
     document.querySelectorAll('.kb-input').forEach(inp=>{ inp.dataset.kbSetup='1'; setupKeyboardInput(inp); });
     document.getElementById('home-scroll').addEventListener('click', (e)=>{
       if(dragState.isEditing && (e.target.id==='home-scroll' || e.target.classList.contains('home-page'))) exitEditMode();
@@ -2742,8 +3346,9 @@ const AgenOS = (function(){
     setTimer, toggleTimer, resetTimer, recordVoice,
     ccToggle, ccToggleDarkMode, ccOpenCamera,
     storeInstall, storeSearch, storeCategory, openStoreDetail,
+    openWidgetSheet, openCustomizeSheet, closeSheet, renderHomeWidgets,
   };
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39796ad4d790d28',t:'MTc4OTEzOTMxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a397a7fa3ba72f85',t:'MTc4OTE0MDAyMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
